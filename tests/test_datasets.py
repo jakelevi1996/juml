@@ -45,3 +45,6 @@ def test_mnist():
         loss = dataset.loss.forward(y, t)
         assert isinstance(loss, torch.Tensor)
         assert list(loss.shape) == []
+
+        metric = dataset.loss.metric_batch(y, t)
+        assert isinstance(metric, int)
