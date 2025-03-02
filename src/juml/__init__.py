@@ -1,1 +1,4 @@
-from juml import models
+from juml import (
+    models,
+    datasets,
+)
