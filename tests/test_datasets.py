@@ -1,8 +1,15 @@
 import torch
 import torch.utils.data
+from jutility import util
 import juml
+import juml_test_utils
+
+OUTPUT_DIR = juml_test_utils.get_output_dir("test_datasets")
 
 def test_mnist():
+    printer = util.Printer("test_mnist", dir_name=OUTPUT_DIR)
+    juml_test_utils.set_torch_seed("test_mnist")
+
     dataset = juml.datasets.Mnist()
     assert repr(dataset) == "Mnist(n_train=60.0k, n_test=10.0k)"
     assert dataset.get_input_shape()  == [1, 28, 28]
@@ -33,3 +40,8 @@ def test_mnist():
         assert t.dtype is not torch.float32
         assert t.max().item() == 9
         assert t.min().item() == 0
+
+        y = torch.normal(0, 1, [batch_size, 10])
+        loss = dataset.loss.forward(y, t)
+        assert isinstance(loss, torch.Tensor)
+        assert list(loss.shape) == []
