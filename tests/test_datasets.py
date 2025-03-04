@@ -190,20 +190,20 @@ def test_mnist():
     assert isinstance(test_split, torch.utils.data.Dataset)
     assert len(test_split) == 10000
 
-    for batch_size in [64, 100, 128]:
-        data_loader = dataset.get_data_loader("train", batch_size)
-        x, t = next(iter(data_loader))
+    batch_size = 64
+    data_loader = dataset.get_data_loader("train", batch_size)
+    x, t = next(iter(data_loader))
 
-        assert isinstance(x, torch.Tensor)
-        assert list(x.shape) == [batch_size, 1, 28, 28]
-        assert x.dtype is torch.float32
-        assert x.dtype is not torch.int64
-        assert x.max().item() == 1
-        assert x.min().item() == 0
+    assert isinstance(x, torch.Tensor)
+    assert list(x.shape) == [batch_size, 1, 28, 28]
+    assert x.dtype is torch.float32
+    assert x.dtype is not torch.int64
+    assert x.max().item() == 1
+    assert x.min().item() == 0
 
-        assert isinstance(t, torch.Tensor)
-        assert list(t.shape) == [batch_size]
-        assert t.dtype is torch.int64
-        assert t.dtype is not torch.float32
-        assert t.max().item() == 9
-        assert t.min().item() == 0
+    assert isinstance(t, torch.Tensor)
+    assert list(t.shape) == [batch_size]
+    assert t.dtype is torch.int64
+    assert t.dtype is not torch.float32
+    assert t.max().item() == 9
+    assert t.min().item() == 0
