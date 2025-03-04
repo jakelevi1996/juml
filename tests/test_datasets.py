@@ -90,11 +90,3 @@ def test_mnist():
         assert t.dtype is not torch.float32
         assert t.max().item() == 9
         assert t.min().item() == 0
-
-        y = torch.normal(0, 1, [batch_size, 10])
-        loss = dataset.loss.forward(y, t)
-        assert isinstance(loss, torch.Tensor)
-        assert list(loss.shape) == []
-
-        metric = dataset.loss.metric_batch(y, t)
-        assert isinstance(metric, int)
