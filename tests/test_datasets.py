@@ -1,3 +1,4 @@
+import math
 import torch
 import torch.utils.data
 from jutility import util
@@ -5,6 +6,61 @@ import juml
 import juml_test_utils
 
 OUTPUT_DIR = juml_test_utils.get_output_dir("test_datasets")
+
+def test_get_data_loader():
+    printer = util.Printer("test_get_data_loader", dir_name=OUTPUT_DIR)
+    juml_test_utils.set_torch_seed("test_get_data_loader")
+
+    input_dim   = 7
+    output_dim  = 11
+    n_train     = 200
+    n_test      = 100
+
+    dataset = juml.datasets.Linear(
+        input_dim=input_dim,
+        output_dim=output_dim,
+        n_train=n_train,
+        n_test=n_test,
+        x_std=0.1,
+        t_std=0.2,
+    )
+
+    for batch_size in [64, 100, 128]:
+        data_loader = dataset.get_data_loader("train", batch_size)
+        assert isinstance(data_loader, torch.utils.data.DataLoader)
+
+        x, t = next(iter(data_loader))
+
+        assert isinstance(x, torch.Tensor)
+        assert list(x.shape) == [batch_size, input_dim]
+        assert x.dtype is torch.float32
+        assert x.dtype is not torch.int64
+
+        assert isinstance(t, torch.Tensor)
+        assert list(t.shape) == [batch_size, output_dim]
+        assert t.dtype is torch.float32
+        assert t.dtype is not torch.int64
+
+    batch_size = 17
+    batch_size_list = []
+
+    data_loader = dataset.get_data_loader("train", batch_size)
+    assert isinstance(data_loader, torch.utils.data.DataLoader)
+
+    for x, t in data_loader:
+        assert isinstance(x, torch.Tensor)
+        assert isinstance(t, torch.Tensor)
+        assert x.shape[0 ] == t.shape[0 ]
+        assert x.shape[1:] != t.shape[1:]
+
+        batch_size_list.append(x.shape[0])
+
+    assert sum(batch_size_list) == n_train
+    assert set(batch_size_list) == set([batch_size, n_train % batch_size])
+    assert len(batch_size_list) == math.ceil(n_train / batch_size)
+    assert len(set(batch_size_list)) == 2
+
+    printer(batch_size_list)
 
 def test_linear():
     printer = util.Printer("test_linear", dir_name=OUTPUT_DIR)
