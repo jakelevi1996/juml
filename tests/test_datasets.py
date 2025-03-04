@@ -10,11 +10,11 @@ def test_linear():
     printer = util.Printer("test_linear", dir_name=OUTPUT_DIR)
     juml_test_utils.set_torch_seed("test_linear")
 
-    input_dim  = 7
-    output_dim = 11
-    n_train = 23
-    n_test  = 27
-    batch_size = 17
+    input_dim   = 7
+    output_dim  = 11
+    n_train     = 23
+    n_test      = 27
+    batch_size  = 17
 
     dataset = juml.datasets.Linear(
         input_dim=input_dim,

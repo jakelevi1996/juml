@@ -6,6 +6,35 @@ import juml_test_utils
 
 OUTPUT_DIR = juml_test_utils.get_output_dir("test_loss")
 
+def test_loss_metric():
+    printer = util.Printer("test_loss_metric", dir_name=OUTPUT_DIR)
+    juml_test_utils.set_torch_seed("test_loss_metric")
+
+    input_dim   = 7
+    output_dim  = 11
+    n_train     = 23
+    n_test      = 27
+    batch_size  = 17
+
+    model = ...
+    dataset = juml.datasets.Linear(
+        input_dim=input_dim,
+        output_dim=output_dim,
+        n_train=n_train,
+        n_test=n_test,
+        x_std=0.1,
+        t_std=0.2,
+    )
+    data_loader = dataset.get_data_loader("train", batch_size)
+
+    metric = dataset.loss.metric(
+        model=model,
+        data_loader=data_loader,
+        gpu=False,
+    )
+    assert isinstance(metric, float)
+    assert metric > 0
+
 def test_crossentropy():
     printer = util.Printer("test_crossentropy", dir_name=OUTPUT_DIR)
     juml_test_utils.set_torch_seed("test_crossentropy")
