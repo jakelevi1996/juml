@@ -114,14 +114,19 @@ def test_get_subset_loader():
     assert list(t_full.shape)   == [n_train,    output_dim]
     assert list(x_subset.shape) == [n_subset,   input_dim]
     assert list(t_subset.shape) == [n_subset,   output_dim]
-    assert (
-        set(tuple(xi) for xi in x_subset.tolist()) <
-        set(tuple(xi) for xi in x_full.tolist())
-    )
-    assert (
-        set(tuple(ti) for ti in t_subset.tolist()) <
-        set(tuple(ti) for ti in t_full.tolist())
-    )
+
+    x_subset    = set(tuple(xi) for xi in x_subset.tolist())
+    t_subset    = set(tuple(ti) for ti in t_subset.tolist())
+    x_full      = set(tuple(xi) for xi in x_full.tolist())
+    t_full      = set(tuple(ti) for ti in t_full.tolist())
+    assert x_subset < x_full
+    assert t_subset < t_full
+    assert not x_full < x_subset
+    assert not t_full < t_subset
+    assert len(x_subset)    == n_subset
+    assert len(t_subset)    == n_subset
+    assert len(x_full)      == n_train
+    assert len(t_full)      == n_train
 
 def test_linear():
     printer = util.Printer("test_linear", dir_name=OUTPUT_DIR)
