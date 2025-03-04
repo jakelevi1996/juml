@@ -60,10 +60,6 @@ class CoordConv(Embedder):
         return self._output_shape
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        # batched_coord_tensor = torch.tile(
-        #     self._coord_tensor,
-        #     list(x.shape[:-3]) + [1, 1, 1],
-        # )
         batched_shape = list(x.shape[:-3]) + list(self._coord_tensor.shape)
         batched_coord_tensor = self._coord_tensor.expand(batched_shape)
         return torch.concat([x, batched_coord_tensor], dim=-3)
