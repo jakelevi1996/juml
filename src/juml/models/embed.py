@@ -64,3 +64,17 @@ class CoordConv(Embedder):
         batched_shape = list(x.shape[:-3]) + self._coord_shape
         batched_coord_tensor = self._coord_tensor.expand(batched_shape)
         return torch.concat([x, batched_coord_tensor], dim=-3)
+
+def get_types() -> list[type[Embedder]]:
+    return [
+        Identity,
+        Flatten,
+        CoordConv,
+    ]
+
+def get_cli_choice() -> cli.ObjectChoice:
+    return cli.ObjectChoice(
+        "embedder",
+        *[embed_type.get_cli_arg() for embed_type in get_types()],
+        default="Identity",
+    )
