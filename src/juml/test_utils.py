@@ -14,7 +14,7 @@ torch.set_printoptions(
 )
 
 def get_output_dir(*subdir_names):
-    return os.path.join(CURRENT_DIR, "Outputs", *subdir_names)
+    return os.path.join("tests", "Outputs", *subdir_names)
 
 def set_torch_seed(*args):
     seed = util.Seeder().get_seed(*args)
