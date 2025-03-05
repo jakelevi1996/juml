@@ -4,8 +4,6 @@ from jutility import util
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
-util.numpy_set_print_options()
-
 torch.set_printoptions(
     precision=3,
     linewidth=10000,
