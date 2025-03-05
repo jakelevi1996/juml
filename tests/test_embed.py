@@ -3,13 +3,12 @@ import torch
 import torch.utils.data
 from jutility import util
 import juml
-import juml_test_utils
 
-OUTPUT_DIR = juml_test_utils.get_output_dir("test_embed")
+OUTPUT_DIR = juml.test_utils.get_output_dir("test_embed")
 
 def test_identity():
     printer = util.Printer("test_identity", dir_name=OUTPUT_DIR)
-    juml_test_utils.set_torch_seed("test_identity")
+    juml.test_utils.set_torch_seed("test_identity")
 
     input_shape = [3, 4, 5, 6]
     x = torch.rand(input_shape)
@@ -24,7 +23,7 @@ def test_identity():
 
 def test_flatten():
     printer = util.Printer("test_flatten", dir_name=OUTPUT_DIR)
-    juml_test_utils.set_torch_seed("test_flatten")
+    juml.test_utils.set_torch_seed("test_flatten")
 
     input_shape = [3, 4, 5, 6]
     x = torch.rand(input_shape)
@@ -51,7 +50,7 @@ def test_flatten():
 
 def test_coordconv():
     printer = util.Printer("test_coordconv", dir_name=OUTPUT_DIR)
-    juml_test_utils.set_torch_seed("test_coordconv")
+    juml.test_utils.set_torch_seed("test_coordconv")
 
     input_shape = [2, 4, 3, 5]
     x = torch.arange(math.prod(input_shape)).reshape(input_shape)

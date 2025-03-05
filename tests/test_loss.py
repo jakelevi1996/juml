@@ -2,13 +2,12 @@ import torch
 import torch.utils.data
 from jutility import util
 import juml
-import juml_test_utils
 
-OUTPUT_DIR = juml_test_utils.get_output_dir("test_loss")
+OUTPUT_DIR = juml.test_utils.get_output_dir("test_loss")
 
 def test_loss_metric():
     printer = util.Printer("test_loss_metric", dir_name=OUTPUT_DIR)
-    juml_test_utils.set_torch_seed("test_loss_metric")
+    juml.test_utils.set_torch_seed("test_loss_metric")
 
     input_dim   = 7
     output_dim  = 11
@@ -37,7 +36,7 @@ def test_loss_metric():
 
 def test_crossentropy():
     printer = util.Printer("test_crossentropy", dir_name=OUTPUT_DIR)
-    juml_test_utils.set_torch_seed("test_crossentropy")
+    juml.test_utils.set_torch_seed("test_crossentropy")
 
     output_dim = 11
     batch_size = 87
@@ -59,7 +58,7 @@ def test_crossentropy():
 
 def test_mse():
     printer = util.Printer("test_mse", dir_name=OUTPUT_DIR)
-    juml_test_utils.set_torch_seed("test_mse")
+    juml.test_utils.set_torch_seed("test_mse")
 
     output_dim = 11
     batch_size = 87

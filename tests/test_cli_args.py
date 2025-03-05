@@ -1,13 +1,12 @@
 import torch
 from jutility import util, cli
 import juml
-import juml_test_utils
 
-OUTPUT_DIR = juml_test_utils.get_output_dir("test_cli_args")
+OUTPUT_DIR = juml.test_utils.get_output_dir("test_cli_args")
 
 def test_cli_args():
     printer = util.Printer("test_cli_args", dir_name=OUTPUT_DIR)
-    juml_test_utils.set_torch_seed("test_cli_args")
+    juml.test_utils.set_torch_seed("test_cli_args")
 
     parser = cli.Parser(
         cli.ObjectChoice(

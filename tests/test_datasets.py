@@ -3,13 +3,12 @@ import torch
 import torch.utils.data
 from jutility import util
 import juml
-import juml_test_utils
 
-OUTPUT_DIR = juml_test_utils.get_output_dir("test_datasets")
+OUTPUT_DIR = juml.test_utils.get_output_dir("test_datasets")
 
 def test_get_data_loader():
     printer = util.Printer("test_get_data_loader", dir_name=OUTPUT_DIR)
-    juml_test_utils.set_torch_seed("test_get_data_loader")
+    juml.test_utils.set_torch_seed("test_get_data_loader")
 
     input_dim   = 7
     output_dim  = 11
@@ -64,7 +63,7 @@ def test_get_data_loader():
 
 def test_get_subset_loader():
     printer = util.Printer("test_get_subset_loader", dir_name=OUTPUT_DIR)
-    juml_test_utils.set_torch_seed("test_get_subset_loader")
+    juml.test_utils.set_torch_seed("test_get_subset_loader")
 
     input_dim   = 7
     output_dim  = 11
@@ -130,7 +129,7 @@ def test_get_subset_loader():
 
 def test_linear():
     printer = util.Printer("test_linear", dir_name=OUTPUT_DIR)
-    juml_test_utils.set_torch_seed("test_linear")
+    juml.test_utils.set_torch_seed("test_linear")
 
     input_dim   = 7
     output_dim  = 11
@@ -180,7 +179,7 @@ def test_linear():
 
 def test_mnist():
     printer = util.Printer("test_mnist", dir_name=OUTPUT_DIR)
-    juml_test_utils.set_torch_seed("test_mnist")
+    juml.test_utils.set_torch_seed("test_mnist")
 
     dataset = juml.datasets.Mnist()
     assert repr(dataset) == "Mnist(n_train=60.0k, n_test=10.0k)"
@@ -215,7 +214,7 @@ def test_mnist():
 
 def test_cifar10():
     printer = util.Printer("test_cifar10", dir_name=OUTPUT_DIR)
-    juml_test_utils.set_torch_seed("test_cifar10")
+    juml.test_utils.set_torch_seed("test_cifar10")
 
     dataset = juml.datasets.Cifar10()
     assert repr(dataset) == "Cifar10(n_train=50.0k, n_test=10.0k)"
