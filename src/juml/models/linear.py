@@ -23,7 +23,9 @@ class LinearModel(Model):
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        return self._layer.forward(x)
+        x = self._embed.forward(x)
+        x = self._layer.forward(x)
+        return x
 
     @classmethod
     def get_cli_options(cls) -> list[cli.Arg]:

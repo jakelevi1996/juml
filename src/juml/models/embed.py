@@ -26,6 +26,7 @@ class Identity(Embedder):
 
 class Flatten(Embedder):
     def __init__(self, num_flatten: int):
+        self._torch_module_init()
         self._num_flatten = num_flatten
 
     def set_input_shape(self, input_shape: list[int]):
