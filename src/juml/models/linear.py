@@ -2,7 +2,7 @@ import math
 import torch
 from juml.models.base import Model
 
-class Linear(Model):
+class LinearLayer(Model):
     def __init__(
         self,
         input_dim: int,

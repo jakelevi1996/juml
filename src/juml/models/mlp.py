@@ -2,7 +2,7 @@ import math
 import torch
 from jutility import cli
 from juml.models.base import Model
-from juml.models.linear import Linear
+from juml.models.linear import LinearLayer
 
 class Mlp(Model):
     def __init__(
@@ -19,11 +19,11 @@ class Mlp(Model):
 
         layer_input_dim = math.prod(input_shape[-self.num_flat:])
         for _ in range(num_hidden_layers):
-            layer = Linear(layer_input_dim, hidden_dim)
+            layer = LinearLayer(layer_input_dim, hidden_dim)
             self.hidden_layers.append(layer)
             layer_input_dim = hidden_dim
 
-        self.output_layer = Linear(layer_input_dim, output_shape[-1])
+        self.output_layer = LinearLayer(layer_input_dim, output_shape[-1])
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = x.flatten(-self.num_flat, -1)
