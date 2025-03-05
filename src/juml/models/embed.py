@@ -54,12 +54,13 @@ class CoordConv(Embedder):
         y_hw    = torch.tile(y_h1, [1, w])
         xy_2hw  = torch.stack([x_hw, y_hw], dim=-3)
         self._coord_tensor = torch.nn.Parameter(xy_2hw, requires_grad=False)
+        self._coord_shape  = list(self._coord_tensor.shape)
         self._output_shape = input_shape[:-3] + [c + 2, h, w]
 
     def get_output_shape(self) -> list[int]:
         return self._output_shape
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        batched_shape = list(x.shape[:-3]) + list(self._coord_tensor.shape)
+        batched_shape = list(x.shape[:-3]) + self._coord_shape
         batched_coord_tensor = self._coord_tensor.expand(batched_shape)
         return torch.concat([x, batched_coord_tensor], dim=-3)
