@@ -29,4 +29,5 @@ class Model(torch.nn.Module):
         return util.format_type(
             type(self),
             num_params=units.metric.format(self.num_params()),
+            item_fmt="%s=%s",
         )
