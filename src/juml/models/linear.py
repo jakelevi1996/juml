@@ -1,6 +1,33 @@
 import math
 import torch
+from jutility import cli
+from juml.models import embed
 from juml.models.base import Model
+
+class LinearModel(Model):
+    def __init__(
+        self,
+        input_shape: list[int],
+        output_shape: list[int],
+        embedder: embed.Embedder,
+    ):
+        self._torch_module_init()
+
+        embedder.set_input_shape(input_shape)
+        embed_shape = embedder.get_output_shape()
+        self._embed = embedder
+
+        self._layer = LinearLayer(
+            input_dim=embed_shape[-1],
+            output_dim=output_shape[-1],
+        )
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return self._layer.forward(x)
+
+    @classmethod
+    def get_cli_options(cls) -> list[cli.Arg]:
+        return [embed.get_cli_choice()]
 
 class LinearLayer(Model):
     def __init__(
