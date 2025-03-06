@@ -15,7 +15,13 @@ def test_loss_metric():
     n_test      = 27
     batch_size  = 17
 
-    model = ...
+    model = juml.models.Mlp(
+        input_shape=[input_dim],
+        output_shape=[output_dim],
+        hidden_dim=13,
+        num_hidden_layers=2,
+        embedder=juml.models.embed.Identity(),
+    )
     dataset = juml.datasets.Linear(
         input_dim=input_dim,
         output_dim=output_dim,
