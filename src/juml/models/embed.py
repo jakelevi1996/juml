@@ -10,6 +10,10 @@ class Embedder(Model):
     def get_output_shape(self) -> list[int]:
         raise NotImplementedError()
 
+    def get_output_dim(self) -> int:
+        output_shape = self.get_output_shape()
+        return output_shape[-1]
+
     @classmethod
     def get_cli_options(cls) -> list[cli.Arg]:
         return []
