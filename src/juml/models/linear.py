@@ -14,14 +14,15 @@ class LinearModel(Model):
     ):
         self._torch_module_init()
 
-        embedder.set_input_shape(input_shape)
-        pooler.set_shapes([], output_shape)
         self.embed = embedder
-        self.pool  = pooler
+        self.embed.set_input_shape(input_shape)
+
+        self.pool = pooler
+        self.pool.set_shapes([], output_shape)
 
         self.layer = LinearLayer(
-            input_dim=embedder.get_output_dim(-1),
-            output_dim=pooler.get_input_dim(-1),
+            input_dim=self.embed.get_output_dim(-1),
+            output_dim=self.pool.get_input_dim(-1),
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
