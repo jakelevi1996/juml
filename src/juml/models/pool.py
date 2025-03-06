@@ -62,10 +62,25 @@ class Unflatten(Pooler):
     def get_cli_options(cls) -> list[cli.Arg]:
         return [cli.Arg("num_unflatten", type=int, default=None)]
 
+class Average2d(Pooler):
+    def set_shapes(
+        self,
+        input_shape:  list[int],
+        output_shape: list[int],
+    ):
+        self.linear = torch.nn.Linear(input_shape[-3], output_shape[-1])
+
+    def forward(self, x_nchw: torch.Tensor) -> torch.Tensor:
+        x_nci = x_nchw.flatten(-2, -1)
+        x_nc  = x_nci.mean(dim=-1)
+        x_no  = self.linear.forward(x_nc)
+        return x_no
+
 def get_types() -> list[type[Pooler]]:
     return [
         Identity,
         Unflatten,
+        Average2d,
     ]
 
 def get_cli_choice() -> cli.ObjectChoice:
