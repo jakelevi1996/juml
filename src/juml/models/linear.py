@@ -14,11 +14,10 @@ class LinearModel(Model):
         self._torch_module_init()
 
         embedder.set_input_shape(input_shape)
-        embed_shape = embedder.get_output_shape()
         self.embed = embedder
 
         self.layer = LinearLayer(
-            input_dim=embed_shape[-1],
+            input_dim=embedder.get_output_dim(-1),
             output_dim=output_shape[-1],
         )
 

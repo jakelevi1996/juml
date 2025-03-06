@@ -18,7 +18,7 @@ class Mlp(Model):
 
         embedder.set_input_shape(input_shape)
         self.embed = embedder
-        layer_input_dim = embedder.get_output_dim()
+        layer_input_dim = embedder.get_output_dim(-1)
 
         self.hidden_layers = torch.nn.ModuleList()
         for _ in range(num_hidden_layers):
