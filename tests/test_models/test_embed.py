@@ -1,10 +1,9 @@
 import math
 import torch
-import torch.utils.data
 from jutility import util
 import juml
 
-OUTPUT_DIR = juml.test_utils.get_output_dir("test_embed")
+OUTPUT_DIR = juml.test_utils.get_output_dir("test_models/test_embed")
 
 def test_identity():
     printer = util.Printer("test_identity", dir_name=OUTPUT_DIR)
