@@ -15,16 +15,16 @@ class LinearModel(Model):
 
         embedder.set_input_shape(input_shape)
         embed_shape = embedder.get_output_shape()
-        self._embed = embedder
+        self.embed = embedder
 
-        self._layer = LinearLayer(
+        self.layer = LinearLayer(
             input_dim=embed_shape[-1],
             output_dim=output_shape[-1],
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        x = self._embed.forward(x)
-        x = self._layer.forward(x)
+        x = self.embed.forward(x)
+        x = self.layer.forward(x)
         return x
 
     @classmethod
