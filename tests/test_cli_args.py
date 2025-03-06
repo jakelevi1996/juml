@@ -32,6 +32,10 @@ def test_cli_args():
     )
     args = parser.parse_args(arg_str.split())
 
+    assert args.get_summary() == (
+        "dLd.i13d.nte456d.ntr789d.o7d.t0.0d.x0.0mLm.eIm.pI"
+    )
+
     cli.verbose.set_printer(printer)
     with cli.verbose:
         dataset = args.init_object("dataset")
