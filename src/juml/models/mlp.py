@@ -23,7 +23,7 @@ class Mlp(Model):
         self.pool = pooler
         self.pool.set_shapes([], output_shape)
 
-        layer_input_dim = embedder.get_output_dim(-1)
+        layer_input_dim = self.embed.get_output_dim(-1)
         self.hidden_layers = torch.nn.ModuleList()
         for _ in range(num_hidden_layers):
             layer = LinearLayer(layer_input_dim, hidden_dim)
