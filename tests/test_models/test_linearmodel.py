@@ -4,7 +4,7 @@ import torch.utils.data
 from jutility import util
 import juml
 
-OUTPUT_DIR = juml.test_utils.get_output_dir("test_models/test_linear")
+OUTPUT_DIR = juml.test_utils.get_output_dir("test_models/test_linearmodel")
 
 def test_linearmodel():
     printer = util.Printer("test_linearmodel", dir_name=OUTPUT_DIR)
