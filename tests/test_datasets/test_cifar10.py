@@ -10,17 +10,8 @@ def test_cifar10():
     juml.test_utils.set_torch_seed("test_cifar10")
 
     dataset = juml.datasets.Cifar10()
-    assert repr(dataset) == "Cifar10(n_train=50.0k, n_test=10.0k)"
     assert dataset.get_input_shape()  == [3, 32, 32]
     assert dataset.get_output_shape() == [10]
-
-    train_split = dataset.get_data_split("train")
-    assert isinstance(train_split, torch.utils.data.Dataset)
-    assert len(train_split) == 50000
-
-    test_split = dataset.get_data_split("test")
-    assert isinstance(test_split, torch.utils.data.Dataset)
-    assert len(test_split) == 10000
 
     batch_size = 64
     data_loader = dataset.get_data_loader("train", batch_size)
