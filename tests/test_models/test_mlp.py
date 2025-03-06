@@ -55,3 +55,32 @@ def test_mlp_flatten():
     assert y.dtype is torch.float32
     assert y.dtype is not torch.int64
     assert list(y.shape) == [3, output_dim]
+
+def test_mlp_unflatten():
+    printer = util.Printer("test_mlp_unflatten", dir_name=OUTPUT_DIR)
+    juml.test_utils.set_torch_seed("test_mlp_unflatten")
+
+    x = torch.rand([3, 4, 5, 6])
+    t = torch.rand([3, 4, 5, 7])
+
+    pooler = juml.models.pool.Unflatten(2)
+    embedder = juml.models.embed.Flatten(2)
+    model = juml.models.Mlp(
+        input_shape=x.shape,
+        output_shape=t.shape,
+        hidden_dim=20,
+        num_hidden_layers=2,
+        embedder=embedder,
+        pooler=pooler,
+    )
+    assert pooler.get_input_shape() == [3, 4, (5 * 7)]
+    assert pooler.get_input_dim(-1) == (5 * 7)
+    assert repr(embedder)   == "Flatten(num_params=0)"
+    assert repr(pooler)     == "Unflatten(num_params=0)"
+    assert repr(model)      == "Mlp(num_params=1.8k)"
+    assert repr(model.output_layer) == "LinearLayer(num_params=735)"
+    assert list(model.output_layer.w_io.shape) == [20, 35]
+    assert list(model.output_layer.b_o.shape)  == [35]
+
+    y = model.forward(x)
+    assert list(y.shape) == [3, 4, 5, 7]
