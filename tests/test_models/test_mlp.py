@@ -20,6 +20,7 @@ def test_mlp():
         hidden_dim=13,
         num_hidden_layers=2,
         embedder=juml.models.embed.Identity(),
+        pooler=juml.models.pool.Identity(),
     )
     assert repr(model) == "Mlp(num_params=440)"
     assert model.num_params() == 440
@@ -44,6 +45,7 @@ def test_mlp_flatten():
         hidden_dim=13,
         num_hidden_layers=2,
         embedder=juml.models.embed.Flatten(num_flatten=3),
+        pooler=juml.models.pool.Identity(),
     )
     assert repr(model) == "Mlp(num_params=2.2k)"
     assert model.num_params() == 2169

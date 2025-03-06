@@ -21,6 +21,7 @@ def test_loss_metric():
         hidden_dim=13,
         num_hidden_layers=2,
         embedder=juml.models.embed.Identity(),
+        pooler=juml.models.pool.Identity(),
     )
     dataset = juml.datasets.Linear(
         input_dim=input_dim,
