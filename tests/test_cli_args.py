@@ -12,12 +12,14 @@ def test_cli_args():
         cli.ObjectChoice(
             "model",
             juml.models.LinearModel.get_cli_arg(),
+            juml.models.Mlp.get_cli_arg(),
             default="LinearModel",
             is_group=True,
         ),
         cli.ObjectChoice(
             "dataset",
             juml.datasets.Linear.get_cli_arg(),
+            juml.datasets.Mnist.get_cli_arg(),
             default="Linear",
             is_group=True,
         ),

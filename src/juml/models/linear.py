@@ -1,7 +1,7 @@
 import math
 import torch
 from jutility import cli
-from juml.models import embed
+from juml.models import embed, pool
 from juml.models.base import Model
 
 class LinearModel(Model):
@@ -10,25 +10,32 @@ class LinearModel(Model):
         input_shape: list[int],
         output_shape: list[int],
         embedder: embed.Embedder,
+        pooler: pool.Pooler,
     ):
         self._torch_module_init()
 
         embedder.set_input_shape(input_shape)
+        pooler.set_shapes([], output_shape)
         self.embed = embedder
+        self.pool  = pooler
 
         self.layer = LinearLayer(
             input_dim=embedder.get_output_dim(-1),
-            output_dim=output_shape[-1],
+            output_dim=pooler.get_input_dim(-1),
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.embed.forward(x)
         x = self.layer.forward(x)
+        x = self.pool.forward(x)
         return x
 
     @classmethod
     def get_cli_options(cls) -> list[cli.Arg]:
-        return [embed.get_cli_choice()]
+        return [
+            embed.get_cli_choice(),
+            pool.get_cli_choice(),
+        ]
 
 class LinearLayer(Model):
     def __init__(
