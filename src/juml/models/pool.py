@@ -109,6 +109,21 @@ class Attention2d(Pooler):
         x_no   = self.linear.forward(x_nc)
         return x_no
 
+class Conv2d(Pooler):
+    def __init__(self, *args, **kwargs):
+        self._torch_module_init()
+
+    def set_shapes(
+        self,
+        input_shape:  list[int],
+        output_shape: list[int],
+    ):
+        self.conv = torch.nn.Conv2d(input_shape[-3], output_shape[-1], 1)
+
+    def forward(self, x_nchw: torch.Tensor) -> torch.Tensor:
+        x_nohw = self.conv.forward(x_nchw)
+        return x_nohw
+
 def get_types() -> list[type[Pooler]]:
     return [
         Identity,
@@ -116,6 +131,7 @@ def get_types() -> list[type[Pooler]]:
         Average2d,
         Max2d,
         Attention2d,
+        Conv2d,
     ]
 
 def get_cli_choice() -> cli.ObjectChoice:
