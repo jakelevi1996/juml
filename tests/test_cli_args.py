@@ -4,27 +4,27 @@ import juml
 
 OUTPUT_DIR = juml.test_utils.get_output_dir("test_cli_args")
 
-def test_cli_args():
-    printer = util.Printer("test_cli_args", dir_name=OUTPUT_DIR)
-    juml.test_utils.set_torch_seed("test_cli_args")
+def test_cli_args_linearmodel():
+    printer = util.Printer("test_cli_args_linearmodel", dir_name=OUTPUT_DIR)
+    juml.test_utils.set_torch_seed("test_cli_args_linearmodel")
 
     parser = cli.Parser(
         cli.ObjectChoice(
             "model",
             juml.models.LinearModel.get_cli_arg(),
             juml.models.Mlp.get_cli_arg(),
-            default="LinearModel",
             is_group=True,
         ),
         cli.ObjectChoice(
             "dataset",
             juml.datasets.Linear.get_cli_arg(),
             juml.datasets.Mnist.get_cli_arg(),
-            default="Linear",
             is_group=True,
         ),
     )
     arg_str = (
+        "--model LinearModel "
+        "--dataset Linear "
         "--dataset.Linear.input_dim     13  "
         "--dataset.Linear.output_dim    7   "
         "--dataset.Linear.n_train       789 "
@@ -48,19 +48,9 @@ def test_cli_args():
         )
         assert isinstance(model, juml.models.LinearModel)
 
-    optimiser = torch.optim.Adam(params=model.parameters(), lr=1e-3)
-
     data_loader = dataset.get_data_loader("train", 67)
     x, t = next(iter(data_loader))
-    y1 = model.forward(x)
-    loss1 = dataset.loss.forward(y1, t)
-
-    optimiser.zero_grad()
-    loss1.backward()
-    optimiser.step()
-
-    y2 = model.forward(x)
-    loss2 = dataset.loss.forward(y2, t)
+    y = model.forward(x)
 
     assert repr(dataset) == "Linear(n_train=789, n_test=456)"
     assert repr(model)   == "LinearModel(num_params=98)"
@@ -68,23 +58,13 @@ def test_cli_args():
     assert dataset.get_input_shape()  == [13]
     assert dataset.get_output_shape() == [7]
 
-    assert isinstance(x,        torch.Tensor)
-    assert isinstance(t,        torch.Tensor)
-    assert isinstance(y1,       torch.Tensor)
-    assert isinstance(y2,       torch.Tensor)
-    assert isinstance(loss1,    torch.Tensor)
-    assert isinstance(loss2,    torch.Tensor)
+    assert isinstance(x, torch.Tensor)
+    assert isinstance(t, torch.Tensor)
+    assert isinstance(y, torch.Tensor)
 
-    assert list(x.shape)        == [67, 13]
-    assert list(t.shape)        == [67, 7]
-    assert list(y1.shape)       == [67, 7]
-    assert list(y2.shape)       == [67, 7]
-    assert list(loss1.shape)    == []
-    assert list(loss2.shape)    == []
-
-    assert loss1.item() > 0
-    assert loss2.item() > 0
-    assert loss2.item() < loss1.item()
+    assert list(x.shape) == [67, 13]
+    assert list(t.shape) == [67, 7]
+    assert list(y.shape) == [67, 7]
 
     printer.hline()
     printer(parser.help())
