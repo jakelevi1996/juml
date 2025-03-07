@@ -46,6 +46,12 @@ def test_sequential():
     y1 = p.forward(x)
     y2 = s.forward(y1)
 
+    assert isinstance(y1, torch.Tensor)
+    assert y1.dtype is torch.float32
+    assert y1.dtype is not torch.int64
+    assert list(y1.shape) == [3, 9, 2, 2]
+
+    assert isinstance(y2, torch.Tensor)
     assert y2.dtype is torch.float32
     assert y2.dtype is not torch.int64
     assert list(y2.shape) == list(y.shape)
