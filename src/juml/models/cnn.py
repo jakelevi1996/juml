@@ -21,7 +21,6 @@ class Cnn(Sequential):
         self.embed.set_input_shape(input_shape)
         self.pool.set_shapes([channel_dim, None, None], output_shape)
 
-        # input_dim = self.pool.get_input_dim(-3)
         input_dim = self.embed.get_output_dim(-3)
         layer = InputReluCnnLayer(input_dim, channel_dim, kernel_size)
         self.layers.append(layer)
