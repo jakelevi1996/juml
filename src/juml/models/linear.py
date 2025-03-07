@@ -3,8 +3,9 @@ import torch
 from jutility import cli
 from juml.models import embed, pool
 from juml.models.base import Model
+from juml.models.sequential import Sequential
 
-class LinearModel(Model):
+class LinearModel(Sequential):
     def __init__(
         self,
         input_shape: list[int],
@@ -12,31 +13,19 @@ class LinearModel(Model):
         embedder: embed.Embedder,
         pooler: pool.Pooler,
     ):
-        self._torch_module_init()
-
-        self.embed = embedder
+        self._init_sequential(embedder, pooler)
         self.embed.set_input_shape(input_shape)
-
-        self.pool = pooler
         self.pool.set_shapes([], output_shape)
 
-        self.layer = LinearLayer(
+        layer = LinearLayer(
             input_dim=self.embed.get_output_dim(-1),
             output_dim=self.pool.get_input_dim(-1),
         )
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        x = self.embed.forward(x)
-        x = self.layer.forward(x)
-        x = self.pool.forward(x)
-        return x
+        self.layers.append(layer)
 
     @classmethod
     def get_cli_options(cls) -> list[cli.Arg]:
-        return [
-            embed.get_cli_choice(),
-            pool.get_cli_choice(),
-        ]
+        return []
 
 class LinearLayer(Model):
     def __init__(

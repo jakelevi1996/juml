@@ -72,9 +72,12 @@ def test_linearmodel_unflatten():
     assert repr(embedder)       == "Flatten(num_params=0)"
     assert repr(pooler)         == "Unflatten(num_params=0)"
     assert repr(model)          == "LinearModel(num_params=1.1k)"
-    assert repr(model.layer)    == "LinearLayer(num_params=1.1k)"
-    assert list(model.layer.w_io.shape) == [30, 35]
-    assert list(model.layer.b_o.shape)  == [35]
+
+    [layer] = model.layers
+    assert isinstance(layer, juml.models.LinearLayer)
+    assert repr(layer) == "LinearLayer(num_params=1.1k)"
+    assert list(layer.w_io.shape) == [30, 35]
+    assert list(layer.b_o.shape)  == [35]
 
     y = model.forward(x)
     assert list(y.shape) == [3, 4, 5, 7]
