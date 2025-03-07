@@ -110,9 +110,6 @@ class Attention2d(Pooler):
         return x_no
 
 class Conv2d(Pooler):
-    def __init__(self, *args, **kwargs):
-        self._torch_module_init()
-
     def set_shapes(
         self,
         input_shape:  list[int],
