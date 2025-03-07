@@ -78,9 +78,12 @@ def test_mlp_unflatten():
     assert repr(embedder)   == "Flatten(num_params=0)"
     assert repr(pooler)     == "Unflatten(num_params=0)"
     assert repr(model)      == "Mlp(num_params=1.8k)"
-    assert repr(model.output_layer) == "LinearLayer(num_params=735)"
-    assert list(model.output_layer.w_io.shape) == [20, 35]
-    assert list(model.output_layer.b_o.shape)  == [35]
+
+    output_layer = model.layers[-1]
+    assert isinstance(output_layer, juml.models.LinearLayer)
+    assert repr(output_layer) == "LinearLayer(num_params=735)"
+    assert list(output_layer.w_io.shape) == [20, 35]
+    assert list(output_layer.b_o.shape)  == [35]
 
     y = model.forward(x)
     assert list(y.shape) == [3, 4, 5, 7]
