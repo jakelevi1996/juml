@@ -12,7 +12,8 @@ class Cnn(Sequential):
         output_shape: list[int],
         kernel_size: int,
         channel_dim: int,
-        blocks: list[int],
+        num_stages: int,
+        blocks_per_stage: int,
         stride: int,
         embedder: embed.Embedder,
         pooler: pool.Pooler,
@@ -25,15 +26,15 @@ class Cnn(Sequential):
         layer = InputReluCnnLayer(input_dim, channel_dim, kernel_size)
         self.layers.append(layer)
 
-        for b in blocks[:-1]:
-            for _ in range(b - 1):
+        for _ in range(num_stages - 1):
+            for _ in range(blocks_per_stage - 1):
                 layer = ReluCnnLayer(channel_dim, kernel_size)
                 self.layers.append(layer)
 
             layer = StridedReluCnnLayer(channel_dim, kernel_size, stride)
             self.layers.append(layer)
 
-        for _ in range(blocks[-1]):
+        for _ in range(blocks_per_stage):
             layer = ReluCnnLayer(channel_dim, kernel_size)
             self.layers.append(layer)
 
