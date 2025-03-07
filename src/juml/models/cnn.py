@@ -41,8 +41,11 @@ class Cnn(Sequential):
     @classmethod
     def get_cli_options(cls) -> list[cli.Arg]:
         return [
-            cli.Arg("hidden_dim",           type=int, default=100),
-            cli.Arg("num_hidden_layers",    type=int, default=3),
+            cli.Arg("kernel_size",      type=int, default=5),
+            cli.Arg("channel_dim",      type=int, default=64),
+            cli.Arg("num_stages",       type=int, default=3),
+            cli.Arg("blocks_per_stage", type=int, default=2),
+            cli.Arg("stride",           type=int, default=2),
         ]
 
 class ReluCnnLayer(Model):

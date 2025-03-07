@@ -90,3 +90,58 @@ def test_cli_args():
     printer(parser.help())
     printer(dataset)
     printer(model)
+
+def test_cli_args_cnn():
+    printer = util.Printer("test_cli_args_cnn", dir_name=OUTPUT_DIR)
+    juml.test_utils.set_torch_seed("test_cli_args_cnn")
+
+    parser = cli.Parser(
+        cli.ObjectChoice(
+            "model",
+            juml.models.LinearModel.get_cli_arg(),
+            juml.models.Mlp.get_cli_arg(),
+            juml.models.Cnn.get_cli_arg(),
+            is_group=True,
+        ),
+        cli.ObjectChoice(
+            "dataset",
+            juml.datasets.Linear.get_cli_arg(),
+            juml.datasets.Mnist.get_cli_arg(),
+            is_group=True,
+        ),
+    )
+    arg_str = (
+        "--model Cnn "
+        "--model.Cnn.pooler Average2d "
+        "--dataset Mnist "
+    )
+    args = parser.parse_args(arg_str.split())
+
+    assert args.get_summary() == (
+        "dMmCm.b2m.ch64m.eIm.k5m.n3m.pAVm.s2"
+    )
+
+    cli.verbose.set_printer(printer)
+    with cli.verbose:
+        dataset = args.init_object("dataset")
+        assert isinstance(dataset, juml.base.Dataset)
+
+        model = args.init_object(
+            "model",
+            input_shape=dataset.get_input_shape(),
+            output_shape=dataset.get_output_shape(),
+        )
+        assert isinstance(model, juml.base.Model)
+
+    assert repr(dataset) == "Mnist(n_train=60.0k, n_test=10.0k)"
+    assert repr(model)   == "Cnn(num_params=617.1k)"
+
+    data_loader = dataset.get_data_loader("train", 67)
+    x, t = next(iter(data_loader))
+    y = model.forward(x)
+    assert list(y.shape) == [67, 10]
+
+    printer.hline()
+    printer(parser.help())
+    printer(dataset)
+    printer(model)
