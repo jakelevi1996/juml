@@ -124,6 +124,22 @@ class Conv2d(Pooler):
         x_nohw = self.conv.forward(x_nchw)
         return x_nohw
 
+class SigmoidProduct2d(Pooler):
+    def set_shapes(
+        self,
+        input_shape:  list[int],
+        output_shape: list[int],
+    ):
+        self.conv_p = torch.nn.Conv2d(input_shape[-3], 1, 1)
+        self.conv_x = torch.nn.Conv2d(input_shape[-3], output_shape[-1], 1)
+
+    def forward(self, x_nchw: torch.Tensor) -> torch.Tensor:
+        p_n1hw = self.conv_p.forward(x_nchw)
+        p_n1hw = torch.sigmoid(p_n1hw)
+        x_nohw = self.conv_x.forward(x_nchw)
+        x_nohw = p_n1hw * x_nohw
+        return x_nohw
+
 def get_types() -> list[type[Pooler]]:
     return [
         Identity,
@@ -132,6 +148,7 @@ def get_types() -> list[type[Pooler]]:
         Max2d,
         Attention2d,
         Conv2d,
+        SigmoidProduct2d,
     ]
 
 def get_cli_choice() -> cli.ObjectChoice:
