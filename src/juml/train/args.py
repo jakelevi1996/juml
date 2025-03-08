@@ -1,7 +1,7 @@
 from jutility import cli
 from juml.models.base import Model
 from juml.datasets.base import Dataset
-from juml.train.modes.base import Trainer
+from juml.train.base import Trainer
 
 class TrainArgs:
     def __init__(

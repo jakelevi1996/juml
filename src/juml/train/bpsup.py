@@ -1,6 +1,6 @@
 import torch
 from jutility import cli, util
-from juml.train.modes.base import Trainer
+from juml.train.base import Trainer
 from juml.models.base import Model
 from juml.datasets.base import Dataset
 

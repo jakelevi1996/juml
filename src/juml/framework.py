@@ -1,9 +1,8 @@
 from jutility import cli, util
-from juml import models, datasets, commands
-from juml.train import modes
+from juml import models, datasets, train, commands
 from juml.models.base import Model
 from juml.datasets.base import Dataset
-from juml.train.modes.base import Trainer
+from juml.train.base import Trainer
 from juml.train.args import TrainArgs
 from juml.commands.base import Command
 
@@ -27,8 +26,8 @@ class Framework:
     @classmethod
     def get_trainers(cls) -> list[type[Trainer]]:
         return [
-            modes.BpSup,
-            modes.BpSupDataEfficiency,
+            train.BpSup,
+            train.BpSupDataEfficiency,
         ]
 
     @classmethod
