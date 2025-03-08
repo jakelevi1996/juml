@@ -4,7 +4,7 @@ from juml.train import modes
 from juml.models.base import Model
 from juml.datasets.base import Dataset
 from juml.train.modes.base import TrainMode
-from juml.train.trainer import TrainArgs
+from juml.train.args import TrainArgs
 from juml.commands.base import Command
 
 class Framework:

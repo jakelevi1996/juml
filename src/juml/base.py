@@ -5,6 +5,6 @@ from juml.models.pool import Pooler
 from juml.datasets.base import Dataset, DataSplit
 from juml.datasets.loss import Loss
 from juml.train.modes.base import TrainMode
-from juml.train.trainer import TrainArgs
+from juml.train.args import TrainArgs
 from juml.commands.base import Command
 from juml.framework import Framework

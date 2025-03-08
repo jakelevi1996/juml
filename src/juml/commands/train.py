@@ -1,6 +1,6 @@
 from jutility import cli
 from juml.commands.base import Command
-from juml.train.trainer import TrainArgs
+from juml.train.args import TrainArgs
 
 class Train(Command):
     def run(self, args: cli.ParsedArgs):
