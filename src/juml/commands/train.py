@@ -4,7 +4,7 @@ from juml.train.args import TrainArgs
 
 class Train(Command):
     def run(self, args: cli.ParsedArgs):
-        TrainArgs.from_args(args)
+        TrainArgs.train(args)
 
     @classmethod
     def get_args(cls, train_arg: cli.ObjectArg) -> list[cli.Arg]:

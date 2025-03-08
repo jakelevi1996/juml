@@ -17,7 +17,7 @@ class TrainArgs:
         self.trainer    = trainer
 
     @classmethod
-    def from_args(cls, args: cli.ParsedArgs):
+    def train(cls, args: cli.ParsedArgs):
         with cli.verbose:
             dataset = args.init_object(
                 "TrainArgs.dataset",
@@ -45,13 +45,6 @@ class TrainArgs:
             dataset=dataset,
         )
         assert isinstance(trainer, Trainer)
-
-        return cls(
-            args=args,
-            model=model,
-            dataset=dataset,
-            trainer=trainer,
-        )
 
     @classmethod
     def get_cli_arg(
