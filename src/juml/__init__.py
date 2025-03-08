@@ -3,5 +3,6 @@ from juml import (
     models,
     datasets,
     train,
+    commands,
     test_utils,
 )
