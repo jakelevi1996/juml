@@ -7,3 +7,4 @@ from juml.datasets.loss import Loss
 from juml.train.modes.base import TrainMode
 from juml.train.trainer import Trainer
 from juml.commands.base import Command
+from juml.framework import Framework
