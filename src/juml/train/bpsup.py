@@ -23,7 +23,7 @@ class BpSup(Trainer):
         dataset:    Dataset,
     ):
         optimiser = args.init_object(
-            "TrainArgs.trainer.BpSup.optimiser",
+            "train.trainer.BpSup.optimiser",
             params=model.parameters(),
         )
         assert isinstance(optimiser, torch.optim.Optimizer)
