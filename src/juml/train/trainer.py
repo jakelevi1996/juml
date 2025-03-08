@@ -3,7 +3,7 @@ from juml.models.base import Model
 from juml.datasets.base import Dataset
 from juml.train.modes.base import TrainMode
 
-class Trainer:
+class TrainArgs:
     def __init__(
         self,
         args:       cli.ParsedArgs,
@@ -20,26 +20,26 @@ class Trainer:
     def from_args(cls, args: cli.ParsedArgs):
         with cli.verbose:
             dataset = args.init_object(
-                "Trainer.dataset",
+                "TrainArgs.dataset",
             )
             assert isinstance(dataset, Dataset)
 
             model = args.init_object(
-                "Trainer.model",
+                "TrainArgs.model",
                 input_shape=dataset.get_input_shape(),
                 output_shape=dataset.get_output_shape(),
             )
             assert isinstance(model, Model)
 
             train_mode_type = args.get_type(
-                "Trainer.train_mode",
+                "TrainArgs.train_mode",
             )
             assert issubclass(train_mode_type, TrainMode)
 
             train_mode_type.init_sub_objects(args, model, dataset)
 
         train_mode = args.init_object(
-            "Trainer.train_mode",
+            "TrainArgs.train_mode",
             args=args,
             model=model,
             dataset=dataset,

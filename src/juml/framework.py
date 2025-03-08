@@ -4,7 +4,7 @@ from juml.train import modes
 from juml.models.base import Model
 from juml.datasets.base import Dataset
 from juml.train.modes.base import TrainMode
-from juml.train.trainer import Trainer
+from juml.train.trainer import TrainArgs
 from juml.commands.base import Command
 
 class Framework:
@@ -41,7 +41,7 @@ class Framework:
 
     @classmethod
     def get_trainer_arg(cls) -> cli.ObjectArg:
-        return Trainer.get_cli_arg(
+        return TrainArgs.get_cli_arg(
             cls.get_models(),
             cls.get_datasets(),
             cls.get_train_modes(),
