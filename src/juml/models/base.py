@@ -23,7 +23,7 @@ class Model(torch.nn.Module):
 
     @classmethod
     def get_cli_options(cls) -> list[cli.Arg]:
-        return NotImplementedError()
+        raise NotImplementedError()
 
     def __repr__(self):
         return util.format_type(
