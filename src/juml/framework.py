@@ -40,7 +40,7 @@ class Framework:
         }
 
     @classmethod
-    def get_trainer_arg(cls) -> cli.ObjectArg:
+    def get_train_arg(cls) -> cli.ObjectArg:
         return TrainArgs.get_cli_arg(
             cls.get_models(),
             cls.get_datasets(),
@@ -60,7 +60,7 @@ class Framework:
         parser = cli.Parser(
             sub_commands=cli.SubCommandGroup(
                 *[
-                    command_type.init_juml(cls.get_trainer_arg())
+                    command_type.init_juml(cls.get_train_arg())
                     for command_type in cls.get_commands()
                 ],
             ),

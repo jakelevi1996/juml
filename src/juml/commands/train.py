@@ -7,5 +7,5 @@ class Train(Command):
         TrainArgs.from_args(args)
 
     @classmethod
-    def get_args(cls, trainer_arg: cli.ObjectArg) -> list[cli.Arg]:
-        return [trainer_arg]
+    def get_args(cls, train_arg: cli.ObjectArg) -> list[cli.Arg]:
+        return [train_arg]
