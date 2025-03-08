@@ -45,6 +45,5 @@ class BpSup(TrainMode):
                     cli.Arg("weight_decay", type=float, default=0.01),
                 ),
                 default="Adam",
-                # init_requires=["params"],
             ),
         ]

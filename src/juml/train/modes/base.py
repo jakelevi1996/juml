@@ -27,7 +27,6 @@ class TrainMode:
         return cli.ObjectArg(
             cls,
             *cls.get_cli_options(),
-            # init_requires=["args", "model", "dataset"],
         )
 
     @classmethod
