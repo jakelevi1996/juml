@@ -1,7 +1,7 @@
 from jutility import cli
 from juml.models.base import Model
 from juml.datasets.base import Dataset
-from juml.train.modes.base import TrainMode
+from juml.train.modes.base import Trainer
 
 class TrainArgs:
     def __init__(
@@ -9,12 +9,12 @@ class TrainArgs:
         args:       cli.ParsedArgs,
         model:      Model,
         dataset:    Dataset,
-        train_mode: TrainMode,
+        trainer:    Trainer,
     ):
         self.args       = args
         self.model      = model
         self.dataset    = dataset
-        self.train_mode = train_mode
+        self.trainer    = trainer
 
     @classmethod
     def from_args(cls, args: cli.ParsedArgs):
@@ -31,35 +31,35 @@ class TrainArgs:
             )
             assert isinstance(model, Model)
 
-            train_mode_type = args.get_type(
-                "TrainArgs.train_mode",
+            trainer_type = args.get_type(
+                "TrainArgs.trainer",
             )
-            assert issubclass(train_mode_type, TrainMode)
+            assert issubclass(trainer_type, Trainer)
 
-            train_mode_type.init_sub_objects(args, model, dataset)
+            trainer_type.init_sub_objects(args, model, dataset)
 
-        train_mode = args.init_object(
-            "TrainArgs.train_mode",
+        trainer = args.init_object(
+            "TrainArgs.trainer",
             args=args,
             model=model,
             dataset=dataset,
         )
-        assert isinstance(train_mode, TrainMode)
+        assert isinstance(trainer, Trainer)
 
         return cls(
             args=args,
             model=model,
             dataset=dataset,
-            train_mode=train_mode,
+            trainer=trainer,
         )
 
     @classmethod
     def get_cli_arg(
         cls,
-        models:         list[type[Model]],
-        datasets:       list[type[Dataset]],
-        train_modes:    list[type[TrainMode]],
-        defaults:       dict[str, str | None],
+        models:     list[type[Model]],
+        datasets:   list[type[Dataset]],
+        trainers:   list[type[Trainer]],
+        defaults:   dict[str, str | None],
     ) -> cli.ObjectArg:
         return cli.ObjectArg(
             cls,
@@ -76,9 +76,9 @@ class TrainArgs:
                 is_group=True,
             ),
             cli.ObjectChoice(
-                "train_mode",
-                *[t.get_cli_arg() for t in train_modes],
-                default=defaults["train_mode"],
+                "trainer",
+                *[t.get_cli_arg() for t in trainers],
+                default=defaults["trainer"],
                 is_group=True,
             ),
         )

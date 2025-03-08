@@ -1,10 +1,10 @@
 import torch
 from jutility import cli, util
-from juml.train.modes.base import TrainMode
+from juml.train.modes.base import Trainer
 from juml.models.base import Model
 from juml.datasets.base import Dataset
 
-class BpSup(TrainMode):
+class BpSup(Trainer):
     def __init__(
         self,
         args:       cli.ParsedArgs,
@@ -23,7 +23,7 @@ class BpSup(TrainMode):
         dataset:    Dataset,
     ):
         optimiser = args.init_object(
-            "TrainArgs.train_mode.BpSup.optimiser",
+            "TrainArgs.trainer.BpSup.optimiser",
             params=model.parameters(),
         )
         assert isinstance(optimiser, torch.optim.Optimizer)

@@ -2,7 +2,7 @@ from jutility import cli, util
 from juml.models.base import Model
 from juml.datasets.base import Dataset
 
-class TrainMode:
+class Trainer:
     def __init__(
         self,
         args:       cli.ParsedArgs,
