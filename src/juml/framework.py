@@ -27,7 +27,6 @@ class Framework:
     def get_trainers(cls) -> list[type[Trainer]]:
         return [
             train.BpSup,
-            train.BpSupDataEfficiency,
         ]
 
     @classmethod
@@ -51,7 +50,6 @@ class Framework:
     def get_commands(cls) -> list[type[Command]]:
         return [
             commands.Train,
-            commands.Sweep,
         ]
 
     @classmethod
