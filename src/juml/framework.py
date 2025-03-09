@@ -68,8 +68,8 @@ class Framework:
         ]
 
     @classmethod
-    def run(cls, *parser_args, **parser_kwargs):
-        parser = cli.Parser(
+    def get_parser(cls) -> cli.Parser:
+        return cli.Parser(
             sub_commands=cli.SubCommandGroup(
                 *[
                     command_type.init_juml(cls.get_train_args())
@@ -77,6 +77,10 @@ class Framework:
                 ],
             ),
         )
+
+    @classmethod
+    def run(cls, *parser_args, **parser_kwargs):
+        parser = cls.get_parser()
         args = parser.parse_args(*parser_args, **parser_kwargs)
         command = args.get_command()
 
