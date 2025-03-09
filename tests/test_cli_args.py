@@ -33,7 +33,7 @@ def test_cli_args_linearmodel():
     args = parser.parse_args(arg_str.split())
 
     assert args.get_summary() == (
-        "dLd.i13d.nte456d.ntr789d.o7d.t0.0d.x0.0mLm.eIm.pI"
+        "dLdi13dnte456dntr789do7dt0.0dx0.0mLmeImpI"
     )
 
     cli.verbose.set_printer(printer)
@@ -98,7 +98,7 @@ def test_cli_args_cnn():
     args = parser.parse_args(arg_str.split())
 
     assert args.get_summary() == (
-        "dMmCm.b2m.ch64m.eIm.k5m.n3m.pAVm.s2"
+        "dMmCmb2mc64meImk5mn3mpAVms2"
     )
 
     cli.verbose.set_printer(printer)
