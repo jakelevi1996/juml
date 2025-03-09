@@ -29,15 +29,15 @@ class BpSup(Trainer):
         dataset:    Dataset,
     ):
         optimiser = args.init_object(
-            "train.trainer.BpSup.optimiser",
+            "trainer.BpSup.optimiser",
             params=model.parameters(),
         )
         assert isinstance(optimiser, torch.optim.Optimizer)
 
         scheduler = args.init_object(
-            "train.trainer.BpSup.lrs",
+            "trainer.BpSup.lrs",
             optimizer=optimiser,
-            T_max=args.get_value("train.trainer.BpSup.epochs"),
+            T_max=args.get_value("trainer.BpSup.epochs"),
         )
         assert isinstance(scheduler, torch.optim.lr_scheduler.LRScheduler)
 

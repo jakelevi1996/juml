@@ -5,10 +5,10 @@ class Command(cli.SubCommand):
         raise NotImplementedError()
 
     @classmethod
-    def init_juml(cls, train_arg: cli.ObjectArg):
+    def init_juml(cls, train_args: list[cli.Arg]):
         return cls(
             cls.get_name(),
-            *cls.get_args(train_arg),
+            *cls.get_args(train_args),
         )
 
     @classmethod
@@ -16,7 +16,7 @@ class Command(cli.SubCommand):
         return cls.__name__.lower()
 
     @classmethod
-    def get_args(cls, train_arg: cli.ObjectArg) -> list[cli.Arg]:
+    def get_args(cls, train_args: list[cli.Arg]) -> list[cli.Arg]:
         raise NotImplementedError()
 
     def __repr__(self) -> str:

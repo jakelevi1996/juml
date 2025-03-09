@@ -38,13 +38,29 @@ class Framework:
         }
 
     @classmethod
-    def get_train_arg(cls) -> cli.ObjectArg:
-        return TrainArgs.get_cli_arg(
-            cls.get_models(),
-            cls.get_datasets(),
-            cls.get_trainers(),
-            cls.get_defaults(),
-        )
+    def get_train_args(cls) -> list[cli.Arg]:
+        defaults = cls.get_defaults()
+        return [
+            cli.ObjectChoice(
+                "model",
+                *[t.get_cli_arg() for t in cls.get_models()],
+                default=defaults["model"],
+                is_group=True,
+            ),
+            cli.ObjectChoice(
+                "dataset",
+                *[t.get_cli_arg() for t in cls.get_datasets()],
+                default=defaults["dataset"],
+                is_group=True,
+            ),
+            cli.ObjectChoice(
+                "trainer",
+                *[t.get_cli_arg() for t in cls.get_trainers()],
+                default=defaults["trainer"],
+                is_group=True,
+            ),
+            cli.NoTagArg("model_name", type=str, default=None),
+        ]
 
     @classmethod
     def get_commands(cls) -> list[type[Command]]:
@@ -57,7 +73,7 @@ class Framework:
         parser = cli.Parser(
             sub_commands=cli.SubCommandGroup(
                 *[
-                    command_type.init_juml(cls.get_train_arg())
+                    command_type.init_juml(cls.get_train_args())
                     for command_type in cls.get_commands()
                 ],
             ),
