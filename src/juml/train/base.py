@@ -96,11 +96,11 @@ class Trainer:
     def get_model_name(cls, args: cli.ParsedArgs) -> str:
         model_name = args.get_value("model_name")
         if model_name is None:
-            model_name = "d%s_m%s_t%s" % tuple(
+            model_name = "d%s_m%s_t%s_s%s" % tuple(
                 a.get_value_summary() + a.get_summary()
                 for a in [
                     args.get_arg(name)
-                    for name in ["dataset", "model", "trainer"]
+                    for name in ["dataset", "model", "trainer", "seed"]
                 ]
             )
 
