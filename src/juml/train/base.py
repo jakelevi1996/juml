@@ -8,6 +8,10 @@ class Trainer:
         args:       cli.ParsedArgs,
         model:      Model,
         dataset:    Dataset,
+        seed:       int,
+        gpu:        bool,
+        devices:    list[int],
+        configs:    list[str],
         **kwargs,
     ):
         raise NotImplementedError()

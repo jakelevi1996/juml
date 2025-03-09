@@ -57,6 +57,12 @@ class Framework:
                 *[t.get_cli_arg() for t in cls.get_trainers()],
                 default=defaults["trainer"],
                 is_group=True,
+                shared_args=[
+                    cli.Arg("seed",         type=int, default=0),
+                    cli.NoTagArg("gpu",     action="store_true"),
+                    cli.NoTagArg("devices", type=int, default=[], nargs="*"),
+                    cli.NoTagArg("configs", type=str, default=[], nargs="*"),
+                ]
             ),
             cli.NoTagArg("model_name", type=str, default=None),
         ]

@@ -92,13 +92,9 @@ class BpSup(Trainer):
     @classmethod
     def get_cli_options(cls) -> list[cli.Arg]:
         return [
-            cli.Arg("seed",         type=int, default=0),
-            cli.Arg("batch_size",   type=int, default=100),
-            cli.Arg("epochs",       type=int, default=10),
-            cli.NoTagArg("gpu",          action="store_true"),
-            cli.NoTagArg("devices",      type=int, default=[], nargs="*"),
-            cli.NoTagArg("configs",      type=str, default=[], nargs="*"),
-            cli.NoTagArg("print_level",  type=int, default=0),
+            cli.Arg("batch_size",       type=int, default=100),
+            cli.Arg("epochs",           type=int, default=10),
+            cli.NoTagArg("print_level", type=int, default=0),
             cli.ObjectChoice(
                 "optimiser",
                 cli.ObjectArg(
