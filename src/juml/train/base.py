@@ -85,7 +85,7 @@ class Trainer:
 
     @classmethod
     def init_sub_objects(
-        self,
+        cls,
         args:       cli.ParsedArgs,
         model:      Model,
         dataset:    Dataset,
