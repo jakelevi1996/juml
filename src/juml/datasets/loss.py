@@ -1,6 +1,6 @@
 import torch
 import torch.utils.data
-from juml.device import device
+from juml import device
 
 class Loss(torch.nn.Module):
     def _torch_module_init(self):
@@ -26,7 +26,7 @@ class Loss(torch.nn.Module):
     ) -> float:
         metric_sum = 0
         for x, t in data_loader:
-            x, t = device([x, t], gpu)
+            x, t = device.to_device([x, t], gpu)
             y = model.forward(x)
             metric_sum += self.metric_batch(y, t)
 
