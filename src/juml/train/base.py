@@ -44,6 +44,27 @@ class Trainer:
         return trainer
 
     @classmethod
+    def apply_configs(
+        cls,
+        args:           cli.ParsedArgs,
+        config_paths:   list[str],
+        forbidden:      list[str],
+    ):
+        for cp in config_paths:
+            print("Loading config from \"%s\"" % cp)
+            config_dict = util.load_json(cp)
+            assert isinstance(config_dict, dict)
+
+            extra_keys = set(config_dict.keys()) & set(forbidden)
+            if len(extra_keys) > 0:
+                raise ValueError(
+                    "Configuration file \"%s\" contains forbidden keys %s"
+                    % (cp, extra_keys)
+                )
+
+            args.update(config_dict)
+
+    @classmethod
     def init_sub_objects(
         self,
         args:       cli.ParsedArgs,
