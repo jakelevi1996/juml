@@ -10,19 +10,23 @@ class Trainer:
         args:       cli.ParsedArgs,
         model:      Model,
         dataset:    Dataset,
-        seed:       int,
         gpu:        bool,
-        devices:    list[int],
-        configs:    list[str],
         **kwargs,
     ):
         raise NotImplementedError()
 
     @classmethod
-    def from_args(cls, args: cli.ParsedArgs) -> "Trainer":
-        cls.apply_configs(args, args.get_value("trainer.configs"))
-        device.set_visible(args.get_value("trainer.devices"))
-        torch.manual_seed( args.get_value("trainer.seed"))
+    def from_args(
+        cls,
+        args:       cli.ParsedArgs,
+        seed:       int,
+        gpu:        bool,
+        devices:    list[int],
+        configs:    list[str],
+    ) -> "Trainer":
+        cls.apply_configs(args, configs, [])
+        device.set_visible(devices)
+        torch.manual_seed(seed)
 
         with cli.verbose:
             dataset = args.init_object(
@@ -37,7 +41,7 @@ class Trainer:
             )
             assert isinstance(model, Model)
 
-        if args.get_value("trainer.gpu"):
+        if gpu:
             model.cuda()
             dataset.loss.cuda()
 
@@ -52,6 +56,7 @@ class Trainer:
             args=args,
             model=model,
             dataset=dataset,
+            gpu=gpu,
         )
         assert isinstance(trainer, Trainer)
 

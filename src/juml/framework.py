@@ -62,7 +62,7 @@ class Framework:
             cli.NoTagArg("gpu",     action="store_true"),
             cli.NoTagArg("devices", type=int, default=[], nargs="*"),
             cli.NoTagArg("configs", type=str, default=[], nargs="*"),
-            cli.NoTagArg("model_name", type=str, default=None),
+            cli.NoTagArg("model_name", type=str, default=None, is_kwarg=False),
         ]
 
     @classmethod
