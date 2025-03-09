@@ -40,7 +40,7 @@ def test_linearmodel_flatten():
     model = juml.models.LinearModel(
         input_shape=list(x.shape),
         output_shape=[output_dim],
-        embedder=juml.models.embed.Flatten(num_flatten=3),
+        embedder=juml.models.embed.Flatten(n=3),
         pooler=juml.models.pool.Identity(),
     )
     assert repr(model) == "LinearModel(num_params=1.6k)"

@@ -29,25 +29,25 @@ class Identity(Embedder):
         return x
 
 class Flatten(Embedder):
-    def __init__(self, num_flatten: int):
+    def __init__(self, n: int):
         self._torch_module_init()
-        self._num_flatten = num_flatten
+        self._n = n
 
     def set_input_shape(self, input_shape: list[int]):
         self._input_shape = input_shape
 
     def get_output_shape(self) -> list[int]:
         return [
-            *self._input_shape[:-self._num_flatten],
-            math.prod(self._input_shape[-self._num_flatten:]),
+            *self._input_shape[:-self._n],
+            math.prod(self._input_shape[-self._n:]),
         ]
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        return x.flatten(-self._num_flatten, -1)
+        return x.flatten(-self._n, -1)
 
     @classmethod
     def get_cli_options(cls) -> list[cli.Arg]:
-        return [cli.Arg("num_flatten", type=int, default=None)]
+        return [cli.Arg("n", type=int, default=None)]
 
 class CoordConv(Embedder):
     def set_input_shape(self, input_shape: list[int]):

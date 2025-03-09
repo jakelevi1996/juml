@@ -44,7 +44,7 @@ def test_mlp_flatten():
         output_shape=[output_dim],
         hidden_dim=13,
         num_hidden_layers=2,
-        embedder=juml.models.embed.Flatten(num_flatten=3),
+        embedder=juml.models.embed.Flatten(n=3),
         pooler=juml.models.pool.Identity(),
     )
     assert repr(model) == "Mlp(num_params=2.2k)"

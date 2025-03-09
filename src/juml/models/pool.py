@@ -37,18 +37,18 @@ class Identity(Pooler):
         return x
 
 class Unflatten(Pooler):
-    def __init__(self, num_unflatten: int):
+    def __init__(self, n: int):
         self._torch_module_init()
-        self._num_unflatten = num_unflatten
+        self._n = n
 
     def set_shapes(
         self,
         input_shape:  list[int],
         output_shape: list[int],
     ):
-        self._unflatten_shape = output_shape[-self._num_unflatten:]
+        self._unflatten_shape = output_shape[-self._n:]
         self._input_shape = [
-            *output_shape[:-self._num_unflatten],
+            *output_shape[:-self._n],
             math.prod(self._unflatten_shape),
         ]
 
@@ -60,7 +60,7 @@ class Unflatten(Pooler):
 
     @classmethod
     def get_cli_options(cls) -> list[cli.Arg]:
-        return [cli.Arg("num_unflatten", type=int, default=None)]
+        return [cli.Arg("n", type=int, default=None)]
 
 class Average2d(Pooler):
     def set_shapes(
