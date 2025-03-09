@@ -54,7 +54,7 @@ class BpSup(Trainer):
             table.print_last()
             lrs.step()
 
-        table.update(level=1, epoch=epochs)
+        table.update(level=2, epoch=epochs)
 
         self.save_results(args, model, table, dataset)
 
