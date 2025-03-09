@@ -8,10 +8,40 @@ class Trainer:
         args:       cli.ParsedArgs,
         model:      Model,
         dataset:    Dataset,
-        *train_args,
-        **train_kwargs,
+        **kwargs,
     ):
         raise NotImplementedError()
+
+    @classmethod
+    def from_args(cls, args: cli.ParsedArgs) -> "Trainer":
+        with cli.verbose:
+            dataset = args.init_object(
+                "dataset",
+            )
+            assert isinstance(dataset, Dataset)
+
+            model = args.init_object(
+                "model",
+                input_shape=dataset.get_input_shape(),
+                output_shape=dataset.get_output_shape(),
+            )
+            assert isinstance(model, Model)
+
+        trainer_type = args.get_type(
+            "trainer",
+        )
+        assert issubclass(trainer_type, Trainer)
+
+        trainer_type.init_sub_objects(args, model, dataset)
+        trainer = args.init_object(
+            "trainer",
+            args=args,
+            model=model,
+            dataset=dataset,
+        )
+        assert isinstance(trainer, Trainer)
+
+        return trainer
 
     @classmethod
     def init_sub_objects(

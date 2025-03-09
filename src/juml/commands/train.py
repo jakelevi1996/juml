@@ -1,10 +1,10 @@
 from jutility import cli
 from juml.commands.base import Command
-from juml.train.args import TrainArgs
+from juml.train.base import Trainer
 
 class Train(Command):
     def run(self, args: cli.ParsedArgs):
-        TrainArgs.train(args)
+        return Trainer.from_args(args)
 
     @classmethod
     def get_args(cls, train_args: list[cli.Arg]) -> list[cli.Arg]:
