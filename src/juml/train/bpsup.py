@@ -11,15 +11,15 @@ class BpSup(Trainer):
         args:           cli.ParsedArgs,
         model:          Model,
         dataset:        Dataset,
-        optimiser:      torch.optim.Optimizer,
-        lrs:            torch.optim.lr_scheduler.LRScheduler,
         seed:           int,
-        batch_size:     int,
-        epochs:         int,
         gpu:            bool,
         devices:        list[int],
         configs:        list[str],
+        batch_size:     int,
+        epochs:         int,
         print_level:    int,
+        optimiser:      torch.optim.Optimizer,
+        lrs:            torch.optim.lr_scheduler.LRScheduler,
     ):
         self.apply_configs(args, configs)
         torch.manual_seed(seed)
