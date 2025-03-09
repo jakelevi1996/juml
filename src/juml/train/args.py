@@ -74,5 +74,6 @@ class TrainArgs:
                 default=defaults["trainer"],
                 is_group=True,
             ),
+            cli.NoTagArg("model_name", type=str, default=None),
             name="train",
         )
