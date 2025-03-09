@@ -28,11 +28,12 @@ class BpSup(Trainer):
         model:      Model,
         dataset:    Dataset,
     ):
-        optimiser = args.init_object(
-            "trainer.BpSup.optimiser",
-            params=model.parameters(),
-        )
-        assert isinstance(optimiser, torch.optim.Optimizer)
+        with cli.verbose:
+            optimiser = args.init_object(
+                "trainer.BpSup.optimiser",
+                params=model.parameters(),
+            )
+            assert isinstance(optimiser, torch.optim.Optimizer)
 
         scheduler = args.init_object(
             "trainer.BpSup.lrs",
