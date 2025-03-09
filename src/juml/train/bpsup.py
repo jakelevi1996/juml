@@ -21,13 +21,6 @@ class BpSup(Trainer):
         optimiser:      torch.optim.Optimizer,
         lrs:            torch.optim.lr_scheduler.LRScheduler,
     ):
-        self.apply_configs(args, configs)
-        torch.manual_seed(seed)
-        device.set_visible(devices)
-        if gpu:
-            model.cuda()
-            dataset.loss.cuda()
-
         train_loader = dataset.get_data_loader("train", batch_size)
         test_loader  = dataset.get_data_loader("test" , batch_size)
 

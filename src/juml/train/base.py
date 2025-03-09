@@ -1,4 +1,6 @@
+import torch
 from jutility import cli, util
+from juml import device
 from juml.models.base import Model
 from juml.datasets.base import Dataset
 
@@ -18,6 +20,10 @@ class Trainer:
 
     @classmethod
     def from_args(cls, args: cli.ParsedArgs) -> "Trainer":
+        cls.apply_configs(args, args.get_value("trainer.configs"))
+        device.set_visible(args.get_value("trainer.devices"))
+        torch.manual_seed( args.get_value("trainer.seed"))
+
         with cli.verbose:
             dataset = args.init_object(
                 "dataset",
@@ -30,6 +36,10 @@ class Trainer:
                 output_shape=dataset.get_output_shape(),
             )
             assert isinstance(model, Model)
+
+        if args.get_value("trainer.gpu"):
+            model.cuda()
+            dataset.loss.cuda()
 
         trainer_type = args.get_type(
             "trainer",
