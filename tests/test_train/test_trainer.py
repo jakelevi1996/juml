@@ -65,6 +65,7 @@ def test_get_model_name():
         "--model Cnn "
         "--model.Cnn.kernel_size 42 "
         "--dataset Cifar10 "
+        "--trainer.gpu "
         "--trainer.seed 999 "
         "--trainer.BpSup.batch_size 1234 "
         "--trainer.BpSup.optimiser AdamW "
