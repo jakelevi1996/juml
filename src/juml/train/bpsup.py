@@ -1,5 +1,6 @@
 import torch
 from jutility import cli, util
+from juml import device
 from juml.train.base import Trainer
 from juml.models.base import Model
 from juml.datasets.base import Dataset
@@ -20,6 +21,52 @@ class BpSup(Trainer):
         configs:        list[str],
         print_level:    int,
     ):
+        self.apply_configs(args, configs)
+        torch.manual_seed(seed)
+        device.set_visible(devices)
+        if gpu:
+            model.cuda()
+            dataset.loss.cuda()
+
+        train_loader = dataset.get_data_loader("train", batch_size)
+        test_loader  = dataset.get_data_loader("test" , batch_size)
+
+        table = util.Table(
+            util.TimeColumn("t", width=-11),
+            util.Column("epoch"),
+            util.Column("batch"),
+            util.Column("batch_loss", ".5f", width=10),
+            util.CallbackColumn("train_metric", ".5f", width=12).set_callback(
+                lambda: dataset.loss.metric(model, train_loader, gpu),
+                level=1,
+            ),
+            util.CallbackColumn("test_metric", ".5f", width=12).set_callback(
+                lambda: dataset.loss.metric(model, test_loader, gpu),
+                level=1,
+            ),
+            print_interval=util.TimeInterval(1),
+            print_level=print_level,
+        )
+
+        for e in range(epochs):
+            table.update(level=1, epoch=e)
+            for i, (x, t) in enumerate(train_loader):
+                x, t = device.to_device([x, t], gpu)
+                y = model.forward(x)
+                loss = dataset.loss.forward(y, t)
+
+                optimiser.zero_grad()
+                loss.backward()
+                optimiser.step()
+
+                table.update(epoch=e, batch=i, batch_loss=loss.item())
+
+            table.print_last()
+            lrs.step()
+
+        table.update(level=1, epoch=epochs)
+
+        self.save_results(args, model, table, dataset)
 
     @classmethod
     def init_sub_objects(
