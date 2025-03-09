@@ -1,9 +1,9 @@
 import torch
 from jutility import cli
 from juml.datasets import loss
-from juml.datasets.base import Dataset, DataSplit
+from juml.datasets.base import DatasetFromDict, DataSplit
 
-class Linear(Dataset):
+class Linear(DatasetFromDict):
     def __init__(
         self,
         input_dim:  int,
@@ -39,9 +39,6 @@ class Linear(Dataset):
             t=t_no + torch.normal(0, t_std, t_no.shape),
             n=n,
         )
-
-    def get_data_split(self, split: str):
-        return self._split_dict[split]
 
     def get_input_shape(self) -> list[int]:
         return [self._input_dim]
