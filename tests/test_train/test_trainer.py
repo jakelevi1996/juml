@@ -62,11 +62,11 @@ def test_get_model_name():
 
     s = (
         "train "
+        "--gpu "
+        "--seed 999 "
         "--model Cnn "
         "--model.Cnn.kernel_size 42 "
         "--dataset Cifar10 "
-        "--trainer.gpu "
-        "--trainer.seed 999 "
         "--trainer.BpSup.batch_size 1234 "
         "--trainer.BpSup.optimiser AdamW "
         "--trainer.BpSup.optimiser.AdamW.weight_decay 6.789 "
