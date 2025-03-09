@@ -4,5 +4,6 @@ from juml import (
     datasets,
     train,
     commands,
+    device,
     test_utils,
 )
