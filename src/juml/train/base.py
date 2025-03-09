@@ -53,6 +53,20 @@ class Trainer:
         return
 
     @classmethod
+    def get_model_name(cls, args: cli.ParsedArgs) -> str:
+        model_name = args.get_value("model_name")
+        if model_name is None:
+            model_name = "d%s_m%s_t%s" % tuple(
+                a.get_value_summary() + a.get_summary()
+                for a in [
+                    args.get_arg(name)
+                    for name in ["dataset", "model", "trainer"]
+                ]
+            )
+
+        return model_name
+
+    @classmethod
     def get_cli_arg(cls) -> cli.ObjectArg:
         return cli.ObjectArg(
             cls,
