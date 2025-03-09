@@ -34,6 +34,13 @@ class BpSup(Trainer):
         )
         assert isinstance(optimiser, torch.optim.Optimizer)
 
+        scheduler = args.init_object(
+            "train.trainer.BpSup.lrs",
+            optimizer=optimiser,
+            T_max=args.get_value("train.trainer.BpSup.epochs"),
+        )
+        assert isinstance(scheduler, torch.optim.lr_scheduler.LRScheduler)
+
     @classmethod
     def get_cli_options(cls) -> list[cli.Arg]:
         return [
