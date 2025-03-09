@@ -29,3 +29,7 @@ def test_get_model_name():
     assert juml.base.Trainer.get_model_name(args) == (
         "dC_mCb2c64eIk42n3pIs2_tBb1234e10lCle0.0oADAMWol0.001ow6.789s999"
     )
+
+    s = "train --model_name abcdef"
+    args = parser.parse_args(s.split())
+    assert juml.base.Trainer.get_model_name(args) == "abcdef"
