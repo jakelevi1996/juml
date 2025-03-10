@@ -96,7 +96,7 @@ class Sweeper:
             arg_summaries.append(Trainer.get_model_name(args))
 
         merged_summaries = util.merge_strings(arg_summaries)
-        output_dir = os.path.join("./results/train_sweep", merged_summaries)
+        output_dir = os.path.join("results/train_sweep", merged_summaries)
         util.save_pickle(results_dict, "results_dict", output_dir)
 
         if title is None:

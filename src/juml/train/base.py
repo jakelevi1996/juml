@@ -155,7 +155,7 @@ class Trainer:
     def get_output_dir(
         cls,
         args:       cli.ParsedArgs,
-        root_dir:   str="./results/train",
+        root_dir:   str="results/train",
     ) -> str:
         model_name = cls.get_model_name(args)
         print("Model name = `%s`" % model_name)
