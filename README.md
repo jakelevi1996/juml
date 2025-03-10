@@ -1,7 +1,5 @@
-# jumly
+# juml
 
-`jumly` - a unified framework for multi-paradigm machine learning research.
+`juml` - a Judicious, Unified and extendable framework for multi-paradigm Machine Learning research, powered by [`jutility`](https://github.com/jakelevi1996/jutility) and [PyTorch](https://pytorch.org/).
 
 > *[Judicious [adjective]: having or showing reason and good judgment in making decisions](https://dictionary.cambridge.org/dictionary/english/judicious)*
-
-Short for "Jake's Utilities for Machine Learning research, using jutilitY" (because `juml` [clashed](https://stackoverflow.com/a/71490005/8477566) with [`jumi`](https://pypi.org/project/jumi/)).
