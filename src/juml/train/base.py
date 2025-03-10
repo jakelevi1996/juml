@@ -127,8 +127,14 @@ class Trainer:
             "num_params":   model.num_params(),
             "time_str":     util.time_format(time_list[-1]),
             "time":         time_list[-1],
-            "train":        train_metric,
-            "test":         test_metric,
+            "train_0":      train_metric[0],
+            "train_end":    train_metric[-1],
+            "train_max":    max(train_metric),
+            "train_min":    min(train_metric),
+            "test_0":       test_metric[0],
+            "test_end":     test_metric[-1],
+            "test_max":     max(test_metric),
+            "test_min":     min(test_metric),
         }
 
         util.save_text(cmd,         "cmd",      output_dir)
