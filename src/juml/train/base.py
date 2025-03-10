@@ -102,6 +102,7 @@ class Trainer:
         table:      util.Table,
     ):
         output_dir = cls.get_output_dir(args)
+        model_name = os.path.basename(output_dir)
 
         time_list    = table.get_data("t")
         batch_loss   = table.get_data("batch_loss")
@@ -146,6 +147,7 @@ class Trainer:
         util.save_json(metrics,     "metrics",  output_dir)
         torch.save(model.state_dict(), model_path)
         table.save_pickle("table", output_dir)
+        print("Model name = `%s`" % model_name)
         print(
             "Final metrics = %.5f (train), %.5f (test)"
             % (train_metric[-1], test_metric[-1])
@@ -157,9 +159,7 @@ class Trainer:
         args:       cli.ParsedArgs,
         root_dir:   str="results/train",
     ) -> str:
-        model_name = cls.get_model_name(args)
-        print("Model name = `%s`" % model_name)
-        return os.path.join(root_dir, model_name)
+        return os.path.join(root_dir, cls.get_model_name(args))
 
     @classmethod
     def get_model_name(cls, args: cli.ParsedArgs) -> str:
