@@ -202,21 +202,21 @@ def sweeper_subprocess(
     while True:
         try:
             args_update_dict = q.get(block=False)
-            args.update(args_update_dict)
-            for key in args_update_dict:
-                if key in train_args:
-                    train_args[key] = args_update_dict[key]
-
-            metrics_dir  = Trainer.get_output_dir(args)
-            metrics_path = os.path.join(metrics_dir, "metrics.json")
-            if (not os.path.isfile(metrics_path)) or no_cache:
-                with util.Timer(args_update_dict, hline=True):
-                    Trainer.from_args(
-                        args,
-                        devices=devices,
-                        configs=[],
-                        **train_args,
-                    )
-
         except queue.Empty:
             return
+
+        args.update(args_update_dict)
+        for key in args_update_dict:
+            if key in train_args:
+                train_args[key] = args_update_dict[key]
+
+        metrics_dir  = Trainer.get_output_dir(args)
+        metrics_path = os.path.join(metrics_dir, "metrics.json")
+        if (not os.path.isfile(metrics_path)) or no_cache:
+            with util.Timer(args_update_dict, hline=True):
+                Trainer.from_args(
+                    args,
+                    devices=devices,
+                    configs=[],
+                    **train_args,
+                )
