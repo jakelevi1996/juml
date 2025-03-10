@@ -210,6 +210,33 @@ class Trainer:
         mp.save(plot_name, output_dir)
 
     @classmethod
+    def load(cls, args: cli.ParsedArgs) -> tuple[str, Model, Dataset]:
+        model_dir = cls.get_output_dir(args)
+
+        args_path = util.get_full_path("args.json", model_dir, loading=True)
+        args_dict = util.load_json(args_path)
+        args.update(args_dict, allow_new_keys=True)
+
+        with cli.verbose:
+            dataset = args.init_object(
+                "dataset",
+            )
+            assert isinstance(dataset, Dataset)
+
+            model = args.init_object(
+                "model",
+                input_shape=dataset.get_input_shape(),
+                output_shape=dataset.get_output_shape(),
+            )
+            assert isinstance(model, Model)
+
+        model_path = util.get_full_path("model.pth", model_dir, loading=True)
+        state_dict = torch.load(model_path, map_location="cpu")
+        model.load_state_dict(state_dict)
+
+        return model_dir, model, dataset
+
+    @classmethod
     def get_cli_arg(cls) -> cli.ObjectArg:
         return cli.ObjectArg(
             cls,
