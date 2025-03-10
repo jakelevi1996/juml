@@ -9,8 +9,8 @@ class Sweeper:
     def __init__(
         self,
         args:           cli.ParsedArgs,
-        sweep_arg_name: str  | None,
-        sweep_arg_vals: list | None,
+        sweep_arg_name: str | None,
+        sweep_arg_vals: list,
         sweep_devices:  list[list[int]],
         seeds:          list[int],
         no_cache:       bool,
@@ -26,13 +26,15 @@ class Sweeper:
             dataset = args.init_object("dataset")
             assert isinstance(dataset, Dataset)
 
-        if (sweep_arg_name is not None) and (sweep_arg_vals is not None):
+        if sweep_arg_name is not None:
             update_list = [
                 {sweep_arg_name: val, "seed": seed}
                 for val  in sweep_arg_vals
                 for seed in seeds
             ]
         else:
+            sweep_arg_name = "seed"
+            sweep_arg_vals = seeds
             update_list = [
                 {"seed": seed}
                 for seed in seeds
@@ -182,7 +184,7 @@ class Sweeper:
         return cli.ObjectArg(
             cls,
             cli.Arg("sweep_arg_name",       default=None, type=str),
-            cli.JsonArg("sweep_arg_vals",   default=None, nargs="+"),
+            cli.JsonArg("sweep_arg_vals",   default=[],   nargs="+"),
             cli.JsonArg("sweep_devices",    default=[[]]),
             cli.Arg("seeds",    type=int, nargs="+", default=list(range(5))),
             cli.Arg("no_cache", action="store_true"),
