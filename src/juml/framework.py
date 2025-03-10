@@ -25,7 +25,7 @@ class Framework:
     @classmethod
     def get_trainers(cls) -> list[type[Trainer]]:
         return [
-            train.BpSup,
+            train.BpSp,
         ]
 
     @classmethod
@@ -33,7 +33,7 @@ class Framework:
         return {
             "model":    None,
             "dataset":  None,
-            "trainer":  "BpSup",
+            "trainer":  "BpSp",
         }
 
     @classmethod

@@ -67,10 +67,10 @@ def test_get_model_name():
         "--model Cnn "
         "--model.Cnn.kernel_size 42 "
         "--dataset Cifar10 "
-        "--trainer.BpSup.batch_size 1234 "
-        "--trainer.BpSup.optimiser AdamW "
-        "--trainer.BpSup.optimiser.AdamW.weight_decay 6.789 "
-        "--trainer.BpSup.lrs.CosineAnnealingLR.eta_min 0 "
+        "--trainer.BpSp.batch_size 1234 "
+        "--trainer.BpSp.optimiser AdamW "
+        "--trainer.BpSp.optimiser.AdamW.weight_decay 6.789 "
+        "--trainer.BpSp.lrs.CosineAnnealingLR.eta_min 0 "
     )
     args = parser.parse_args(s.split())
     assert juml.base.Trainer.get_model_name(args) == (

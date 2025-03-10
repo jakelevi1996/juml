@@ -5,7 +5,7 @@ from juml.train.base import Trainer
 from juml.models.base import Model
 from juml.datasets.base import Dataset
 
-class BpSup(Trainer):
+class BpSp(Trainer):
     def __init__(
         self,
         args:           cli.ParsedArgs,
@@ -67,15 +67,15 @@ class BpSup(Trainer):
     ):
         with cli.verbose:
             optimiser = args.init_object(
-                "trainer.BpSup.optimiser",
+                "trainer.BpSp.optimiser",
                 params=model.parameters(),
             )
             assert isinstance(optimiser, torch.optim.Optimizer)
 
         scheduler = args.init_object(
-            "trainer.BpSup.lrs",
+            "trainer.BpSp.lrs",
             optimizer=optimiser,
-            T_max=args.get_value("trainer.BpSup.epochs"),
+            T_max=args.get_value("trainer.BpSp.epochs"),
         )
         assert isinstance(scheduler, torch.optim.lr_scheduler.LRScheduler)
 

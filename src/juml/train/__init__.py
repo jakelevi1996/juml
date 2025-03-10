@@ -1,1 +1,1 @@
-from juml.train.bpsup import BpSup
+from juml.train.bpsup import BpSp
