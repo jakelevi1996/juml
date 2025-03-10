@@ -115,7 +115,8 @@ class Trainer:
             dataset=dataset,
             plot_name="metrics",
             output_dir=output_dir,
-            title=repr(model),
+            title="%r\n%r" % (model, dataset),
+            title_font_size=15,
         )
 
         cmd         = util.get_argv_str()
