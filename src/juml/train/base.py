@@ -155,12 +155,8 @@ class Trainer:
         )
 
     @classmethod
-    def get_output_dir(
-        cls,
-        args:       cli.ParsedArgs,
-        root_dir:   str="results/train",
-    ) -> str:
-        return os.path.join(root_dir, cls.get_model_name(args))
+    def get_output_dir(cls, args: cli.ParsedArgs) -> str:
+        return os.path.join("results/train", cls.get_model_name(args))
 
     @classmethod
     def get_model_name(cls, args: cli.ParsedArgs) -> str:
