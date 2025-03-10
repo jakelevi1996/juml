@@ -56,7 +56,7 @@ class BpSup(Trainer):
 
         table.update(level=2, epoch=epochs)
 
-        self.save_results(args, model, table, dataset)
+        self.save_results(args, model, dataset, table)
 
     @classmethod
     def init_sub_objects(

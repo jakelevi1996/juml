@@ -2,6 +2,9 @@
 
 *.txt
 *.json
+*.png
+*.pth
+*.pkl
 
 __pycache__
 *.egg-info
