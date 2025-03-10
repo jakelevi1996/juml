@@ -5,7 +5,7 @@ from juml.models import embed, pool
 from juml.models.base import Model
 from juml.models.sequential import Sequential
 
-class LinearModel(Sequential):
+class Linear(Sequential):
     def __init__(
         self,
         input_shape: list[int],

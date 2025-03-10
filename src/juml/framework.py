@@ -9,7 +9,7 @@ class Framework:
     @classmethod
     def get_models(cls) -> list[type[Model]]:
         return [
-            models.LinearModel,
+            models.Linear,
             models.Mlp,
             models.Cnn,
         ]

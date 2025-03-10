@@ -11,7 +11,7 @@ def test_cli_args_linearmodel():
     parser = cli.Parser(
         cli.ObjectChoice(
             "model",
-            juml.models.LinearModel.get_cli_arg(),
+            juml.models.Linear.get_cli_arg(),
             juml.models.Mlp.get_cli_arg(),
             is_group=True,
         ),
@@ -23,7 +23,7 @@ def test_cli_args_linearmodel():
         ),
     )
     arg_str = (
-        "--model LinearModel "
+        "--model Linear "
         "--dataset Linear "
         "--dataset.Linear.input_dim     13  "
         "--dataset.Linear.output_dim    7   "
@@ -46,14 +46,14 @@ def test_cli_args_linearmodel():
             input_shape=dataset.get_input_shape(),
             output_shape=dataset.get_output_shape(),
         )
-        assert isinstance(model, juml.models.LinearModel)
+        assert isinstance(model, juml.models.Linear)
 
     data_loader = dataset.get_data_loader("train", 67)
     x, t = next(iter(data_loader))
     y = model.forward(x)
 
     assert repr(dataset) == "Linear(n_train=789, n_test=456)"
-    assert repr(model)   == "LinearModel(num_params=98)"
+    assert repr(model)   == "Linear(num_params=98)"
 
     assert dataset.get_input_shape()  == [13]
     assert dataset.get_output_shape() == [7]
@@ -78,7 +78,7 @@ def test_cli_args_cnn():
     parser = cli.Parser(
         cli.ObjectChoice(
             "model",
-            juml.models.LinearModel.get_cli_arg(),
+            juml.models.Linear.get_cli_arg(),
             juml.models.Mlp.get_cli_arg(),
             juml.models.Cnn.get_cli_arg(),
             is_group=True,
