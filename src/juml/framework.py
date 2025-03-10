@@ -69,6 +69,7 @@ class Framework:
     def get_commands(cls) -> list[type[Command]]:
         return [
             commands.Train,
+            commands.Sweep,
             commands.PlotConfusionMatrix,
         ]
 
