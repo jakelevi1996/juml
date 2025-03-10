@@ -159,7 +159,7 @@ class Sweeper:
                 metrics_path = os.path.join(metrics_dir, "metrics.json")
                 metrics = util.load_json(metrics_path)
                 print(
-                    "```\n%s final %s metric = %.5f, "
+                    "\n%s final %s metric = %.5f, "
                     "found with `%s = %s` and `seed = %s`"
                     % (opt_type, split, metric, sweep_arg_name, val, seed)
                 )
@@ -175,7 +175,7 @@ class Sweeper:
                     )
 
                 img_path = os.path.join(metrics_dir, "metrics.png")
-                print("```\n\n![](%s)" % img_path)
+                print("\n![](%s)" % img_path)
 
     @classmethod
     def get_cli_arg(cls) -> cli.ObjectArg:
