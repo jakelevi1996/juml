@@ -84,11 +84,8 @@ class Sweeper:
         for args_update_dict in update_list:
             val = args_update_dict[sweep_arg_name]
             args.update(args_update_dict)
-            metrics_path = util.get_full_path(
-                "metrics.json",
-                Trainer.get_output_dir(args),
-                loading=True,
-            )
+            metrics_path = Trainer.get_metrics_path(args)
+            print("Loading from `%s`" % metrics_path)
             metrics = util.load_json(metrics_path)
 
             results_dict["train"].update(val, metrics["train"]["end"])
@@ -157,8 +154,7 @@ class Sweeper:
                 val, seed_ind, metric = opt_dict[opt_type]
                 seed = seeds[seed_ind]
                 args.update({sweep_arg_name: val, "seed": seed})
-                metrics_dir = Trainer.get_output_dir(args)
-                metrics_path = os.path.join(metrics_dir, "metrics.json")
+                metrics_path = Trainer.get_metrics_path(args)
                 metrics = util.load_json(metrics_path)
                 print(
                     "\n%s final %s metric = %.5f, "
@@ -166,7 +162,7 @@ class Sweeper:
                     % (opt_type, split, metric, sweep_arg_name, val, seed)
                 )
                 cf.print("Model", metrics["repr_model"])
-                cf.print("Model name", Trainer.get_model_name(args))
+                cf.print("Model name", metrics["model_name"])
                 cf.print("Training duration", metrics["time_str"])
                 for s in ["train", "test"]:
                     m = metrics[s]
@@ -176,6 +172,7 @@ class Sweeper:
                         % (m["max"], m["min"], m["end"]),
                     )
 
+                metrics_dir = os.path.dirname(metrics_path)
                 img_path = os.path.join(metrics_dir, "metrics.png")
                 print("\n![](%s)" % img_path)
 
@@ -212,8 +209,7 @@ def sweeper_subprocess(
             if key in train_args:
                 train_args[key] = args_update_dict[key]
 
-        metrics_dir  = Trainer.get_output_dir(args)
-        metrics_path = os.path.join(metrics_dir, "metrics.json")
+        metrics_path = Trainer.get_metrics_path(args)
         if (not os.path.isfile(metrics_path)) or no_cache:
             with util.Timer(args_update_dict, hline=True):
                 Trainer.from_args(

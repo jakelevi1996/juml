@@ -238,6 +238,10 @@ class Trainer:
         return model_dir, model, dataset
 
     @classmethod
+    def get_metrics_path(cls, args: cli.ParsedArgs) -> str:
+        return os.path.join(cls.get_output_dir(args), "metrics.json")
+
+    @classmethod
     def get_cli_arg(cls) -> cli.ObjectArg:
         return cli.ObjectArg(
             cls,
