@@ -85,7 +85,6 @@ class Sweeper:
             val = args_update_dict[sweep_arg_name]
             args.update(args_update_dict)
             metrics_path = Trainer.get_metrics_path(args)
-            print("Loading from `%s`" % metrics_path)
             metrics = util.load_json(metrics_path)
 
             results_dict["train"].update(val, metrics["train"]["end"])
@@ -218,3 +217,5 @@ def sweeper_subprocess(
                     configs=[],
                     **train_args,
                 )
+        else:
+            print("Found cached results `%s` -> skip" % metrics_path)
