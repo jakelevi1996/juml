@@ -20,31 +20,35 @@ class Sweeper:
         configs:        list[str],
         **train_args,
     ):
-        Trainer.apply_configs(args, configs, {sweep_arg_name})
+        Trainer.apply_configs(args, configs, list(params.keys()))
 
         with cli.verbose:
             dataset = args.init_object("dataset")
             assert isinstance(dataset, Dataset)
 
-        if sweep_arg_name is not None:
-            update_list = [
-                {sweep_arg_name: val, "seed": seed}
-                for val  in sweep_arg_vals
-                for seed in sweep_seeds
+        components_list = [[["seed", s]] for s in sweep_seeds]
+        for param_name, param_vals in params.items():
+            components_list = [
+                c + p
+                for c in components_list
+                for p in [[[param_name, v]] for v in param_vals]
             ]
-        else:
-            sweep_arg_name = "seed"
-            sweep_arg_vals = sweep_seeds
-            update_list = [
-                {"seed": seed}
-                for seed in sweep_seeds
-            ]
+
+        experiment_list = [
+            {k: v for k, v in c}
+            for c in components_list
+        ]
+        experiment_dict = {
+            util.format_dict(u): u
+            for u in experiment_list
+        }
+        results_dict = dict()
 
         mp_context = multiprocessing.get_context("spawn")
 
         q = mp_context.Queue()
-        for u in update_list:
-            q.put(u)
+        for e in experiment_list:
+            q.put(e)
 
         p_list = [
             mp_context.Process(
