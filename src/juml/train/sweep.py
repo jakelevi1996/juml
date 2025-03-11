@@ -11,7 +11,7 @@ class Sweeper:
         args:           cli.ParsedArgs,
         params:         dict[str, list],
         sweep_devices:  list[list[int]],
-        sweep_seeds:    list[int],
+        seeds:          list[int],
         target_metric:  str,
         no_cache:       bool,
         log_x:          bool,
@@ -27,7 +27,7 @@ class Sweeper:
             assert isinstance(dataset, Dataset)
 
         self.params = params
-        self.sweep_seeds = sweep_seeds
+        self.seeds = seeds
         self.target = target_metric.split(".")
         self.init_experiment_config()
         self.init_results(None)
@@ -169,7 +169,7 @@ class Sweeper:
             for opt_type in sorted(opt_dict.keys()):
                 util.hline()
                 val, seed_ind, metric = opt_dict[opt_type]
-                seed = sweep_seeds[seed_ind]
+                seed = seeds[seed_ind]
                 args.update({sweep_arg_name: val, "seed": seed})
                 metrics_path = Trainer.get_metrics_path(args)
                 metrics = util.load_json(metrics_path)
@@ -194,7 +194,7 @@ class Sweeper:
                 print("\n![](%s)" % img_path)
 
     def init_experiment_config(self):
-        components_list = [[["seed", s]] for s in self.sweep_seeds]
+        components_list = [[["seed", s]] for s in self.seeds]
         for param_name, param_vals in self.params.items():
             components_list = [
                 c + p
@@ -261,7 +261,7 @@ class Sweeper:
                 metavar="`list[list[int]]`",
             ),
             cli.Arg(
-                "sweep_seeds",
+                "seeds",
                 type=int,
                 nargs="+",
                 default=list(range(5)),
