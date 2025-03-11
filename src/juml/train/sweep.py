@@ -26,28 +26,15 @@ class Sweeper:
             dataset = args.init_object("dataset")
             assert isinstance(dataset, Dataset)
 
-        components_list = [[["seed", s]] for s in sweep_seeds]
-        for param_name, param_vals in params.items():
-            components_list = [
-                c + p
-                for c in components_list
-                for p in [[[param_name, v]] for v in param_vals]
-            ]
-
-        experiment_list = [
-            {k: v for k, v in c}
-            for c in components_list
-        ]
-        experiment_dict = {
-            util.format_dict(u): u
-            for u in experiment_list
-        }
-        results_dict = dict()
+        self.params = params
+        self.sweep_seeds = sweep_seeds
+        self.init_experiment_config()
+        self.init_results(dict())
 
         mp_context = multiprocessing.get_context("spawn")
 
         q = mp_context.Queue()
-        for e in experiment_list:
+        for e in self.experiment_list:
             q.put(e)
 
         p_list = [
@@ -196,6 +183,30 @@ class Sweeper:
                 metrics_dir = os.path.dirname(metrics_path)
                 img_path = os.path.join(metrics_dir, "metrics.png")
                 print("\n![](%s)" % img_path)
+
+    def init_experiment_config(self):
+        components_list = [[["seed", s]] for s in self.sweep_seeds]
+        for param_name, param_vals in self.params.items():
+            components_list = [
+                c + p
+                for c in components_list
+                for p in [[[param_name, v]] for v in param_vals]
+            ]
+
+        self.experiment_list = [
+            {k: v for k, v in c}
+            for c in components_list
+        ]
+        self.experiment_dict = {
+            util.format_dict(e): e
+            for e in self.experiment_list
+        }
+
+    def init_results(self, results_dict: dict[str, float]):
+        self.results_dict = results_dict
+
+    def store_result(self, arg_dict: dict, result: float):
+        self.results_dict[util.format_dict(arg_dict)] = result
 
     @classmethod
     def get_cli_arg(cls) -> cli.ObjectArg:
