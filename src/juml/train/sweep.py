@@ -15,8 +15,7 @@ class Sweeper:
         target_metric:  str,
         maximise:       bool,
         no_cache:       bool,
-        log_x:          bool,
-        title:          str | None,
+        log_x:          list[str],
         devices:        list[int],
         configs:        list[str],
         **train_args,
@@ -27,9 +26,11 @@ class Sweeper:
             dataset = args.init_object("dataset")
             assert isinstance(dataset, Dataset)
 
-        self.params = params
-        self.seeds = seeds
-        self.target = target_metric.split(".")
+        self.dataset    = dataset
+        self.params     = params
+        self.seeds      = seeds
+        self.target     = target_metric.split(".")
+        self.log_x      = log_x
         self.init_experiment_config()
         self.init_results(None)
 
@@ -63,23 +64,23 @@ class Sweeper:
         """
         Now:
 
-        - Loop over sweep arg names:
-            - Make dict[str, NoisyData]
-            - Loop over values:
-                - Store results in dict[str, NoisyData]
-            - Plot dict[str, NoisyData] in
-              results/sweep/sweep_name/arg_name.png
         - Save `results/sweep/sweep_name/results.md`, including metrics.png and
           all arg_name.png
+        - Display all experiment configs (surrounded by `hline`) before running
+        - Save dictionary of model names as JSON
+        - Rename `sweep_devices` to `devices`
+        - Use printers specific to each pid saved in self.output_dir
         """
         util.hline()
 
         self.model_names = dict()
-        for e in self.experiment_list:
-            args.update(e)
+        self.all_metrics = dict()
+        for arg_str, arg_dict in self.experiment_dict.items():
+            args.update(arg_dict)
             metrics = util.load_json(Trainer.get_metrics_path(args))
-            self.store_result(e, metrics)
-            self.model_names[util.format_dict(e)] = metrics["model_name"]
+            self.store_result(arg_str, metrics)
+            self.all_metrics[arg_str] = metrics
+            self.model_names[arg_str] = metrics["model_name"]
 
         self.name = util.merge_strings(list(self.model_names.values()))
         self.output_dir = os.path.join("results", "sweep", self.name)
@@ -103,79 +104,10 @@ class Sweeper:
             % (target_metric, best_result, self.best_arg_str, best_model_name)
         )
 
-        util.hline()
-        log_y = dataset.loss.metric_info().get("log_y", False)
-        x_index = any(
-            (not isinstance(val, int)) and (not isinstance(val, float))
-            for val in sweep_arg_vals
-        )
-        results_dict = {
-            "train":    plotting.NoisyData(log_y=log_y, x_index=x_index),
-            "test":     plotting.NoisyData(log_y=log_y, x_index=x_index),
-            "time":     plotting.NoisyData(log_y=True,  x_index=x_index),
-            "size":     plotting.NoisyData(log_y=True,  x_index=x_index),
-        }
-        arg_summaries = []
-
-        for args_update_dict in update_list:
-            val = args_update_dict[sweep_arg_name]
-            args.update(args_update_dict)
-            metrics_path = Trainer.get_metrics_path(args)
-            metrics = util.load_json(metrics_path)
-
-            results_dict["train"].update(val, metrics["train"]["end"])
-            results_dict["test" ].update(val, metrics["test" ]["end"])
-            results_dict["time" ].update(val, metrics["time" ])
-            results_dict["size" ].update(val, metrics["num_params"])
-            arg_summaries.append(Trainer.get_model_name(args))
-
-        merged_summaries = util.merge_strings(arg_summaries)
-        output_dir = os.path.join("results/train_sweep", merged_summaries)
-        util.save_pickle(results_dict, "results_dict", output_dir)
-
-        if title is None:
-            title = "%s\n%r" % (sweep_arg_name, sweep_arg_vals)
-        else:
-            title = title.replace("\\n", "\n")
-
-        mp = plotting.MultiPlot(
-            plotting.Subplot(
-                results_dict["train"].plot(),
-                **results_dict["train"].get_xtick_kwargs(),
-                **dataset.loss.metric_info(),
-                xlabel=sweep_arg_name,
-                log_x=log_x,
-                title="Train metric",
-            ),
-            plotting.Subplot(
-                results_dict["test"].plot(),
-                **results_dict["test"].get_xtick_kwargs(),
-                **dataset.loss.metric_info(),
-                xlabel=sweep_arg_name,
-                log_x=log_x,
-                title="Test metric",
-            ),
-            plotting.Subplot(
-                results_dict["time"].plot(),
-                **results_dict["time"].get_xtick_kwargs(),
-                xlabel=sweep_arg_name,
-                log_x=log_x,
-                log_y=True,
-                ylabel="Time (s)",
-                title="Time",
-            ),
-            plotting.Subplot(
-                results_dict["size"].plot(),
-                **results_dict["size"].get_xtick_kwargs(),
-                xlabel=sweep_arg_name,
-                log_x=log_x,
-                log_y=True,
-                ylabel="Number of parameters",
-                title="Number of parameters",
-            ),
-            title=title,
-        )
-        mp.save("metrics", output_dir)
+        self.best_arg_dict  = self.experiment_dict[self.best_arg_str]
+        self.plot_paths     = dict()
+        for param_name in self.params.keys():
+            self.plot_param(param_name)
 
         cf = util.ColumnFormatter("%-20s", sep=" = ")
         for split in ["train", "test"]:
@@ -238,8 +170,7 @@ class Sweeper:
 
         self.results_dict = results_dict
 
-    def store_result(self, arg_dict: dict, metrics: dict):
-        arg_str = util.format_dict(arg_dict)
+    def store_result(self, arg_str: str, metrics: dict):
         if arg_str not in self.results_dict:
             raise ValueError(
                 "Received invalid experiment %s, choose from %s"
@@ -264,6 +195,81 @@ class Sweeper:
 
         self.results_dict[arg_str] = result
 
+    def plot_param(self, param_name: str):
+        param_vals  = self.params[param_name]
+        best_val    = self.best_arg_dict[param_name]
+        best_seed   = self.best_arg_dict["seed"]
+
+        metric_info = self.dataset.loss.metric_info()
+        log_y       = metric_info.get("log_y", False)
+        log_x       = (True if (param_name in self.log_x) else False)
+
+        x_index = any(
+            (not isinstance(v, int)) and (not isinstance(v, float))
+            for v in param_vals
+        )
+        results_dict = {
+            "train":    plotting.NoisyData(log_y=log_y, x_index=x_index),
+            "test":     plotting.NoisyData(log_y=log_y, x_index=x_index),
+            "time":     plotting.NoisyData(log_y=True,  x_index=x_index),
+            "size":     plotting.NoisyData(log_y=True,  x_index=x_index),
+        }
+
+        for v in param_vals:
+            for s in self.seeds:
+                self.best_arg_dict[param_name]  = v
+                self.best_arg_dict["seed"]      = s
+                arg_str = util.format_dict(self.best_arg_dict)
+                metrics = self.all_metrics[arg_str]
+
+                results_dict["train"].update(v, metrics["train"]["min"])
+                results_dict["test" ].update(v, metrics["test" ]["min"])
+                results_dict["time" ].update(v, metrics["time" ])
+                results_dict["size" ].update(v, metrics["num_params"])
+
+        self.best_arg_dict[param_name]  = best_val
+        self.best_arg_dict["seed"]      = best_seed
+
+        mp = plotting.MultiPlot(
+            plotting.Subplot(
+                results_dict["train"].plot(),
+                **results_dict["train"].get_xtick_kwargs(),
+                **metric_info,
+                xlabel=param_name,
+                log_x=log_x,
+                title="Train metric",
+            ),
+            plotting.Subplot(
+                results_dict["test"].plot(),
+                **results_dict["test"].get_xtick_kwargs(),
+                **metric_info,
+                xlabel=param_name,
+                log_x=log_x,
+                title="Test metric",
+            ),
+            plotting.Subplot(
+                results_dict["time"].plot(),
+                **results_dict["time"].get_xtick_kwargs(),
+                xlabel=param_name,
+                log_x=log_x,
+                log_y=True,
+                ylabel="Time (s)",
+                title="Time",
+            ),
+            plotting.Subplot(
+                results_dict["size"].plot(),
+                **results_dict["size"].get_xtick_kwargs(),
+                xlabel=param_name,
+                log_x=log_x,
+                log_y=True,
+                ylabel="Number of parameters",
+                title="Number of parameters",
+            ),
+            title="%s\n%r" % (param_name, param_vals),
+        )
+        full_path = mp.save(param_name, self.output_dir)
+        self.plot_paths[param_name] = full_path
+
     @classmethod
     def get_cli_arg(cls) -> cli.ObjectArg:
         return cli.ObjectArg(
@@ -287,8 +293,7 @@ class Sweeper:
             cli.Arg("target_metric",    type=str, default="test.min"),
             cli.Arg("maximise",         action="store_true"),
             cli.Arg("no_cache",         action="store_true"),
-            cli.Arg("log_x",            action="store_true"),
-            cli.Arg("title",            type=str, default=None),
+            cli.Arg("log_x",            type=str, default=[], nargs="+"),
             is_group=True,
         )
 
