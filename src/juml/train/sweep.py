@@ -62,8 +62,6 @@ class Sweeper:
         """
         Now:
 
-        - Save results as JSON in results/sweep/sweep_name/results.json (where
-          sweep_name = merged_summaries)
         - Find experiment dict with best metric
         - Loop over sweep arg names:
             - Make dict[str, NoisyData]
@@ -74,11 +72,18 @@ class Sweeper:
         - Save `results/sweep/sweep_name/results.md`, including metrics.png and
           all arg_name.png
         """
+        util.hline()
 
+        model_names = []
         for e in self.experiment_list:
             args.update(e)
             metrics = util.load_json(Trainer.get_metrics_path(args))
             self.store_result(e, metrics)
+            model_names.append(metrics["model_name"])
+
+        self.name = util.merge_strings(model_names)
+        self.output_dir = os.path.join("results", "sweep", self.name)
+        util.save_json(self.results_dict, "results", self.output_dir)
 
         util.hline()
         log_y = dataset.loss.metric_info().get("log_y", False)
