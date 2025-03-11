@@ -40,14 +40,14 @@ class Sweeper:
                 for seed in sweep_seeds
             ]
 
-        mp_contex = multiprocessing.get_context("spawn")
+        mp_context = multiprocessing.get_context("spawn")
 
-        q = mp_contex.Queue()
+        q = mp_context.Queue()
         for u in update_list:
             q.put(u)
 
         p_list = [
-            mp_contex.Process(
+            mp_context.Process(
                 target=sweeper_subprocess,
                 kwargs={
                     "args":         args,
