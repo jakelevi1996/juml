@@ -13,6 +13,7 @@ class Sweeper:
         sweep_devices:  list[list[int]],
         seeds:          list[int],
         target_metric:  str,
+        maximise:       bool,
         no_cache:       bool,
         log_x:          bool,
         title:          str | None,
@@ -62,7 +63,6 @@ class Sweeper:
         """
         Now:
 
-        - Find experiment dict with best metric
         - Loop over sweep arg names:
             - Make dict[str, NoisyData]
             - Loop over values:
@@ -74,16 +74,34 @@ class Sweeper:
         """
         util.hline()
 
-        model_names = []
+        self.model_names = dict()
         for e in self.experiment_list:
             args.update(e)
             metrics = util.load_json(Trainer.get_metrics_path(args))
             self.store_result(e, metrics)
-            model_names.append(metrics["model_name"])
+            self.model_names[util.format_dict(e)] = metrics["model_name"]
 
-        self.name = util.merge_strings(model_names)
+        self.name = util.merge_strings(list(self.model_names.values()))
         self.output_dir = os.path.join("results", "sweep", self.name)
         util.save_json(self.results_dict, "results", self.output_dir)
+
+        self.best_arg_str = (
+            max(
+                self.results_dict.keys(),
+                key=(lambda k: self.results_dict[k]),
+            )
+            if maximise else
+            min(
+                self.results_dict.keys(),
+                key=(lambda k: self.results_dict[k]),
+            )
+        )
+        best_result = self.results_dict[self.best_arg_str]
+        best_model_name = self.model_names[self.best_arg_str]
+        print(
+            "Best `%s` metric = %.5f (%s, model_name=`%s`)"
+            % (target_metric, best_result, self.best_arg_str, best_model_name)
+        )
 
         util.hline()
         log_y = dataset.loss.metric_info().get("log_y", False)
@@ -267,6 +285,7 @@ class Sweeper:
                 default=list(range(5)),
             ),
             cli.Arg("target_metric",    type=str, default="test.min"),
+            cli.Arg("maximise",         action="store_true"),
             cli.Arg("no_cache",         action="store_true"),
             cli.Arg("log_x",            action="store_true"),
             cli.Arg("title",            type=str, default=None),
