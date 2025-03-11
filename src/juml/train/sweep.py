@@ -67,6 +67,24 @@ class Sweeper:
         for p in p_list:
             p.join()
 
+        """
+        Now:
+
+        - Loop over experiment list:
+            - Record results (according to specified target_metric)
+        - Save results as JSON in results/sweep/sweep_name/results.json (where
+          sweep_name = merged_summaries)
+        - Find experiment dict with best metric
+        - Loop over sweep arg names:
+            - Make dict[str, NoisyData]
+            - Loop over values:
+                - Store results in dict[str, NoisyData]
+            - Plot dict[str, NoisyData] in
+              results/sweep/sweep_name/arg_name.png
+        - Save `results/sweep/sweep_name/results.md`, including metrics.png and
+          all arg_name.png
+        """
+
         util.hline()
         log_y = dataset.loss.metric_info().get("log_y", False)
         x_index = any(
