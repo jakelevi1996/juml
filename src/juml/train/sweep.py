@@ -9,10 +9,10 @@ class Sweeper:
     def __init__(
         self,
         args:           cli.ParsedArgs,
-        sweep_arg_name: str | None,
-        sweep_arg_vals: list,
+        params:         dict[str, list],
         sweep_devices:  list[list[int]],
         seeds:          list[int],
+        target_metric:  str,
         no_cache:       bool,
         log_x:          bool,
         title:          str | None,
@@ -179,10 +179,10 @@ class Sweeper:
     def get_cli_arg(cls) -> cli.ObjectArg:
         return cli.ObjectArg(
             cls,
-            cli.Arg("sweep_arg_name",       default=None, type=str),
-            cli.JsonArg("sweep_arg_vals",   default=[],   nargs="+"),
+            cli.JsonArg("params",           default=dict()),
             cli.JsonArg("sweep_devices",    default=[[]]),
             cli.Arg("seeds",    type=int, nargs="+", default=list(range(5))),
+            cli.Arg("target_metric",        type=str, default="test.min"),
             cli.Arg("no_cache", action="store_true"),
             cli.Arg("log_x",    action="store_true"),
             cli.Arg("title",    type=str, default=None),
