@@ -250,8 +250,16 @@ class Sweeper:
     def get_cli_arg(cls) -> cli.ObjectArg:
         return cli.ObjectArg(
             cls,
-            cli.JsonArg("params",           default=dict()),
-            cli.JsonArg("sweep_devices",    default=[[]]),
+            cli.JsonArg(
+                "params",
+                default=dict(),
+                metavar="`dict[str, list]`",
+            ),
+            cli.JsonArg(
+                "sweep_devices",
+                default=[[]],
+                metavar="`list[list[int]]`",
+            ),
             cli.Arg(
                 "sweep_seeds",
                 type=int,
