@@ -11,7 +11,7 @@ class Sweeper:
         args:           cli.ParsedArgs,
         params:         dict[str, list],
         sweep_devices:  list[list[int]],
-        seeds:          list[int],
+        sweep_seeds:    list[int],
         target_metric:  str,
         no_cache:       bool,
         log_x:          bool,
@@ -30,14 +30,14 @@ class Sweeper:
             update_list = [
                 {sweep_arg_name: val, "seed": seed}
                 for val  in sweep_arg_vals
-                for seed in seeds
+                for seed in sweep_seeds
             ]
         else:
             sweep_arg_name = "seed"
-            sweep_arg_vals = seeds
+            sweep_arg_vals = sweep_seeds
             update_list = [
                 {"seed": seed}
-                for seed in seeds
+                for seed in sweep_seeds
             ]
 
         mp_contex = multiprocessing.get_context("spawn")
@@ -169,7 +169,7 @@ class Sweeper:
             for opt_type in sorted(opt_dict.keys()):
                 util.hline()
                 val, seed_ind, metric = opt_dict[opt_type]
-                seed = seeds[seed_ind]
+                seed = sweep_seeds[seed_ind]
                 args.update({sweep_arg_name: val, "seed": seed})
                 metrics_path = Trainer.get_metrics_path(args)
                 metrics = util.load_json(metrics_path)
@@ -199,11 +199,16 @@ class Sweeper:
             cls,
             cli.JsonArg("params",           default=dict()),
             cli.JsonArg("sweep_devices",    default=[[]]),
-            cli.Arg("seeds",    type=int, nargs="+", default=list(range(5))),
-            cli.Arg("target_metric",        type=str, default="test.min"),
-            cli.Arg("no_cache", action="store_true"),
-            cli.Arg("log_x",    action="store_true"),
-            cli.Arg("title",    type=str, default=None),
+            cli.Arg(
+                "sweep_seeds",
+                type=int,
+                nargs="+",
+                default=list(range(5)),
+            ),
+            cli.Arg("target_metric",    type=str, default="test.min"),
+            cli.Arg("no_cache",         action="store_true"),
+            cli.Arg("log_x",            action="store_true"),
+            cli.Arg("title",            type=str, default=None),
             is_group=True,
         )
 
