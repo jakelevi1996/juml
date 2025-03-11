@@ -28,6 +28,7 @@ class Sweeper:
 
         self.params = params
         self.sweep_seeds = sweep_seeds
+        self.target = target_metric.split(".")
         self.init_experiment_config()
         self.init_results(None)
 
@@ -61,8 +62,6 @@ class Sweeper:
         """
         Now:
 
-        - Loop over experiment list:
-            - Record results (according to specified target_metric)
         - Save results as JSON in results/sweep/sweep_name/results.json (where
           sweep_name = merged_summaries)
         - Find experiment dict with best metric
@@ -75,6 +74,11 @@ class Sweeper:
         - Save `results/sweep/sweep_name/results.md`, including metrics.png and
           all arg_name.png
         """
+
+        for e in self.experiment_list:
+            args.update(e)
+            metrics = util.load_json(Trainer.get_metrics_path(args))
+            self.store_result(e, metrics)
 
         util.hline()
         log_y = dataset.loss.metric_info().get("log_y", False)
@@ -211,8 +215,31 @@ class Sweeper:
 
         self.results_dict = results_dict
 
-    def store_result(self, arg_dict: dict, result: float):
-        self.results_dict[util.format_dict(arg_dict)] = result
+    def store_result(self, arg_dict: dict, metrics: dict):
+        arg_str = util.format_dict(arg_dict)
+        if arg_str not in self.results_dict:
+            raise ValueError(
+                "Received invalid experiment %s, choose from %s"
+                % (arg_str, sorted(self.results_dict.keys()))
+            )
+        if self.results_dict[arg_str] is not None:
+            raise ValueError(
+                "Experiment %s already has result %s"
+                % (arg_str, self.results_dict[arg_str])
+            )
+
+        input_metrics = metrics
+        for key in self.target:
+            metrics = metrics[key]
+
+        result = metrics
+        if not isinstance(result, float):
+            raise ValueError(
+                "Target %s in metrics %s has type %s, expected `float`"
+                % (self.target, input_metrics, type(result))
+            )
+
+        self.results_dict[arg_str] = result
 
     @classmethod
     def get_cli_arg(cls) -> cli.ObjectArg:
