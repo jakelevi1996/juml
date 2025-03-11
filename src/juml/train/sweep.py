@@ -29,7 +29,7 @@ class Sweeper:
         self.params = params
         self.sweep_seeds = sweep_seeds
         self.init_experiment_config()
-        self.init_results(dict())
+        self.init_results(None)
 
         mp_context = multiprocessing.get_context("spawn")
 
@@ -202,7 +202,13 @@ class Sweeper:
             for e in self.experiment_list
         }
 
-    def init_results(self, results_dict: dict[str, float]):
+    def init_results(self, results_dict: dict[str, float | None] | None):
+        if results_dict is None:
+            results_dict = {
+                s: None
+                for s in self.experiment_dict.keys()
+            }
+
         self.results_dict = results_dict
 
     def store_result(self, arg_dict: dict, result: float):
