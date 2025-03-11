@@ -86,8 +86,8 @@ class Framework:
 
     @classmethod
     def run(cls, *parser_args, **parser_kwargs):
-        parser = cls.get_parser()
-        args = parser.parse_args(*parser_args, **parser_kwargs)
+        parser  = cls.get_parser()
+        args    = parser.parse_args(*parser_args, **parser_kwargs)
         command = args.get_command()
 
         with util.Timer(repr(command)):
