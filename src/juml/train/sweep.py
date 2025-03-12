@@ -131,6 +131,7 @@ class Sweeper:
         )
 
         table = util.Table.key_value(width=-40, printer=md_printer)
+        table.update(key="`# experiments`", value="`%s`" % len(self))
         table.update(key="Target metric",   value="`%s`" % target_metric)
         table.update(key="Best result",     value="`%s`" % self.best_result)
         for name, metric in [
@@ -358,6 +359,9 @@ class Sweeper:
             cli.Arg("log_x",            type=str, default=[], nargs="+"),
             is_group=True,
         )
+
+    def __len__(self):
+        return len(self.experiment_list)
 
 def sweeper_subprocess(
     args:       cli.ParsedArgs,
