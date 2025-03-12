@@ -120,6 +120,13 @@ class Sweeper:
             file_ext="md",
             print_to_console=False,
         )
+        sh_printer = util.Printer(
+            "git_add",
+            dir_name=self.output_dir,
+            file_ext="sh",
+            print_to_console=False,
+        )
+
         table = util.Table.key_value(width=-40, printer=md_printer)
         table.update(key="Target metric",   value="`%s`" % target_metric)
         table.update(key="Best result",     value="`%s`" % best_result)
@@ -132,10 +139,17 @@ class Sweeper:
 
         table.update(key="`--seed`", value=self.best_arg_dict["seed"])
 
+        sh_printer("cd %s" % self.output_dir)
+        sh_printer("git add -f results.md")
+
         for rel_path in self.plot_rel_paths:
-            md_printer("\n![](%s)" % rel_path)
+            md_printer("\n![](%s)"      % rel_path)
+            sh_printer("git add -f %s"  % rel_path)
+
+        sh_printer("cd %s" % os.path.relpath(os.getcwd(), self.output_dir))
 
         md_printer.flush()
+        sh_printer.flush()
 
         cf = util.ColumnFormatter("%-20s", sep=" = ")
         for split in ["train", "test"]:
