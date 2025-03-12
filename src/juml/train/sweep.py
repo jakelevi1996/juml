@@ -222,8 +222,8 @@ class Sweeper:
                 arg_str = util.format_dict(self.best_arg_dict)
                 metrics = self.all_metrics[arg_str]
 
-                results_dict["train"].update(v, metrics["train"]["min"])
-                results_dict["test" ].update(v, metrics["test" ]["min"])
+                results_dict["train"].update(v, metrics["train"]["end"])
+                results_dict["test" ].update(v, metrics["test" ]["end"])
                 results_dict["time" ].update(v, metrics["time" ])
                 results_dict["size" ].update(v, metrics["num_params"])
 
