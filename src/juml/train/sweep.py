@@ -147,6 +147,9 @@ class Sweeper:
 
         table.update(key="`--seed`", value=self.best_arg_dict["seed"])
 
+        best_metrics_json = os.path.join(best_model_rel_dir, "metrics.json")
+        md_printer("\n[All metrics](%s)" % best_metrics_json)
+
         sh_printer("cd %s" % self.output_dir)
         sh_printer("git add -f results.md")
 
