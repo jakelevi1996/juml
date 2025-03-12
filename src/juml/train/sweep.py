@@ -147,10 +147,10 @@ class Sweeper:
             table.update(key="`--%s`" % name, value="`%s`" % val)
 
         best_metrics_json = os.path.join(best_model_rel_dir, "metrics.json")
-        md_printer("\n[All metrics](%s)" % best_metrics_json)
-
-        sh_printer("cd %s" % self.output_dir)
-        sh_printer("git add -f results.md")
+        md_printer("\n[All metrics](%s)"    % best_metrics_json)
+        sh_printer("cd %s"                  % self.output_dir)
+        sh_printer("git add -f %s"          % "results.md")
+        sh_printer("git add -f %s"          % best_metrics_json)
 
         for rel_path in self.plot_rel_paths:
             md_printer("\n![](%s)"      % rel_path)
