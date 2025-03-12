@@ -126,6 +126,7 @@ class Trainer:
         metrics     = {
             "repr_model":   repr(model),
             "model_name":   model_name,
+            "model_dir":    output_dir,
             "num_params":   model.num_params(),
             "time_str":     util.time_format(time_list[-1]),
             "time":         time_list[-1],
