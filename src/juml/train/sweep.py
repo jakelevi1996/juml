@@ -277,12 +277,18 @@ class Sweeper:
             cli.JsonArg(
                 "params",
                 default=dict(),
-                metavar="`dict[str, list]`",
+                metavar=": dict[str, list] = \"{}\"",
+                help=(
+                    "EG '{\"trainer.BpSp.epochs\":[100,200,300],"
+                    "\"trainer.BpSp.optimiser.Adam.lr\":"
+                    "[1e-5,1e-4,1e-3,1e-2]}'"
+                )
             ),
             cli.JsonArg(
                 "sweep_devices",
                 default=[[]],
-                metavar="`list[list[int]]`",
+                metavar=": list[list[int]] = \"[[]]\"",
+                help="EG \"[[1,2,3],[3,4],[5]]\" or \"[[],[],[],[],[],[]]\""
             ),
             cli.Arg(
                 "seeds",
