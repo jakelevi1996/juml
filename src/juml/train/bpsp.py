@@ -96,6 +96,12 @@ class BpSp(Trainer):
                     cli.Arg("lr",           type=float, default=0.001),
                     cli.Arg("weight_decay", type=float, default=0.01),
                 ),
+                cli.ObjectArg(
+                    torch.optim.SGD,
+                    cli.Arg("lr",           type=float, default=0.001),
+                    cli.Arg("momentum",     type=float, default=0.0),
+                    cli.Arg("weight_decay", type=float, default=0.0),
+                ),
                 default="Adam",
             ),
             cli.ObjectChoice(
