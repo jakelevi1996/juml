@@ -290,7 +290,7 @@ class Sweeper:
                 **metric_info,
                 xlabel=param_name,
                 log_x=log_x,
-                title="Train metric",
+                title="Final train metric",
             ),
             plotting.Subplot(
                 results_dict["test"].plot(),
@@ -298,7 +298,7 @@ class Sweeper:
                 **metric_info,
                 xlabel=param_name,
                 log_x=log_x,
-                title="Test metric",
+                title="Final test metric",
             ),
             plotting.Subplot(
                 results_dict["time"].plot(),
