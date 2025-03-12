@@ -12,6 +12,7 @@ class Trainer:
         model:      Model,
         dataset:    Dataset,
         gpu:        bool,
+        table:      util.Table,
         **kwargs,
     ):
         raise NotImplementedError()
@@ -19,11 +20,12 @@ class Trainer:
     @classmethod
     def from_args(
         cls,
-        args:       cli.ParsedArgs,
-        seed:       int,
-        gpu:        bool,
-        devices:    list[int],
-        configs:    list[str],
+        args:           cli.ParsedArgs,
+        seed:           int,
+        gpu:            bool,
+        devices:        list[int],
+        configs:        list[str],
+        print_level:    int,
     ) -> "Trainer":
         cls.apply_configs(args, configs, [])
         device.set_visible(devices)
@@ -58,6 +60,11 @@ class Trainer:
             model=model,
             dataset=dataset,
             gpu=gpu,
+            table=util.Table(
+                *trainer_type.get_table_columns(),
+                print_interval=util.TimeInterval(1),
+                print_level=print_level,
+            ),
         )
         assert isinstance(trainer, Trainer)
 
@@ -247,6 +254,10 @@ class Trainer:
     @classmethod
     def get_metrics_path(cls, args: cli.ParsedArgs) -> str:
         return os.path.join(cls.get_output_dir(args), "metrics.json")
+
+    @classmethod
+    def get_table_columns(cls) -> list[util.Column]:
+        raise NotImplementedError()
 
     @classmethod
     def get_cli_arg(cls) -> cli.ObjectArg:

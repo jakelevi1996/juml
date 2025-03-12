@@ -12,30 +12,22 @@ class BpSp(Trainer):
         model:          Model,
         dataset:        Dataset,
         gpu:            bool,
+        table:          util.Table,
         batch_size:     int,
         epochs:         int,
-        print_level:    int,
         optimiser:      torch.optim.Optimizer,
         lrs:            torch.optim.lr_scheduler.LRScheduler,
     ):
         train_loader = dataset.get_data_loader("train", batch_size)
         test_loader  = dataset.get_data_loader("test" , batch_size)
 
-        table = util.Table(
-            util.TimeColumn("t", width=-11),
-            util.Column("epoch"),
-            util.Column("batch"),
-            util.Column("batch_loss", ".5f", width=10),
-            util.CallbackColumn("train_metric", ".5f", width=12).set_callback(
-                lambda: dataset.loss.metric(model, train_loader, gpu),
-                level=1,
-            ),
-            util.CallbackColumn("test_metric", ".5f", width=12).set_callback(
-                lambda: dataset.loss.metric(model, test_loader, gpu),
-                level=1,
-            ),
-            print_interval=util.TimeInterval(1),
-            print_level=print_level,
+        table.get_column("train_metric").set_callback(
+            lambda: dataset.loss.metric(model, train_loader, gpu),
+            level=1,
+        )
+        table.get_column("test_metric").set_callback(
+            lambda: dataset.loss.metric(model, test_loader, gpu),
+            level=1,
         )
 
         for e in range(epochs):
@@ -80,11 +72,21 @@ class BpSp(Trainer):
         assert isinstance(scheduler, torch.optim.lr_scheduler.LRScheduler)
 
     @classmethod
+    def get_table_columns(cls) -> list[util.Column]:
+        return [
+            util.TimeColumn("t"),
+            util.Column("epoch"),
+            util.Column("batch"),
+            util.Column("batch_loss", ".5f", width=10),
+            util.CallbackColumn("train_metric", ".5f", width=12),
+            util.CallbackColumn("test_metric",  ".5f", width=12),
+        ]
+
+    @classmethod
     def get_cli_options(cls) -> list[cli.Arg]:
         return [
-            cli.Arg("batch_size",       type=int, default=100),
-            cli.Arg("epochs",           type=int, default=10),
-            cli.NoTagArg("print_level", type=int, default=0),
+            cli.Arg("batch_size",   type=int, default=100),
+            cli.Arg("epochs",       type=int, default=10),
             cli.ObjectChoice(
                 "optimiser",
                 cli.ObjectArg(

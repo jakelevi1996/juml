@@ -63,6 +63,7 @@ class Framework:
             cli.Arg("devices",      type=int, default=[],   nargs="*"),
             cli.Arg("configs",      type=str, default=[],   nargs="*"),
             cli.Arg("model_name",   type=str, default=None, is_kwarg=False),
+            cli.Arg("print_level",  type=int, default=0),
         ]
 
     @classmethod
