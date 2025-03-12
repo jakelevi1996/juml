@@ -142,6 +142,12 @@ class Trainer:
                 "min":      min(test_metric),
             },
         }
+        kw = {
+            "item_fmt":     "%s = %8.5f",
+            "key_order":    ["start", "end", "max", "min"],
+        }
+        metrics["train_summary"] = util.format_dict(metrics["train"], **kw)
+        metrics[ "test_summary"] = util.format_dict(metrics["test" ], **kw)
 
         util.save_text(cmd,         "cmd",      output_dir)
         util.save_json(arg_dict,    "args",     output_dir)

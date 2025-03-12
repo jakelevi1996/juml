@@ -135,6 +135,8 @@ class Sweeper:
         for name, metric in [
             ("Model",                   "repr_model"),
             ("Model name",              "model_name"),
+            ("Train metrics",           "train_summary"),
+            ("Test metrics",            "test_summary"),
             ("Training duration",       "time_str"),
             ("Number of parameters",    "num_params"),
         ]:
