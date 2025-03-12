@@ -143,13 +143,8 @@ class Sweeper:
         ]:
             table.update(key=name, value="`%s`" % self.best_metrics[metric])
 
-        for param_name in self.params.keys():
-            table.update(
-                key="`--%s`" % param_name,
-                value=self.best_arg_dict[param_name],
-            )
-
-        table.update(key="`--seed`", value=self.best_arg_dict["seed"])
+        for name, val in self.best_arg_dict.items():
+            table.update(key="`--%s`" % name, value="`%s`" % val)
 
         best_metrics_json = os.path.join(best_model_rel_dir, "metrics.json")
         md_printer("\n[All metrics](%s)" % best_metrics_json)
