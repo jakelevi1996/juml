@@ -88,9 +88,10 @@ class Sweeper:
 
         self.name = util.merge_strings(list(self.model_names.values()))
         self.output_dir = os.path.join("results", "sweep", self.name)
-        util.save_json(self.results_dict,   target_metric, self.output_dir)
-        util.save_json(self.model_names,    "model_names", self.output_dir)
-        util.save_text(util.get_argv_str(), "cmd", self.output_dir)
+
+        util.save_json(self.results_dict,   target_metric,  self.output_dir)
+        util.save_json(self.model_names,    "model_names",  self.output_dir)
+        util.save_text(util.get_argv_str(), "cmd",          self.output_dir)
 
         self.best_arg_str = (
             max(
