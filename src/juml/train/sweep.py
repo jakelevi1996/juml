@@ -102,11 +102,15 @@ class Sweeper:
                 key=(lambda k: self.results_dict[k]),
             )
         )
-        best_result = self.results_dict[self.best_arg_str]
-        best_model_name = self.model_names[self.best_arg_str]
+
+        best_result         = self.results_dict[self.best_arg_str]
+        best_model_name     = self.model_names[self.best_arg_str]
+        best_model_dir      = self.all_metrics[self.best_arg_str]["model_dir"]
+        best_model_rel_dir  = os.path.relpath(best_model_dir, self.output_dir)
+        best_metrics_png    = os.path.join(best_model_rel_dir, "metrics.png")
 
         self.best_arg_dict  = self.experiment_dict[self.best_arg_str]
-        self.plot_paths     = []
+        self.plot_rel_paths = [best_metrics_png]
         for param_name in self.params.keys():
             self.plot_param(param_name)
 
@@ -128,8 +132,7 @@ class Sweeper:
 
         table.update(key="`--seed`", value=self.best_arg_dict["seed"])
 
-        for full_path in self.plot_paths:
-            rel_path = os.path.relpath(full_path, self.output_dir)
+        for rel_path in self.plot_rel_paths:
             md_printer("\n![](%s)" % rel_path)
 
         md_printer.flush()
@@ -293,7 +296,9 @@ class Sweeper:
             title="%s\n%r" % (param_name, param_vals),
         )
         full_path = mp.save(param_name, self.output_dir)
-        self.plot_paths.append(full_path)
+
+        rel_path = os.path.relpath(full_path, self.output_dir)
+        self.plot_rel_paths.append(rel_path)
 
     @classmethod
     def get_cli_arg(cls) -> cli.ObjectArg:
