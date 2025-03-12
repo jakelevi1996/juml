@@ -103,14 +103,15 @@ class Sweeper:
             )
         )
 
-        best_result         = self.results_dict[self.best_arg_str]
-        best_model_name     = self.model_names[self.best_arg_str]
-        best_model_dir      = self.all_metrics[self.best_arg_str]["model_dir"]
+        self.best_result    = self.results_dict     [self.best_arg_str]
+        self.best_metrics   = self.all_metrics      [self.best_arg_str]
+        self.best_arg_dict  = self.experiment_dict  [self.best_arg_str]
+
+        best_model_dir      = self.best_metrics["model_dir"]
         best_model_rel_dir  = os.path.relpath(best_model_dir, self.output_dir)
         best_metrics_png    = os.path.join(best_model_rel_dir, "metrics.png")
-
-        self.best_arg_dict  = self.experiment_dict[self.best_arg_str]
         self.plot_rel_paths = [best_metrics_png]
+
         for param_name in self.params.keys():
             self.plot_param(param_name)
 
@@ -129,8 +130,15 @@ class Sweeper:
 
         table = util.Table.key_value(width=-40, printer=md_printer)
         table.update(key="Target metric",   value="`%s`" % target_metric)
-        table.update(key="Best result",     value="`%s`" % best_result)
-        table.update(key="Model name",      value="`%s`" % best_model_name)
+        table.update(key="Best result",     value="`%s`" % self.best_result)
+        for name, metric in [
+            ("Model",                   "repr_model"),
+            ("Model name",              "model_name"),
+            ("Training duration",       "time_str"),
+            ("Number of parameters",    "num_params"),
+        ]:
+            table.update(key=name, value="`%s`" % self.best_metrics[metric])
+
         for param_name in self.params.keys():
             table.update(
                 key="`--%s`" % param_name,
