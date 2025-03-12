@@ -69,6 +69,11 @@ class Sweeper:
         - Display all experiment configs (surrounded by `hline`) before running
         - Rename `sweep_devices` to `devices`
         - Use printers specific to each pid saved in self.output_dir
+        - Display details of best seed, and also mean/std of the same config
+          across random seeds
+        - Add `Profile` command
+        - Rename Linear classes to LinearModel and LinearDataset, and rename
+          LinearLayer to Linear
         """
         util.hline()
 
@@ -99,15 +104,35 @@ class Sweeper:
         )
         best_result = self.results_dict[self.best_arg_str]
         best_model_name = self.model_names[self.best_arg_str]
-        print(
-            "Best `%s` metric = %.5f (%s, model_name=`%s`)"
-            % (target_metric, best_result, self.best_arg_str, best_model_name)
-        )
 
         self.best_arg_dict  = self.experiment_dict[self.best_arg_str]
-        self.plot_paths     = dict()
+        self.plot_paths     = []
         for param_name in self.params.keys():
             self.plot_param(param_name)
+
+        md_printer = util.Printer(
+            "results",
+            dir_name=self.output_dir,
+            file_ext="md",
+            print_to_console=False,
+        )
+        table = util.Table.key_value(width=-40, printer=md_printer)
+        table.update(key="Target metric",   value="`%s`" % target_metric)
+        table.update(key="Best result",     value="`%s`" % best_result)
+        table.update(key="Model name",      value="`%s`" % best_model_name)
+        for param_name in self.params.keys():
+            table.update(
+                key="`--%s`" % param_name,
+                value=self.best_arg_dict[param_name],
+            )
+
+        table.update(key="`--seed`", value=self.best_arg_dict["seed"])
+
+        for full_path in self.plot_paths:
+            rel_path = os.path.relpath(full_path, self.output_dir)
+            md_printer("\n![](%s)" % rel_path)
+
+        md_printer.flush()
 
         cf = util.ColumnFormatter("%-20s", sep=" = ")
         for split in ["train", "test"]:
@@ -268,7 +293,7 @@ class Sweeper:
             title="%s\n%r" % (param_name, param_vals),
         )
         full_path = mp.save(param_name, self.output_dir)
-        self.plot_paths[param_name] = full_path
+        self.plot_paths.append(full_path)
 
     @classmethod
     def get_cli_arg(cls) -> cli.ObjectArg:
