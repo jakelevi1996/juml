@@ -316,6 +316,8 @@ class Sweeper:
                 title="Number of parameters",
             ),
             title="%s\n%r" % (param_name, param_vals),
+            title_font_size=15,
+            figsize=[10, 8],
         )
         full_path = mp.save(param_name, self.output_dir)
 
