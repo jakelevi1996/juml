@@ -117,7 +117,6 @@ class Trainer:
             plot_name="metrics",
             output_dir=output_dir,
             title="%r\n%r" % (model, dataset),
-            title_font_size=15,
         )
 
         cmd         = util.get_argv_str()
@@ -188,8 +187,9 @@ class Trainer:
         output_dir:     str,
         **kwargs,
     ):
-        kwargs.setdefault("title", plot_name)
-        kwargs.setdefault("figsize", [10, 4])
+        kwargs.setdefault("title",              plot_name)
+        kwargs.setdefault("figsize",            [10, 4])
+        kwargs.setdefault("title_font_size",    15)
 
         train_label = "Train (final = %.5f)" % train_metric[-1]
         test_label  =  "Test (final = %.5f)" %  test_metric[-1]
