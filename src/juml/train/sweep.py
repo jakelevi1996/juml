@@ -135,18 +135,6 @@ class Sweeper:
             seed_result  = self.results_dict[seed_arg_str]
             seeds_results_list.append(seed_result)
 
-        self.best_arg_dict["seed"] = best_seed
-        mean_config = statistics.mean(seeds_results_list)
-        mean_all    = statistics.mean(self.results_dict.values())
-        table.update(k="Mean (best params)",    v="`%s`" % mean_config)
-        table.update(k="Mean (all)",            v="`%s`" % mean_all)
-
-        if len(seeds) >= 2:
-            std_config  = statistics.stdev(seeds_results_list)
-            std_all     = statistics.stdev(self.results_dict.values())
-            table.update(k="STD (best params)", v="`%s`" %  std_config)
-            table.update(k="STD (all)",         v="`%s`" %  std_all)
-
         for name, metric in [
             ("Model",                   "repr_model"),
             ("Model name",              "model_name"),
@@ -159,6 +147,18 @@ class Sweeper:
 
         for name, val in self.best_arg_dict.items():
             table.update(k="`--%s`" % name, v="`%s`" % val)
+
+        self.best_arg_dict["seed"] = best_seed
+        mean_config = statistics.mean(seeds_results_list)
+        mean_all    = statistics.mean(self.results_dict.values())
+        table.update(k="Mean (best params)",    v="`%s`" % mean_config)
+        table.update(k="Mean (all)",            v="`%s`" % mean_all)
+
+        if len(seeds) >= 2:
+            std_config  = statistics.stdev(seeds_results_list)
+            std_all     = statistics.stdev(self.results_dict.values())
+            table.update(k="STD (best params)", v="`%s`" %  std_config)
+            table.update(k="STD (all)",         v="`%s`" %  std_all)
 
         md.heading("Sweep parameters and seeds")
         table = util.Table.key_value(md)
