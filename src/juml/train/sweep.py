@@ -385,6 +385,7 @@ def sweeper_subprocess(
         dir_name=output_dir,
         print_to_console=False,
     )
+    printer("Devices = %s" % devices)
     while True:
         try:
             args_update_dict = q.get(block=False)
