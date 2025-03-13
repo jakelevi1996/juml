@@ -1,6 +1,7 @@
 import os
 import multiprocessing
 import queue
+import statistics
 from jutility import plotting, util, cli
 from juml.datasets.base import Dataset
 from juml.train.base import Trainer
@@ -83,8 +84,6 @@ class Sweeper:
         """
         Now:
 
-        - Display details of best seed, and also mean/std of the same config
-          across random seeds
         - Add `Profile` command
         - Rename Linear classes to LinearModel and LinearDataset, and rename
           LinearLayer to Linear
@@ -142,6 +141,28 @@ class Sweeper:
         table.update(k="`# experiments`",   v="`%s`" % len(self))
         table.update(k="Target metric",     v="`%s`" % target_metric)
         table.update(k="Best result",       v="`%s`" % self.best_result)
+        table.update(k="Best config",       v="`%s`" % self.best_arg_str)
+
+        best_seed = self.best_arg_dict["seed"]
+        seeds_results_list = []
+        for s in seeds:
+            self.best_arg_dict["seed"] = s
+            seed_arg_str = util.format_dict(self.best_arg_dict)
+            seed_result  = self.results_dict[seed_arg_str]
+            seeds_results_list.append(seed_result)
+
+        self.best_arg_dict["seed"] = best_seed
+        mean_config = statistics.mean(seeds_results_list)
+        mean_all    = statistics.mean(self.results_dict.values())
+        table.update(k="Mean (best config)",    v="`%s`" % mean_config)
+        table.update(k="Mean (all)",            v="`%s`" % mean_all)
+
+        if len(seeds) >= 2:
+            std_config  = statistics.stdev(seeds_results_list)
+            std_all     = statistics.stdev(self.results_dict.values())
+            table.update(k="STD (best config)", v="`%s`" %  std_config)
+            table.update(k="STD (all)",         v="`%s`" %  std_all)
+
         for name, metric in [
             ("Model",                   "repr_model"),
             ("Model name",              "model_name"),
