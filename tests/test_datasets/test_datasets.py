@@ -15,7 +15,7 @@ def test_get_data_loader():
     n_train     = 200
     n_test      = 100
 
-    dataset = juml.datasets.Linear(
+    dataset = juml.datasets.LinearDataset(
         input_dim=input_dim,
         output_dim=output_dim,
         n_train=n_train,
@@ -70,7 +70,7 @@ def test_get_subset_loader():
     n_train     = 200
     n_test      = 100
 
-    dataset = juml.datasets.Linear(
+    dataset = juml.datasets.LinearDataset(
         input_dim=input_dim,
         output_dim=output_dim,
         n_train=n_train,

@@ -15,7 +15,7 @@ def test_linear():
     n_test      = 27
     batch_size  = 17
 
-    dataset = juml.datasets.Linear(
+    dataset = juml.datasets.LinearDataset(
         input_dim=input_dim,
         output_dim=output_dim,
         n_train=n_train,
@@ -23,7 +23,7 @@ def test_linear():
         x_std=0.1,
         t_std=0.2,
     )
-    assert repr(dataset) == "Linear(n_train=23, n_test=27)"
+    assert repr(dataset) == "LinearDataset(n_train=23, n_test=27)"
     assert dataset.get_input_shape()  == [input_dim ]
     assert dataset.get_output_shape() == [output_dim]
 

@@ -23,7 +23,7 @@ def test_loss_metric():
         embedder=juml.models.embed.Identity(),
         pooler=juml.models.pool.Identity(),
     )
-    dataset = juml.datasets.Linear(
+    dataset = juml.datasets.LinearDataset(
         input_dim=input_dim,
         output_dim=output_dim,
         n_train=n_train,

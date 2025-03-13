@@ -17,7 +17,7 @@ class Framework:
     @classmethod
     def get_datasets(cls) -> list[type[Dataset]]:
         return [
-            datasets.Linear,
+            datasets.LinearDataset,
             datasets.Mnist,
             datasets.Cifar10,
         ]

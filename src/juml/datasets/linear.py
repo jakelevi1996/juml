@@ -3,7 +3,7 @@ from jutility import cli
 from juml.datasets import loss
 from juml.datasets.base import DatasetFromDict, DataSplit
 
-class Linear(DatasetFromDict):
+class LinearDataset(DatasetFromDict):
     def __init__(
         self,
         input_dim:  int,

@@ -17,18 +17,18 @@ def test_cli_args_linearmodel():
         ),
         cli.ObjectChoice(
             "dataset",
-            juml.datasets.Linear.get_cli_arg(),
+            juml.datasets.LinearDataset.get_cli_arg(),
             juml.datasets.Mnist.get_cli_arg(),
             is_group=True,
         ),
     )
     arg_str = (
         "--model LinearModel "
-        "--dataset Linear "
-        "--dataset.Linear.input_dim     13  "
-        "--dataset.Linear.output_dim    7   "
-        "--dataset.Linear.n_train       789 "
-        "--dataset.Linear.n_test        456 "
+        "--dataset LinearDataset "
+        "--dataset.LinearDataset.input_dim     13  "
+        "--dataset.LinearDataset.output_dim    7   "
+        "--dataset.LinearDataset.n_train       789 "
+        "--dataset.LinearDataset.n_test        456 "
     )
     args = parser.parse_args(arg_str.split())
 
@@ -39,7 +39,7 @@ def test_cli_args_linearmodel():
     cli.verbose.set_printer(printer)
     with cli.verbose:
         dataset = args.init_object("dataset")
-        assert isinstance(dataset, juml.datasets.Linear)
+        assert isinstance(dataset, juml.datasets.LinearDataset)
 
         model = args.init_object(
             "model",
@@ -52,7 +52,7 @@ def test_cli_args_linearmodel():
     x, t = next(iter(data_loader))
     y = model.forward(x)
 
-    assert repr(dataset) == "Linear(n_train=789, n_test=456)"
+    assert repr(dataset) == "LinearDataset(n_train=789, n_test=456)"
     assert repr(model)   == "LinearModel(num_params=98)"
 
     assert dataset.get_input_shape()  == [13]
@@ -85,7 +85,7 @@ def test_cli_args_cnn():
         ),
         cli.ObjectChoice(
             "dataset",
-            juml.datasets.Linear.get_cli_arg(),
+            juml.datasets.LinearDataset.get_cli_arg(),
             juml.datasets.Mnist.get_cli_arg(),
             is_group=True,
         ),
