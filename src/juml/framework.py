@@ -71,6 +71,7 @@ class Framework:
         return [
             commands.Train,
             commands.Sweep,
+            commands.Profile,
             commands.PlotConfusionMatrix,
         ]
 

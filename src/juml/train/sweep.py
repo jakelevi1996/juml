@@ -84,7 +84,6 @@ class Sweeper:
         """
         Now:
 
-        - Add `Profile` command
         - Rename Linear classes to LinearModel and LinearDataset, and rename
           LinearLayer to Linear
         """
