@@ -32,9 +32,7 @@ class Trainer:
         torch.manual_seed(seed)
 
         with cli.verbose:
-            dataset = args.init_object(
-                "dataset",
-            )
+            dataset = args.init_object("dataset")
             assert isinstance(dataset, Dataset)
 
             model = args.init_object(
@@ -49,12 +47,10 @@ class Trainer:
             model.cuda()
             dataset.loss.cuda()
 
-        trainer_type = args.get_type(
-            "trainer",
-        )
+        trainer_type = args.get_type("trainer")
         assert issubclass(trainer_type, Trainer)
-
         trainer_type.init_sub_objects(args, model, dataset)
+
         trainer = args.init_object(
             "trainer",
             args=args,
@@ -235,9 +231,7 @@ class Trainer:
         args.update(args_dict, allow_new_keys=True)
 
         with cli.verbose:
-            dataset = args.init_object(
-                "dataset",
-            )
+            dataset = args.init_object("dataset")
             assert isinstance(dataset, Dataset)
 
             model = args.init_object(
