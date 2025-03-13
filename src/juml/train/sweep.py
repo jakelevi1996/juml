@@ -135,7 +135,7 @@ class Sweeper:
         table.update(k="`# experiments`",   v="`%s`" % len(self))
         table.update(k="Target metric",     v="`%s`" % target_metric)
         table.update(k="Best result",       v="`%s`" % self.best_result)
-        table.update(k="Best config",       v="`%s`" % self.best_arg_str)
+        table.update(k="Best params/seed",  v="`%s`" % self.best_arg_str)
 
         best_seed = self.best_arg_dict["seed"]
         seeds_results_list = []
@@ -148,13 +148,13 @@ class Sweeper:
         self.best_arg_dict["seed"] = best_seed
         mean_config = statistics.mean(seeds_results_list)
         mean_all    = statistics.mean(self.results_dict.values())
-        table.update(k="Mean (best config)",    v="`%s`" % mean_config)
+        table.update(k="Mean (best params)",    v="`%s`" % mean_config)
         table.update(k="Mean (all)",            v="`%s`" % mean_all)
 
         if len(seeds) >= 2:
             std_config  = statistics.stdev(seeds_results_list)
             std_all     = statistics.stdev(self.results_dict.values())
-            table.update(k="STD (best config)", v="`%s`" %  std_config)
+            table.update(k="STD (best params)", v="`%s`" %  std_config)
             table.update(k="STD (all)",         v="`%s`" %  std_all)
 
         for name, metric in [
