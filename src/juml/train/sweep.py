@@ -92,7 +92,6 @@ class Sweeper:
             self.all_metrics[arg_str] = metrics
 
         util.save_json(self.results_dict,   target_metric,  self.output_dir)
-        util.save_text(util.get_argv_str(), "cmd",          self.output_dir)
 
         self.best_arg_str = (
             max(
@@ -167,6 +166,9 @@ class Sweeper:
             table.update(k=md.code(param_name), v=md.code(str(param_vals)))
 
         table.update(k="`seeds`", v=md.code(str(self.seeds)))
+
+        md.heading("Command", end="\n")
+        md.code_block(util.get_argv_str())
 
         md.heading("Metrics", end="\n")
         best_metrics_json = os.path.join(best_model_rel_dir, "metrics.json")
