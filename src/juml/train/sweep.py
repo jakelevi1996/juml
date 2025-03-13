@@ -118,20 +118,11 @@ class Sweeper:
         for param_name in self.params.keys():
             self.plot_param(param_name)
 
-        md_printer = util.Printer(
-            "results",
-            dir_name=self.output_dir,
-            file_ext="md",
-            print_to_console=False,
-        )
-        sh_printer = util.Printer(
-            "git_add",
-            dir_name=self.output_dir,
-            file_ext="sh",
-            print_to_console=False,
-        )
+        md = util.MarkdownPrinter("results", self.output_dir)
+        md.title("Sweep results", end="\n")
+        md.heading("Summary")
 
-        table = util.Table.key_value(printer=md_printer)
+        table = util.Table.key_value(printer=md)
         table.update(k="`# experiments`",   v="`%s`" % len(self))
         table.update(k="Target metric",     v="`%s`" % target_metric)
         table.update(k="Best result",       v="`%s`" % self.best_result)
@@ -170,19 +161,15 @@ class Sweeper:
         for name, val in self.best_arg_dict.items():
             table.update(k="`--%s`" % name, v="`%s`" % val)
 
+        md.heading("Metrics", end="\n")
         best_metrics_json = os.path.join(best_model_rel_dir, "metrics.json")
-        md_printer("\n[Best metrics](%s)"    % best_metrics_json)
-        sh_printer("cd %s"                  % self.output_dir)
-        sh_printer("git add -f %s"          % "results.md")
-        sh_printer("git add -f %s"          % best_metrics_json)
-
+        md.file_link(best_metrics_json, "Best metrics (JSON)")
+        git_add_images = []
         for rel_path in self.plot_rel_paths:
-            md_printer("\n![](%s)"      % rel_path)
-            sh_printer("git add -f %s"  % rel_path)
+            md.image(rel_path)
+            git_add_images.append("git add -f %s" % rel_path)
 
-        sh_printer("cd %s" % os.path.relpath(os.getcwd(), self.output_dir))
-
-        md_printer("\nAll results:\n")
+        md.heading("All results")
 
         table = util.Table(
             util.Column("rank",     "i",    width=-10),
@@ -193,7 +180,7 @@ class Sweeper:
                 for param_name in self.params.keys()
             ],
             util.Column("model_name"),
-            printer=md_printer,
+            printer=md,
         )
         sorted_names = sorted(
             self.results_dict.keys(),
@@ -208,8 +195,16 @@ class Sweeper:
                 **self.experiment_dict[arg_str],
             )
 
-        md_printer.flush()
-        sh_printer.flush()
+        md.heading("`git add`", end="\n")
+        md.code_block(
+            "cd %s"         % self.output_dir,
+            "git add -f %s" % "results.md",
+            "git add -f %s" % best_metrics_json,
+            *git_add_images,
+            "cd %s" % os.path.relpath(os.getcwd(), self.output_dir),
+        )
+
+        md.flush()
 
     def init_experiment_config(self):
         components_list = [[["seed", s]] for s in self.seeds]
