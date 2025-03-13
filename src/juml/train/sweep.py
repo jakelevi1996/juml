@@ -162,40 +162,6 @@ class Sweeper:
         md_printer.flush()
         sh_printer.flush()
 
-        cf = util.ColumnFormatter("%-20s", sep=" = ")
-        for split in ["train", "test"]:
-            results = results_dict[split]
-            opt_dict = {
-                "Smallest": results.argmin(),
-                "Largest":  results.argmax(),
-            }
-            for opt_type in sorted(opt_dict.keys()):
-                util.hline()
-                val, seed_ind, metric = opt_dict[opt_type]
-                seed = seeds[seed_ind]
-                args.update({sweep_arg_name: val, "seed": seed})
-                metrics_path = Trainer.get_metrics_path(args)
-                metrics = util.load_json(metrics_path)
-                print(
-                    "\n%s final %s metric = %.5f, "
-                    "found with `%s = %s` and `seed = %s`"
-                    % (opt_type, split, metric, sweep_arg_name, val, seed)
-                )
-                cf.print("Model", metrics["repr_model"])
-                cf.print("Model name", metrics["model_name"])
-                cf.print("Training duration", metrics["time_str"])
-                for s in ["train", "test"]:
-                    m = metrics[s]
-                    cf.print(
-                        "%-5s metrics" % s.title(),
-                        "%.5f (max), %.5f (min), %.5f (final)"
-                        % (m["max"], m["min"], m["end"]),
-                    )
-
-                metrics_dir = os.path.dirname(metrics_path)
-                img_path = os.path.join(metrics_dir, "metrics.png")
-                print("\n![](%s)" % img_path)
-
     def init_experiment_config(self):
         components_list = [[["seed", s]] for s in self.seeds]
         for param_name, param_vals in self.params.items():
