@@ -20,6 +20,9 @@ class Sweeper:
         configs:        list[str],
         **train_args,
     ):
+        printer = util.Printer()
+        printer.heading("Sweeper: Initialise experiments")
+
         Trainer.apply_configs(args, configs, list(params.keys()))
 
         with cli.verbose:
@@ -34,11 +37,9 @@ class Sweeper:
         self.init_experiment_config()
         self.init_results(None)
 
-        util.hline()
         model_names = []
         original_args = {k: args.get_value(k) for k in params.keys()}
         original_args["seed"] = args.get_value("seed")
-        print("Running experiments:")
         for i, (arg_str, arg_dict) in enumerate(
             self.experiment_dict.items(),
             start=1,
@@ -51,7 +52,7 @@ class Sweeper:
         self.name = util.merge_strings(model_names)
         self.output_dir = os.path.join("results", "sweep", self.name)
 
-        util.hline()
+        printer.heading("Sweeper: Run experiments")
 
         mp_context = multiprocessing.get_context("spawn")
 
@@ -81,7 +82,7 @@ class Sweeper:
         for p in p_list:
             p.join()
 
-        util.hline()
+        printer.heading("Sweeper: display results")
 
         self.all_metrics = dict()
         for arg_str, arg_dict in self.experiment_dict.items():
