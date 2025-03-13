@@ -161,6 +161,13 @@ class Sweeper:
         for name, val in self.best_arg_dict.items():
             table.update(k="`--%s`" % name, v="`%s`" % val)
 
+        md.heading("Sweep parameters and seeds")
+        table = util.Table.key_value(md)
+        for param_name, param_vals in self.params.items():
+            table.update(k=md.code(param_name), v=md.code(str(param_vals)))
+
+        table.update(k="`seeds`", v=md.code(str(self.seeds)))
+
         md.heading("Metrics", end="\n")
         best_metrics_json = os.path.join(best_model_rel_dir, "metrics.json")
         md.file_link(best_metrics_json, "Best metrics (JSON)")
