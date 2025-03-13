@@ -93,17 +93,14 @@ class Sweeper:
         """
         util.hline()
 
-        self.model_names = dict()
         self.all_metrics = dict()
         for arg_str, arg_dict in self.experiment_dict.items():
             args.update(arg_dict)
             metrics = util.load_json(Trainer.get_metrics_path(args))
             self.store_result(arg_str, metrics)
             self.all_metrics[arg_str] = metrics
-            self.model_names[arg_str] = metrics["model_name"]
 
         util.save_json(self.results_dict,   target_metric,  self.output_dir)
-        util.save_json(self.model_names,    "model_names",  self.output_dir)
         util.save_text(util.get_argv_str(), "cmd",          self.output_dir)
 
         self.best_arg_str = (
@@ -194,7 +191,7 @@ class Sweeper:
             table.update(
                 rank=i,
                 metric=self.results_dict[arg_str],
-                model_name="`%s`" % self.model_names[arg_str],
+                model_name="`%s`" % self.all_metrics[arg_str]["model_name"],
                 **self.experiment_dict[arg_str],
             )
 
