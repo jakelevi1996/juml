@@ -14,13 +14,13 @@ def test_linearmodel():
     output_dim = 11
     x = torch.rand([3, 4, 5, input_dim])
 
-    model = juml.models.Linear(
+    model = juml.models.LinearModel(
         input_shape=list(x.shape),
         output_shape=[output_dim],
         embedder=juml.models.embed.Identity(),
         pooler=juml.models.pool.Identity(),
     )
-    assert repr(model) == "Linear(num_params=88)"
+    assert repr(model) == "LinearModel(num_params=88)"
     assert model.num_params() == (input_dim * output_dim) + output_dim
 
     y = model.forward(x)
@@ -37,13 +37,13 @@ def test_linearmodel_flatten():
     output_dim = 11
     x = torch.rand([3, 4, 5, input_dim])
 
-    model = juml.models.Linear(
+    model = juml.models.LinearModel(
         input_shape=list(x.shape),
         output_shape=[output_dim],
         embedder=juml.models.embed.Flatten(n=3),
         pooler=juml.models.pool.Identity(),
     )
-    assert repr(model) == "Linear(num_params=1.6k)"
+    assert repr(model) == "LinearModel(num_params=1.6k)"
     assert model.num_params() == (4 * 5 * input_dim * output_dim) + output_dim
 
     y = model.forward(x)
@@ -61,7 +61,7 @@ def test_linearmodel_unflatten():
 
     pooler = juml.models.pool.Unflatten(2)
     embedder = juml.models.embed.Flatten(2)
-    model = juml.models.Linear(
+    model = juml.models.LinearModel(
         input_shape=x.shape,
         output_shape=t.shape,
         embedder=embedder,
@@ -71,7 +71,7 @@ def test_linearmodel_unflatten():
     assert pooler.get_input_dim(-1) == (5 * 7)
     assert repr(embedder)       == "Flatten(num_params=0)"
     assert repr(pooler)         == "Unflatten(num_params=0)"
-    assert repr(model)          == "Linear(num_params=1.1k)"
+    assert repr(model)          == "LinearModel(num_params=1.1k)"
 
     [layer] = model.layers
     assert isinstance(layer, juml.models.LinearLayer)
