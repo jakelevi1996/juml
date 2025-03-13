@@ -35,11 +35,26 @@ class Sweeper:
         self.init_results(None)
 
         util.hline()
+        model_names = []
+        original_args = {k: args.get_value(k) for k in params.keys()}
+        original_args["seed"] = args.get_value("seed")
+        s1 = repr(args)
         print("Running experiments:")
-        for i, e in enumerate(self.experiment_list, start=1):
-            print("(%2i) %s" % (i, util.format_dict(e)))
+        for i, (arg_str, arg_dict) in enumerate(
+            self.experiment_dict.items(),
+            start=1,
+        ):
+            # print("(%2i) %s" % (i, arg_str))
+            print("(%2i) %s | %s" % (i, arg_str, repr(args) == s1))
+            args.update(arg_dict)
+            model_names.append(Trainer.get_summary(args))
+
+        args.update(original_args)
+        self.name = util.merge_strings(model_names)
+        self.output_dir = os.path.join("results", "sweep", self.name)
 
         util.hline()
+        print(repr(args) == s1)
 
         mp_context = multiprocessing.get_context("spawn")
 
@@ -57,6 +72,7 @@ class Sweeper:
                     "devices":      d,
                     "no_cache":     no_cache,
                     "train_args":   train_args,
+                    "output_dir":   self.output_dir,
                 },
             )
             for i, d in enumerate(sweep_devices)
@@ -72,7 +88,6 @@ class Sweeper:
         Now:
 
         - Rename `sweep_devices` to `devices`
-        - Use printers specific to each pid saved in self.output_dir
         - Display details of best seed, and also mean/std of the same config
           across random seeds
         - Add `Profile` command
@@ -89,9 +104,6 @@ class Sweeper:
             self.store_result(arg_str, metrics)
             self.all_metrics[arg_str] = metrics
             self.model_names[arg_str] = metrics["model_name"]
-
-        self.name = util.merge_strings(list(self.model_names.values()))
-        self.output_dir = os.path.join("results", "sweep", self.name)
 
         util.save_json(self.results_dict,   target_metric,  self.output_dir)
         util.save_json(self.model_names,    "model_names",  self.output_dir)
@@ -366,7 +378,13 @@ def sweeper_subprocess(
     devices:    list[int],
     no_cache:   bool,
     train_args: dict,
+    output_dir: str,
 ):
+    printer = util.Printer(
+        "p%i_log" % pid,
+        dir_name=output_dir,
+        print_to_console=False,
+    )
     while True:
         try:
             args_update_dict = q.get(block=False)
@@ -380,11 +398,16 @@ def sweeper_subprocess(
 
         metrics_path = Trainer.get_metrics_path(args)
         if (not os.path.isfile(metrics_path)) or no_cache:
-            with util.Timer(args_update_dict, hline=True):
+            with util.Timer(
+                name=str(args_update_dict),
+                printer=printer,
+                hline=True,
+            ):
                 Trainer.from_args(
                     args,
                     devices=devices,
                     configs=[],
+                    printer=printer,
                     **train_args,
                 )
         else:

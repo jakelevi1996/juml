@@ -25,6 +25,7 @@ class Trainer:
         gpu:            bool,
         devices:        list[int],
         configs:        list[str],
+        printer:        util.Printer,
         print_level:    int,
     ) -> "Trainer":
         cls.apply_configs(args, configs, [])
@@ -62,6 +63,7 @@ class Trainer:
             gpu=gpu,
             table=util.Table(
                 *trainer_type.get_table_columns(),
+                printer=printer,
                 print_interval=util.TimeInterval(1),
                 print_level=print_level,
             ),
