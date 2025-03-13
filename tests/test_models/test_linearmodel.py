@@ -74,8 +74,8 @@ def test_linearmodel_unflatten():
     assert repr(model)          == "LinearModel(num_params=1.1k)"
 
     [layer] = model.layers
-    assert isinstance(layer, juml.models.LinearLayer)
-    assert repr(layer) == "LinearLayer(num_params=1.1k)"
+    assert isinstance(layer, juml.models.Linear)
+    assert repr(layer) == "Linear(num_params=1.1k)"
     assert list(layer.w_io.shape) == [30, 35]
     assert list(layer.b_o.shape)  == [35]
 

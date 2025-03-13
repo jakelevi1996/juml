@@ -4,7 +4,7 @@ from jutility import cli
 from juml.models import embed, pool
 from juml.models.base import Model
 from juml.models.sequential import Sequential
-from juml.models.linear import LinearLayer
+from juml.models.linear import Linear
 
 class Mlp(Sequential):
     def __init__(
@@ -27,7 +27,7 @@ class Mlp(Sequential):
             layer_input_dim = hidden_dim
 
         layer_output_dim = self.pool.get_input_dim(-1)
-        layer = LinearLayer(layer_input_dim, layer_output_dim)
+        layer = Linear(layer_input_dim, layer_output_dim)
         self.layers.append(layer)
 
     @classmethod
@@ -44,7 +44,7 @@ class ReluMlpLayer(Model):
         output_dim: int,
     ):
         self._torch_module_init()
-        self.linear = LinearLayer(input_dim, output_dim)
+        self.linear = Linear(input_dim, output_dim)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.linear.forward(x)

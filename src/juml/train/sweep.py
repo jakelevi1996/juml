@@ -81,12 +81,6 @@ class Sweeper:
         for p in p_list:
             p.join()
 
-        """
-        Now:
-
-        - Rename Linear classes to LinearModel and LinearDataset, and rename
-          LinearLayer to Linear
-        """
         util.hline()
 
         self.all_metrics = dict()
