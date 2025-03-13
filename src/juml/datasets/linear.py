@@ -8,10 +8,10 @@ class LinearDataset(DatasetFromDict):
         self,
         input_dim:  int,
         output_dim: int,
-        n_train: int,
-        n_test:  int,
-        x_std: float,
-        t_std: float,
+        n_train:    int,
+        n_test:     int,
+        x_std:      float,
+        t_std:      float,
     ):
         self._init_loss()
 
@@ -28,9 +28,9 @@ class LinearDataset(DatasetFromDict):
 
     def _make_split(
         self,
-        n: int,
-        x_std: float,
-        t_std: float,
+        n:      int,
+        x_std:  float,
+        t_std:  float,
     ):
         x_ni = torch.normal(0, 1, [n, self._input_dim])
         t_no = x_ni @ self.w_io + self.b_o
@@ -53,10 +53,10 @@ class LinearDataset(DatasetFromDict):
     def get_cli_arg(cls):
         return cli.ObjectArg(
             cls,
-            cli.Arg("input_dim",    type=int, default=10),
-            cli.Arg("output_dim",   type=int, default=10),
-            cli.Arg("n_train",      type=int, default=1000),
-            cli.Arg("n_test",       type=int, default=1000),
+            cli.Arg("input_dim",    type=int,   default=10),
+            cli.Arg("output_dim",   type=int,   default=10),
+            cli.Arg("n_train",      type=int,   default=1000),
+            cli.Arg("n_test",       type=int,   default=1000),
             cli.Arg("x_std",        type=float, default=0.0),
             cli.Arg("t_std",        type=float, default=0.0),
         )
