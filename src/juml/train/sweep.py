@@ -38,14 +38,12 @@ class Sweeper:
         model_names = []
         original_args = {k: args.get_value(k) for k in params.keys()}
         original_args["seed"] = args.get_value("seed")
-        s1 = repr(args)
         print("Running experiments:")
         for i, (arg_str, arg_dict) in enumerate(
             self.experiment_dict.items(),
             start=1,
         ):
-            # print("(%2i) %s" % (i, arg_str))
-            print("(%2i) %s | %s" % (i, arg_str, repr(args) == s1))
+            print("(%2i) %s" % (i, arg_str))
             args.update(arg_dict)
             model_names.append(Trainer.get_summary(args))
 
@@ -54,7 +52,6 @@ class Sweeper:
         self.output_dir = os.path.join("results", "sweep", self.name)
 
         util.hline()
-        print(repr(args) == s1)
 
         mp_context = multiprocessing.get_context("spawn")
 
