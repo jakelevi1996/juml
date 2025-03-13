@@ -130,10 +130,10 @@ class Sweeper:
             print_to_console=False,
         )
 
-        table = util.Table.key_value(width=-40, printer=md_printer)
-        table.update(key="`# experiments`", value="`%s`" % len(self))
-        table.update(key="Target metric",   value="`%s`" % target_metric)
-        table.update(key="Best result",     value="`%s`" % self.best_result)
+        table = util.Table.key_value(printer=md_printer)
+        table.update(k="`# experiments`",   v="`%s`" % len(self))
+        table.update(k="Target metric",     v="`%s`" % target_metric)
+        table.update(k="Best result",       v="`%s`" % self.best_result)
         for name, metric in [
             ("Model",                   "repr_model"),
             ("Model name",              "model_name"),
@@ -142,10 +142,10 @@ class Sweeper:
             ("Training duration",       "time_str"),
             ("Number of parameters",    "num_params"),
         ]:
-            table.update(key=name, value="`%s`" % self.best_metrics[metric])
+            table.update(k=name, v="`%s`" % self.best_metrics[metric])
 
         for name, val in self.best_arg_dict.items():
-            table.update(key="`--%s`" % name, value="`%s`" % val)
+            table.update(k="`--%s`" % name, v="`%s`" % val)
 
         best_metrics_json = os.path.join(best_model_rel_dir, "metrics.json")
         md_printer("\n[All metrics](%s)"    % best_metrics_json)
