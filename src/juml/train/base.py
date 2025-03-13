@@ -22,7 +22,6 @@ class Trainer:
         cls,
         args:           cli.ParsedArgs,
         seed:           int,
-        gpu:            bool,
         devices:        list[int],
         configs:        list[str],
         printer:        util.Printer,
@@ -45,6 +44,7 @@ class Trainer:
             )
             assert isinstance(model, Model)
 
+        gpu = (len(devices) > 0)
         if gpu:
             model.cuda()
             dataset.loss.cuda()

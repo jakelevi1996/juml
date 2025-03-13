@@ -62,7 +62,6 @@ def test_get_model_name():
 
     s = (
         "train "
-        "--gpu "
         "--seed 999 "
         "--model Cnn "
         "--model.Cnn.kernel_size 42 "

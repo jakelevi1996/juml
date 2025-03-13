@@ -59,7 +59,6 @@ class Framework:
                 is_group=True,
             ),
             cli.Arg("seed",         type=int, default=0),
-            cli.Arg("gpu",          action="store_true"),
             cli.Arg("devices",      type=int, default=[],   nargs="*"),
             cli.Arg("configs",      type=str, default=[],   nargs="*"),
             cli.Arg("model_name",   type=str, default=None, is_kwarg=False),
