@@ -100,7 +100,7 @@ class Trainer:
         model:      Model,
         dataset:    Dataset,
     ):
-        return
+        raise NotImplementedError()
 
     @classmethod
     def save_results(
