@@ -91,7 +91,7 @@ class Sweeper:
             self.store_result(arg_str, metrics)
             self.all_metrics[arg_str] = metrics
 
-        util.save_json(self.results_dict,   target_metric,  self.output_dir)
+        util.save_json(self.results_dict, target_metric, self.output_dir)
 
         self.best_arg_str = (
             max(
@@ -160,15 +160,12 @@ class Sweeper:
             table.update(k="STD (best params)", v="`%s`" %  std_config)
             table.update(k="STD (all)",         v="`%s`" %  std_all)
 
-        md.heading("Sweep parameters and seeds")
+        md.heading("Sweep configuration")
         table = util.Table.key_value(md)
         for param_name, param_vals in self.params.items():
             table.update(k=md.code(param_name), v=md.code(str(param_vals)))
 
         table.update(k="`seeds`", v=md.code(str(self.seeds)))
-
-        md.heading("Command", end="\n")
-        md.code_block(util.get_argv_str())
 
         md.heading("Metrics", end="\n")
         best_metrics_json = os.path.join(best_model_rel_dir, "metrics.json")
@@ -217,6 +214,8 @@ class Sweeper:
         md_link = md.make_link(md.get_filename(), "`[ sweep_results ]`")
         md(md_link)
         md.code_block(md_link)
+        md.heading("`sweep` command", end="\n")
+        md.code_block(util.get_argv_str())
 
         md.flush()
 
