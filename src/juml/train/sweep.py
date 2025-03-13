@@ -34,6 +34,13 @@ class Sweeper:
         self.init_experiment_config()
         self.init_results(None)
 
+        util.hline()
+        print("Running experiments:")
+        for i, e in enumerate(self.experiment_list, start=1):
+            print("(%2i) %s" % (i, util.format_dict(e)))
+
+        util.hline()
+
         mp_context = multiprocessing.get_context("spawn")
 
         q = mp_context.Queue()
@@ -64,9 +71,6 @@ class Sweeper:
         """
         Now:
 
-        - Save `results/sweep/sweep_name/results.md`, including metrics.png and
-          all arg_name.png
-        - Display all experiment configs (surrounded by `hline`) before running
         - Rename `sweep_devices` to `devices`
         - Use printers specific to each pid saved in self.output_dir
         - Display details of best seed, and also mean/std of the same config
