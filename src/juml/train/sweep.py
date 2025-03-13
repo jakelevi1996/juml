@@ -97,36 +97,6 @@ class Sweeper:
         util.save_json(self.model_names,    "model_names",  self.output_dir)
         util.save_text(util.get_argv_str(), "cmd",          self.output_dir)
 
-        metrics_printer = util.Printer(
-            target_metric,
-            dir_name=self.output_dir,
-            file_ext="md",
-            print_to_console=False,
-        )
-        table = util.Table(
-            util.Column("rank",     "i",    width=-10),
-            util.Column("metric",   ".5f",  title="`%s`" % target_metric),
-            util.Column("seed",     "i",    title="`seed`"),
-            *[
-                util.Column(param_name, title="`%s`" % param_name)
-                for param_name in self.params.keys()
-            ],
-            util.Column("model_name"),
-            printer=metrics_printer,
-        )
-        sorted_names = sorted(
-            self.results_dict.keys(),
-            key=(lambda k: self.results_dict[k]),
-            reverse=(True if maximise else False),
-        )
-        for i, arg_str in enumerate(sorted_names, start=1):
-            table.update(
-                rank=i,
-                metric=self.results_dict[arg_str],
-                model_name="`%s`" % self.model_names[arg_str],
-                **self.experiment_dict[arg_str],
-            )
-
         self.best_arg_str = (
             max(
                 self.results_dict.keys(),
@@ -182,13 +152,9 @@ class Sweeper:
             table.update(k="`--%s`" % name, v="`%s`" % val)
 
         best_metrics_json = os.path.join(best_model_rel_dir, "metrics.json")
-        md_printer(
-            "\n[ [All results](%s.md) | [Best metrics](%s) ]"
-            % (target_metric, best_metrics_json)
-        )
+        md_printer("\n[Best metrics](%s)"    % best_metrics_json)
         sh_printer("cd %s"                  % self.output_dir)
-        sh_printer("git add -f %s.md"       % "results")
-        sh_printer("git add -f %s.md"       % target_metric)
+        sh_printer("git add -f %s"          % "results.md")
         sh_printer("git add -f %s"          % best_metrics_json)
 
         for rel_path in self.plot_rel_paths:
@@ -196,6 +162,32 @@ class Sweeper:
             sh_printer("git add -f %s"  % rel_path)
 
         sh_printer("cd %s" % os.path.relpath(os.getcwd(), self.output_dir))
+
+        md_printer("\nAll results:\n")
+
+        table = util.Table(
+            util.Column("rank",     "i",    width=-10),
+            util.Column("metric",   ".5f",  title="`%s`" % target_metric),
+            util.Column("seed",     "i",    title="`seed`"),
+            *[
+                util.Column(param_name, title="`%s`" % param_name)
+                for param_name in self.params.keys()
+            ],
+            util.Column("model_name"),
+            printer=md_printer,
+        )
+        sorted_names = sorted(
+            self.results_dict.keys(),
+            key=(lambda k: self.results_dict[k]),
+            reverse=(True if maximise else False),
+        )
+        for i, arg_str in enumerate(sorted_names, start=1):
+            table.update(
+                rank=i,
+                metric=self.results_dict[arg_str],
+                model_name="`%s`" % self.model_names[arg_str],
+                **self.experiment_dict[arg_str],
+            )
 
         md_printer.flush()
         sh_printer.flush()
