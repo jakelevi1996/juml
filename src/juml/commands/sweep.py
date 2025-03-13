@@ -4,11 +4,20 @@ from juml.train.sweep import Sweeper
 
 class Sweep(Command):
     def run(self, args: cli.ParsedArgs):
+        kwargs  = self.get_kwargs()
+        devices = kwargs.pop("devices")
+        if len(devices) > 0:
+            raise ValueError(
+                "Received `--devices %s`, use `--Sweeper.devices` instead "
+                "with `sweep` command"
+                % devices
+            )
+
         with cli.verbose:
             sweeper = args.init_object(
                 "Sweeper",
                 args=args,
-                **self.get_kwargs(),
+                **kwargs,
             )
 
         return sweeper

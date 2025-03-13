@@ -10,13 +10,12 @@ class Sweeper:
         self,
         args:           cli.ParsedArgs,
         params:         dict[str, list],
-        sweep_devices:  list[list[int]],
+        devices:        list[list[int]],
         seeds:          list[int],
         target_metric:  str,
         maximise:       bool,
         no_cache:       bool,
         log_x:          list[str],
-        devices:        list[int],
         configs:        list[str],
         **train_args,
     ):
@@ -72,7 +71,7 @@ class Sweeper:
                     "output_dir":   self.output_dir,
                 },
             )
-            for i, d in enumerate(sweep_devices)
+            for i, d in enumerate(devices)
         ]
 
         for p in p_list:
@@ -84,7 +83,6 @@ class Sweeper:
         """
         Now:
 
-        - Rename `sweep_devices` to `devices`
         - Display details of best seed, and also mean/std of the same config
           across random seeds
         - Add `Profile` command
@@ -344,7 +342,7 @@ class Sweeper:
                 )
             ),
             cli.JsonArg(
-                "sweep_devices",
+                "devices",
                 default=[[]],
                 metavar=": list[list[int]] = \"[[]]\"",
                 help="EG \"[[1,2,3],[3,4],[5]]\" or \"[[],[],[],[],[],[]]\""
