@@ -31,8 +31,8 @@ def test_sequential():
 
     p, s = model.split(5)
 
-    assert isinstance(p, juml.base.Sequential)
-    assert isinstance(s, juml.base.Sequential)
+    assert isinstance(p, juml.models.Sequential)
+    assert isinstance(s, juml.models.Sequential)
     assert len(p) == 5
     assert len(s) == 2
     assert len(p) + len(s) == len(model)
