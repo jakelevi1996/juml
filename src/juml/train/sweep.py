@@ -37,7 +37,7 @@ class Sweeper:
         self.init_experiment_config()
         self.init_results(None)
 
-        model_names = []
+        self.model_names = dict()
         original_args = {k: args.get_value(k) for k in params.keys()}
         original_args["seed"] = args.get_value("seed")
         for i, (arg_str, arg_dict) in enumerate(
@@ -46,10 +46,10 @@ class Sweeper:
         ):
             print("(%2i) %s" % (i, arg_str))
             args.update(arg_dict)
-            model_names.append(Trainer.get_summary(args))
+            self.model_names[arg_str] = Trainer.get_summary(args)
 
         args.update(original_args)
-        self.name = util.merge_strings(model_names)
+        self.name = util.merge_strings(sorted(self.model_names.values()))
         self.output_dir = os.path.join("results", "sweep", self.name)
 
         printer.heading("Sweeper: Run experiments")
@@ -197,7 +197,7 @@ class Sweeper:
             table.update(
                 rank=i,
                 metric=self.results_dict[arg_str],
-                model_name="`%s`" % self.all_metrics[arg_str]["model_name"],
+                model_name=md.code(self.model_names[arg_str]),
                 **self.experiment_dict[arg_str],
             )
 
