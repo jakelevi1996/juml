@@ -19,6 +19,7 @@ class Framework:
     def get_datasets(cls) -> list[type[Dataset]]:
         return [
             datasets.LinearDataset,
+            datasets.SinMix,
             datasets.Mnist,
             datasets.Cifar10,
         ]
