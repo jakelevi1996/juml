@@ -8,8 +8,8 @@ class LinearDataset(DatasetFromDict):
         self,
         input_dim:  int,
         output_dim: int,
-        n_train:    int,
-        n_test:     int,
+        train:      int,
+        test:       int,
         x_std:      float,
         t_std:      float,
     ):
@@ -22,8 +22,8 @@ class LinearDataset(DatasetFromDict):
         self.b_o  = torch.normal(0, 1, [output_dim])
 
         self._split_dict = {
-            "train": self._make_split(n_train, x_std, t_std),
-            "test":  self._make_split(n_test,  x_std, t_std),
+            "train": self._make_split(train, x_std, t_std),
+            "test":  self._make_split(test,  x_std, t_std),
         }
 
     def _make_split(
@@ -55,8 +55,8 @@ class LinearDataset(DatasetFromDict):
             cls,
             cli.Arg("input_dim",    type=int,   default=10),
             cli.Arg("output_dim",   type=int,   default=10),
-            cli.Arg("n_train",      type=int,   default=1000),
-            cli.Arg("n_test",       type=int,   default=1000),
+            cli.Arg("train",        type=int,   default=1000),
+            cli.Arg("test",         type=int,   default=1000),
             cli.Arg("x_std",        type=float, default=0.0),
             cli.Arg("t_std",        type=float, default=0.0),
         )
