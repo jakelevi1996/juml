@@ -43,15 +43,15 @@ class Framework:
         defaults = cls.get_defaults()
         return [
             cli.ObjectChoice(
-                "model",
-                *[t.get_cli_arg() for t in cls.get_models()],
-                default=defaults["model"],
-                is_group=True,
-            ),
-            cli.ObjectChoice(
                 "dataset",
                 *[t.get_cli_arg() for t in cls.get_datasets()],
                 default=defaults["dataset"],
+                is_group=True,
+            ),
+            cli.ObjectChoice(
+                "model",
+                *[t.get_cli_arg() for t in cls.get_models()],
+                default=defaults["model"],
                 is_group=True,
             ),
             cli.ObjectChoice(
