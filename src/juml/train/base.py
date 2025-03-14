@@ -108,40 +108,22 @@ class Trainer:
     ):
         raise NotImplementedError()
 
-    @classmethod
-    def save_results(
-        cls,
-        args:       cli.ParsedArgs,
-        model:      Model,
-        dataset:    Dataset,
-        table:      util.Table,
-    ):
-        output_dir = cls.get_output_dir(args)
-        model_name = os.path.basename(output_dir)
+    def save_results(self, args: cli.ParsedArgs):
+        self.output_dir = self.get_output_dir(args)
+        self.model_name = os.path.basename(self.output_dir)
 
-        time_list    = table.get_data("t")
-        batch_loss   = table.get_data("batch_loss")
-        train_metric = table.get_data("train_metric")
-        test_metric  = table.get_data("test_metric")
-
-        cls.plot_metrics(
-            batch_loss=batch_loss,
-            train_metric=train_metric,
-            test_metric=test_metric,
-            dataset=dataset,
-            plot_name="metrics",
-            output_dir=output_dir,
-            title="%r\n%r" % (model, dataset),
-        )
+        time_list       = self.table.get_data("t")
+        batch_loss      = self.table.get_data("batch_loss")
+        train_metric    = self.table.get_data("train_metric")
+        test_metric     = self.table.get_data("test_metric")
 
         cmd         = util.get_argv_str()
-        model_path  = util.get_full_path("model.pth", output_dir)
         arg_dict    = args.get_value_dict()
         metrics     = {
-            "repr_model":   repr(model),
-            "model_name":   model_name,
-            "model_dir":    output_dir,
-            "num_params":   model.num_params(),
+            "repr_model":   repr(self.model),
+            "model_name":   self.model_name,
+            "model_dir":    self.output_dir,
+            "num_params":   self.model.num_params(),
             "time_str":     util.time_format(time_list[-1]),
             "time":         time_list[-1],
             "train":        {
@@ -164,12 +146,16 @@ class Trainer:
         metrics["train_summary"] = util.format_dict(metrics["train"], **kw)
         metrics[ "test_summary"] = util.format_dict(metrics["test" ], **kw)
 
-        util.save_text(cmd,         "cmd",      output_dir)
-        util.save_json(arg_dict,    "args",     output_dir)
-        util.save_json(metrics,     "metrics",  output_dir)
-        torch.save(model.state_dict(), model_path)
-        table.save_pickle("table", output_dir)
-        print("Model name = `%s`" % model_name)
+        util.save_text(cmd,         "cmd",      self.output_dir)
+        util.save_json(arg_dict,    "args",     self.output_dir)
+        util.save_json(metrics,     "metrics",  self.output_dir)
+        self.plot_metrics(batch_loss, train_metric, test_metric)
+        torch.save(
+            self.model.state_dict(),
+            util.get_full_path("model.pth", self.output_dir),
+        )
+        self.table.save_pickle("table", self.output_dir)
+        print("Model name = `%s`" % self.model_name)
         print(
             "Final metrics = %.5f (train), %.5f (test)"
             % (train_metric[-1], test_metric[-1])
@@ -197,21 +183,12 @@ class Trainer:
             ]
         )
 
-    @classmethod
     def plot_metrics(
-        cls,
+        self,
         batch_loss:     list[float],
         train_metric:   list[float],
         test_metric:    list[float],
-        dataset:        Dataset,
-        plot_name:      str,
-        output_dir:     str,
-        **kwargs,
     ):
-        kwargs.setdefault("title",              plot_name)
-        kwargs.setdefault("figsize",            [10, 4])
-        kwargs.setdefault("title_font_size",    15)
-
         train_label = "Train (final = %.5f)" % train_metric[-1]
         test_label  =  "Test (final = %.5f)" %  test_metric[-1]
 
@@ -219,18 +196,20 @@ class Trainer:
             plotting.Subplot(
                 plotting.Line(batch_loss),
                 xlabel="Batch",
-                **dataset.loss.info(),
+                **self.dataset.loss.info(),
             ),
             plotting.Subplot(
                 plotting.Line(train_metric, c="b", label=train_label),
                 plotting.Line(test_metric,  c="r", label=test_label),
                 plotting.Legend(),
                 xlabel="Epoch",
-                **dataset.loss.metric_info(),
+                **self.dataset.loss.metric_info(),
             ),
-            **kwargs,
+            title="%r\n%r" % (self.model, self.dataset),
+            title_font_size=15,
+            figsize=[10, 4],
         )
-        mp.save(plot_name, output_dir)
+        mp.save("metrics", self.output_dir)
 
     @classmethod
     def load(cls, args: cli.ParsedArgs) -> tuple[str, Model, Dataset]:
