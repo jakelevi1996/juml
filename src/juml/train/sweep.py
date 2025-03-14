@@ -274,8 +274,8 @@ class Sweeper:
     def save_results_markdown(self, best_model_rel_dir: str):
         md = util.MarkdownPrinter("results", self.output_dir)
         md.title("Sweep results", end="\n")
-        md.heading("Summary")
 
+        md.heading("Summary")
         table = util.Table.key_value(printer=md)
         table.update(k="`# experiments`",   v=md.code(len(self)))
         table.update(k="Target metric",     v=md.code(self.target_str))
@@ -364,8 +364,10 @@ class Sweeper:
             "cd %s" % os.path.relpath(os.getcwd(), self.output_dir),
         )
         rm_path = os.path.relpath("README.md", self.output_dir)
+
         md.heading("%s include" % md.make_link(rm_path, "`README.md`"), "\n")
         md.file_link(md.get_filename(), "`[ sweep_results ]`")
+
         md.heading("`sweep` command", end="\n")
         md.code_block(util.get_argv_str())
 
