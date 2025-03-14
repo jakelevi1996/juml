@@ -25,15 +25,15 @@ def test_cli_args_linearmodel():
     arg_str = (
         "--model LinearModel "
         "--dataset LinearDataset "
-        "--dataset.LinearDataset.input_dim     13  "
-        "--dataset.LinearDataset.output_dim    7   "
-        "--dataset.LinearDataset.n_train       789 "
-        "--dataset.LinearDataset.n_test        456 "
+        "--dataset.LinearDataset.input_dim  13  "
+        "--dataset.LinearDataset.output_dim 7   "
+        "--dataset.LinearDataset.train      789 "
+        "--dataset.LinearDataset.test       456 "
     )
     args = parser.parse_args(arg_str.split())
 
     assert args.get_summary() == (
-        "dLdi13dnte456dntr789do7dt0.0dx0.0mLmeImpI"
+        "dLdi13do7dte456dtr789dts0.0dx0.0mLmeImpI"
     )
 
     cli.verbose.set_printer(printer)

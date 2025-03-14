@@ -18,8 +18,8 @@ def test_linear():
     dataset = juml.datasets.LinearDataset(
         input_dim=input_dim,
         output_dim=output_dim,
-        n_train=n_train,
-        n_test=n_test,
+        train=n_train,
+        test=n_test,
         x_std=0.1,
         t_std=0.2,
     )
