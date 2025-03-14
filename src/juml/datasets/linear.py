@@ -25,7 +25,7 @@ class LinearDataset(Synthetic):
             t_std=t_std,
         )
 
-    def _forward(self, x_ni: torch.Tensor) -> torch.Tensor:
+    def _compute_target(self, x_ni: torch.Tensor) -> torch.Tensor:
         t_no = x_ni @ self.w_io + self.b_o
         return t_no
 

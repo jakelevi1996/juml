@@ -32,7 +32,7 @@ class Synthetic(DatasetFromDict):
 
     def _make_split(self, n: int) -> DataSplit:
         x = self._sample_input(n)
-        t = self._forward(x)
+        t = self._compute_target(x)
         return DataSplit(
             x=x + torch.normal(0, self._x_std, x.shape),
             t=t + torch.normal(0, self._t_std, t.shape),
@@ -42,7 +42,7 @@ class Synthetic(DatasetFromDict):
     def _sample_input(self, n: int) -> torch.Tensor:
         return torch.normal(0, 1, [n, *self._input_shape])
 
-    def _forward(self, x: torch.Tensor) -> torch.Tensor:
+    def _compute_target(self, x: torch.Tensor) -> torch.Tensor:
         raise NotImplementedError()
 
     def get_input_shape(self) -> list[int]:

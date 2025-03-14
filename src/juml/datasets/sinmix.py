@@ -28,7 +28,7 @@ class SinMix(Synthetic):
             t_std=t_std,
         )
 
-    def _forward(self, x_ni: torch.Tensor) -> torch.Tensor:
+    def _compute_target(self, x_ni: torch.Tensor) -> torch.Tensor:
         z_nh = x_ni @ self.w1_ih + self.b1_h
         z_nh = torch.sin(z_nh)
         t_no = z_nh @ self.w2_ho + self.b2_o
