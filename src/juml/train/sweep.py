@@ -282,14 +282,6 @@ class Sweeper:
         table.update(k="Best result",       v=md.code(self.best_result))
         table.update(k="Best params/seed",  v=md.code(self.best_arg_str))
 
-        best_seed = self.best_arg_dict["seed"]
-        seeds_results_list = []
-        for s in self.seeds:
-            self.best_arg_dict["seed"] = s
-            seed_arg_str = util.format_dict(self.best_arg_dict)
-            seed_result  = self.results_dict[seed_arg_str]
-            seeds_results_list.append(seed_result)
-
         for name, metric in [
             ("Model",                   "repr_model"),
             ("Model name",              "model_name"),
@@ -302,6 +294,14 @@ class Sweeper:
 
         for name, val in self.best_arg_dict.items():
             table.update(k="`--%s`" % name, v=md.code(val))
+
+        best_seed = self.best_arg_dict["seed"]
+        seeds_results_list = []
+        for s in self.seeds:
+            self.best_arg_dict["seed"] = s
+            seed_arg_str = util.format_dict(self.best_arg_dict)
+            seed_result  = self.results_dict[seed_arg_str]
+            seeds_results_list.append(seed_result)
 
         self.best_arg_dict["seed"] = best_seed
         mean_config = statistics.mean(seeds_results_list)
@@ -331,7 +331,6 @@ class Sweeper:
             git_add_images.append("git add -f %s" % rel_path)
 
         md.heading("All results")
-
         table = util.Table(
             util.Column("rank",     "i",    width=-10),
             util.Column("metric",   ".5f",  title=md.code(self.target_str)),
