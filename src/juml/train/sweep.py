@@ -29,11 +29,13 @@ class Sweeper:
             dataset = args.init_object("dataset")
             assert isinstance(dataset, Dataset)
 
-        self.dataset    = dataset
-        self.params     = params
-        self.seeds      = seeds
-        self.target     = target_metric.split(".")
-        self.log_x      = log_x
+        self.dataset        = dataset
+        self.params         = params
+        self.seeds          = seeds
+        self.target_str     = target_metric
+        self.target_list    = target_metric.split(".")
+        self.maximise       = maximise
+        self.log_x          = log_x
         self.init_experiment_config()
         self.init_results(None)
         self.init_name(args)
@@ -57,14 +59,14 @@ class Sweeper:
             self.store_result(arg_str, metrics)
             self.all_metrics[arg_str] = metrics
 
-        util.save_json(self.results_dict, target_metric, self.output_dir)
+        util.save_json(self.results_dict, self.target_str, self.output_dir)
 
         self.best_arg_str = (
             max(
                 self.results_dict.keys(),
                 key=(lambda k: self.results_dict[k]),
             )
-            if maximise else
+            if self.maximise else
             min(
                 self.results_dict.keys(),
                 key=(lambda k: self.results_dict[k]),
@@ -83,107 +85,7 @@ class Sweeper:
         for param_name in self.params.keys():
             self.plot_param(param_name)
 
-        md = util.MarkdownPrinter("results", self.output_dir)
-        md.title("Sweep results", end="\n")
-        md.heading("Summary")
-
-        table = util.Table.key_value(printer=md)
-        table.update(k="`# experiments`",   v="`%s`" % len(self))
-        table.update(k="Target metric",     v="`%s`" % target_metric)
-        table.update(k="Best result",       v="`%s`" % self.best_result)
-        table.update(k="Best params/seed",  v="`%s`" % self.best_arg_str)
-
-        best_seed = self.best_arg_dict["seed"]
-        seeds_results_list = []
-        for s in seeds:
-            self.best_arg_dict["seed"] = s
-            seed_arg_str = util.format_dict(self.best_arg_dict)
-            seed_result  = self.results_dict[seed_arg_str]
-            seeds_results_list.append(seed_result)
-
-        for name, metric in [
-            ("Model",                   "repr_model"),
-            ("Model name",              "model_name"),
-            ("Train metrics",           "train_summary"),
-            ("Test metrics",            "test_summary"),
-            ("Training duration",       "time_str"),
-            ("Number of parameters",    "num_params"),
-        ]:
-            table.update(k=name, v="`%s`" % self.best_metrics[metric])
-
-        for name, val in self.best_arg_dict.items():
-            table.update(k="`--%s`" % name, v="`%s`" % val)
-
-        self.best_arg_dict["seed"] = best_seed
-        mean_config = statistics.mean(seeds_results_list)
-        mean_all    = statistics.mean(self.results_dict.values())
-        table.update(k="Mean (best params)",    v="`%s`" % mean_config)
-        table.update(k="Mean (all)",            v="`%s`" % mean_all)
-
-        if len(seeds) >= 2:
-            std_config  = statistics.stdev(seeds_results_list)
-            std_all     = statistics.stdev(self.results_dict.values())
-            table.update(k="STD (best params)", v="`%s`" %  std_config)
-            table.update(k="STD (all)",         v="`%s`" %  std_all)
-
-        md.heading("Sweep configuration")
-        table = util.Table.key_value(md)
-        for param_name, param_vals in self.params.items():
-            table.update(k=md.code(param_name), v=md.code(str(param_vals)))
-
-        table.update(k="`seeds`", v=md.code(str(self.seeds)))
-
-        md.heading("Metrics", end="\n")
-        best_metrics_json = os.path.join(best_model_rel_dir, "metrics.json")
-        md.file_link(best_metrics_json, "Best metrics (JSON)")
-        git_add_images = []
-        for rel_path in self.plot_rel_paths:
-            md.image(rel_path)
-            git_add_images.append("git add -f %s" % rel_path)
-
-        md.heading("All results")
-
-        table = util.Table(
-            util.Column("rank",     "i",    width=-10),
-            util.Column("metric",   ".5f",  title="`%s`" % target_metric),
-            util.Column("seed",     "i",    title="`seed`"),
-            *[
-                util.Column(param_name, title="`%s`" % param_name)
-                for param_name in self.params.keys()
-            ],
-            util.Column("model_name"),
-            printer=md,
-        )
-        sorted_names = sorted(
-            self.results_dict.keys(),
-            key=(lambda k: self.results_dict[k]),
-            reverse=(True if maximise else False),
-        )
-        for i, arg_str in enumerate(sorted_names, start=1):
-            table.update(
-                rank=i,
-                metric=self.results_dict[arg_str],
-                model_name=md.code(self.model_names[arg_str]),
-                **self.experiment_dict[arg_str],
-            )
-
-        md.heading("`git add`", end="\n")
-        md.code_block(
-            "cd %s"         % self.output_dir,
-            "git add -f %s" % "results.md",
-            "git add -f %s" % best_metrics_json,
-            *git_add_images,
-            "cd %s" % os.path.relpath(os.getcwd(), self.output_dir),
-        )
-        rm_path = os.path.relpath("README.md", self.output_dir)
-        md.heading("%s include" % md.make_link(rm_path, "`README.md`"))
-        md_link = md.make_link(md.get_filename(), "`[ sweep_results ]`")
-        md(md_link)
-        md.code_block(md_link)
-        md.heading("`sweep` command", end="\n")
-        md.code_block(util.get_argv_str())
-
-        md.flush()
+        self.save_results_markdown(best_model_rel_dir)
 
     def init_experiment_config(self):
         components_list = [[["seed", s]] for s in self.seeds]
@@ -278,14 +180,14 @@ class Sweeper:
             )
 
         input_metrics = metrics
-        for key in self.target:
+        for key in self.target_list:
             metrics = metrics[key]
 
         result = metrics
         if not isinstance(result, float):
             raise ValueError(
                 "Target %s in metrics %s has type %s, expected `float`"
-                % (self.target, input_metrics, type(result))
+                % (self.target_list, input_metrics, type(result))
             )
 
         self.results_dict[arg_str] = result
@@ -368,6 +270,109 @@ class Sweeper:
 
         rel_path = os.path.relpath(full_path, self.output_dir)
         self.plot_rel_paths.append(rel_path)
+
+    def save_results_markdown(self, best_model_rel_dir: str):
+        md = util.MarkdownPrinter("results", self.output_dir)
+        md.title("Sweep results", end="\n")
+        md.heading("Summary")
+
+        table = util.Table.key_value(printer=md)
+        table.update(k="`# experiments`",   v="`%s`" % len(self))
+        table.update(k="Target metric",     v="`%s`" % self.target_str)
+        table.update(k="Best result",       v="`%s`" % self.best_result)
+        table.update(k="Best params/seed",  v="`%s`" % self.best_arg_str)
+
+        best_seed = self.best_arg_dict["seed"]
+        seeds_results_list = []
+        for s in self.seeds:
+            self.best_arg_dict["seed"] = s
+            seed_arg_str = util.format_dict(self.best_arg_dict)
+            seed_result  = self.results_dict[seed_arg_str]
+            seeds_results_list.append(seed_result)
+
+        for name, metric in [
+            ("Model",                   "repr_model"),
+            ("Model name",              "model_name"),
+            ("Train metrics",           "train_summary"),
+            ("Test metrics",            "test_summary"),
+            ("Training duration",       "time_str"),
+            ("Number of parameters",    "num_params"),
+        ]:
+            table.update(k=name, v="`%s`" % self.best_metrics[metric])
+
+        for name, val in self.best_arg_dict.items():
+            table.update(k="`--%s`" % name, v="`%s`" % val)
+
+        self.best_arg_dict["seed"] = best_seed
+        mean_config = statistics.mean(seeds_results_list)
+        mean_all    = statistics.mean(self.results_dict.values())
+        table.update(k="Mean (best params)",    v="`%s`" % mean_config)
+        table.update(k="Mean (all)",            v="`%s`" % mean_all)
+
+        if len(self.seeds) >= 2:
+            std_config  = statistics.stdev(seeds_results_list)
+            std_all     = statistics.stdev(self.results_dict.values())
+            table.update(k="STD (best params)", v="`%s`" %  std_config)
+            table.update(k="STD (all)",         v="`%s`" %  std_all)
+
+        md.heading("Sweep configuration")
+        table = util.Table.key_value(md)
+        for param_name, param_vals in self.params.items():
+            table.update(k=md.code(param_name), v=md.code(str(param_vals)))
+
+        table.update(k="`seeds`", v=md.code(str(self.seeds)))
+
+        md.heading("Metrics", end="\n")
+        best_metrics_json = os.path.join(best_model_rel_dir, "metrics.json")
+        md.file_link(best_metrics_json, "Best metrics (JSON)")
+        git_add_images = []
+        for rel_path in self.plot_rel_paths:
+            md.image(rel_path)
+            git_add_images.append("git add -f %s" % rel_path)
+
+        md.heading("All results")
+
+        table = util.Table(
+            util.Column("rank",     "i",    width=-10),
+            util.Column("metric",   ".5f",  title="`%s`" % self.target_str),
+            util.Column("seed",     "i",    title="`seed`"),
+            *[
+                util.Column(param_name, title="`%s`" % param_name)
+                for param_name in self.params.keys()
+            ],
+            util.Column("model_name"),
+            printer=md,
+        )
+        sorted_names = sorted(
+            self.results_dict.keys(),
+            key=(lambda k: self.results_dict[k]),
+            reverse=(True if self.maximise else False),
+        )
+        for i, arg_str in enumerate(sorted_names, start=1):
+            table.update(
+                rank=i,
+                metric=self.results_dict[arg_str],
+                model_name=md.code(self.model_names[arg_str]),
+                **self.experiment_dict[arg_str],
+            )
+
+        md.heading("`git add`", end="\n")
+        md.code_block(
+            "cd %s"         % self.output_dir,
+            "git add -f %s" % "results.md",
+            "git add -f %s" % best_metrics_json,
+            *git_add_images,
+            "cd %s" % os.path.relpath(os.getcwd(), self.output_dir),
+        )
+        rm_path = os.path.relpath("README.md", self.output_dir)
+        md.heading("%s include" % md.make_link(rm_path, "`README.md`"))
+        md_link = md.make_link(md.get_filename(), "`[ sweep_results ]`")
+        md(md_link)
+        md.code_block(md_link)
+        md.heading("`sweep` command", end="\n")
+        md.code_block(util.get_argv_str())
+
+        md.flush()
 
     @classmethod
     def get_cli_arg(cls) -> cli.ObjectArg:
