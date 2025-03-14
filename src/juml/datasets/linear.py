@@ -1,7 +1,8 @@
 import torch
 from jutility import cli
 from juml.datasets import loss
-from juml.datasets.base import DatasetFromDict, DataSplit
+from juml.datasets.split import DataSplit
+from juml.datasets.fromdict import DatasetFromDict
 
 class LinearDataset(DatasetFromDict):
     def __init__(

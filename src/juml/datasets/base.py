@@ -1,6 +1,6 @@
-import torch
 import torch.utils.data
 from jutility import cli, util, units
+from juml.datasets.split import DataSplit
 from juml.datasets import loss
 
 DATA_REL_DIR = "./data"
@@ -73,38 +73,4 @@ class Dataset:
             n_test =units.metric.format(len(self.get_data_split("test" ))),
             item_fmt="%s=%s",
             key_order=["n_train", "n_test"],
-        )
-
-class DatasetFromDict(Dataset):
-    def __init__(self):
-        self._init_loss()
-        self._init_split_dict()
-
-    def _init_split_dict(self):
-        self._split_dict = self._get_split_dict()
-
-    def _get_split_dict(self) -> dict[str, torch.utils.data.Dataset]:
-        raise NotImplementedError()
-
-    def get_data_split(self, split: str) -> torch.utils.data.Dataset:
-        return self._split_dict[split]
-
-class DataSplit(torch.utils.data.Dataset):
-    def __init__(self, x: torch.Tensor, t: torch.Tensor, n: int):
-        self.x = x
-        self.t = t
-        self.n = n
-
-    def __getitem__(self, index):
-        return self.x[index], self.t[index]
-
-    def __len__(self):
-        return self.n
-
-    def __repr__(self):
-        return util.format_type(
-            type(self),
-            x_shape=list(self.x.shape),
-            t_shape=list(self.t.shape),
-            n=self.n,
         )

@@ -1,7 +1,8 @@
 import torch.utils.data
 import torchvision
 from juml.datasets import loss
-from juml.datasets.base import DatasetFromDict, DATA_REL_DIR
+from juml.datasets.base import DATA_REL_DIR
+from juml.datasets.fromdict import DatasetFromDict
 
 class Mnist(DatasetFromDict):
     def _get_split_dict(self) -> dict[str, torch.utils.data.Dataset]:
