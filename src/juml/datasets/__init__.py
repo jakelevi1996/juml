@@ -1,3 +1,5 @@
+DATA_REL_DIR = "./data"
+
 from juml.datasets import loss
 
 from juml.datasets.split import DataSplit

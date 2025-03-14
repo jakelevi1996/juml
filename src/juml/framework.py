@@ -11,6 +11,7 @@ class Framework:
         return [
             models.LinearModel,
             models.Mlp,
+            models.RzMlp,
             models.Cnn,
         ]
 

@@ -3,8 +3,6 @@ from jutility import cli, util, units
 from juml.datasets.split import DataSplit
 from juml.datasets import loss
 
-DATA_REL_DIR = "./data"
-
 class Dataset:
     def __init__(self):
         self._init_loss()
