@@ -36,51 +36,17 @@ class Sweeper:
         self.log_x      = log_x
         self.init_experiment_config()
         self.init_results(None)
-
-        self.model_names = dict()
-        original_args = {k: args.get_value(k) for k in params.keys()}
-        original_args["seed"] = args.get_value("seed")
-        for i, (arg_str, arg_dict) in enumerate(
-            self.experiment_dict.items(),
-            start=1,
-        ):
-            print("(%2i) %s" % (i, arg_str))
-            args.update(arg_dict)
-            self.model_names[arg_str] = Trainer.get_summary(args)
-
-        args.update(original_args)
-        self.name = util.merge_strings(sorted(self.model_names.values()))
-        self.output_dir = os.path.join("results", "sweep", self.name)
+        self.init_name(args)
+        self.init_output_dir()
 
         printer.heading("Sweeper: Run experiments")
 
-        mp_context = multiprocessing.get_context("spawn")
-
-        q = mp_context.Queue()
-        for e in self.experiment_list:
-            q.put(e)
-
-        p_list = [
-            mp_context.Process(
-                target=sweeper_subprocess,
-                kwargs={
-                    "args":         args,
-                    "q":            q,
-                    "pid":          i,
-                    "devices":      d,
-                    "no_cache":     no_cache,
-                    "train_args":   train_args,
-                    "output_dir":   self.output_dir,
-                },
-            )
-            for i, d in enumerate(devices)
-        ]
-
-        for p in p_list:
-            p.start()
-
-        for p in p_list:
-            p.join()
+        self.run(
+            args=args,
+            devices=devices,
+            no_cache=no_cache,
+            train_args=train_args,
+        )
 
         printer.heading("Sweeper: display results")
 
@@ -245,6 +211,59 @@ class Sweeper:
             }
 
         self.results_dict = results_dict
+
+    def init_name(self, args: cli.ParsedArgs):
+        self.model_names = dict()
+        original_args = {k: args.get_value(k) for k in self.params.keys()}
+        original_args["seed"] = args.get_value("seed")
+        for i, (arg_str, arg_dict) in enumerate(
+            self.experiment_dict.items(),
+            start=1,
+        ):
+            print("(%2i) %s" % (i, arg_str))
+            args.update(arg_dict)
+            self.model_names[arg_str] = Trainer.get_summary(args)
+
+        args.update(original_args)
+        self.name = util.merge_strings(sorted(self.model_names.values()))
+
+    def init_output_dir(self):
+        self.output_dir = os.path.join("results", "sweep", self.name)
+
+    def run(
+        self,
+        args:       cli.ParsedArgs,
+        devices:    list[list[int]],
+        no_cache:   bool,
+        train_args: dict,
+    ):
+        mp_context = multiprocessing.get_context("spawn")
+
+        q = mp_context.Queue()
+        for e in self.experiment_list:
+            q.put(e)
+
+        p_list = [
+            mp_context.Process(
+                target=sweeper_subprocess,
+                kwargs={
+                    "args":         args,
+                    "q":            q,
+                    "pid":          i,
+                    "devices":      d,
+                    "no_cache":     no_cache,
+                    "train_args":   train_args,
+                    "output_dir":   self.output_dir,
+                },
+            )
+            for i, d in enumerate(devices)
+        ]
+
+        for p in p_list:
+            p.start()
+
+        for p in p_list:
+            p.join()
 
     def store_result(self, arg_str: str, metrics: dict):
         if arg_str not in self.results_dict:
