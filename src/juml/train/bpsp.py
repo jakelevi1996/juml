@@ -18,6 +18,8 @@ class BpSp(Trainer):
         optimiser:      torch.optim.Optimizer,
         lrs:            torch.optim.lr_scheduler.LRScheduler,
     ):
+        self._init_trainer(model, dataset, table)
+
         train_loader = dataset.get_data_loader("train", batch_size)
         test_loader  = dataset.get_data_loader("test" , batch_size)
 

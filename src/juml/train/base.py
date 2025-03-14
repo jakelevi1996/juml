@@ -17,6 +17,16 @@ class Trainer:
     ):
         raise NotImplementedError()
 
+    def _init_trainer(
+        self,
+        model:      Model,
+        dataset:    Dataset,
+        table:      util.Table,
+    ):
+        self.model      = model
+        self.dataset    = dataset
+        self.table      = table
+
     @classmethod
     def from_args(
         cls,
