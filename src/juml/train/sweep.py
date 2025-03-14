@@ -277,10 +277,10 @@ class Sweeper:
         md.heading("Summary")
 
         table = util.Table.key_value(printer=md)
-        table.update(k="`# experiments`",   v="`%s`" % len(self))
-        table.update(k="Target metric",     v="`%s`" % self.target_str)
-        table.update(k="Best result",       v="`%s`" % self.best_result)
-        table.update(k="Best params/seed",  v="`%s`" % self.best_arg_str)
+        table.update(k="`# experiments`",   v=md.code(len(self)))
+        table.update(k="Target metric",     v=md.code(self.target_str))
+        table.update(k="Best result",       v=md.code(self.best_result))
+        table.update(k="Best params/seed",  v=md.code(self.best_arg_str))
 
         best_seed = self.best_arg_dict["seed"]
         seeds_results_list = []
@@ -298,22 +298,22 @@ class Sweeper:
             ("Training duration",       "time_str"),
             ("Number of parameters",    "num_params"),
         ]:
-            table.update(k=name, v="`%s`" % self.best_metrics[metric])
+            table.update(k=name, v=md.code(self.best_metrics[metric]))
 
         for name, val in self.best_arg_dict.items():
-            table.update(k="`--%s`" % name, v="`%s`" % val)
+            table.update(k="`--%s`" % name, v=md.code(val))
 
         self.best_arg_dict["seed"] = best_seed
         mean_config = statistics.mean(seeds_results_list)
         mean_all    = statistics.mean(self.results_dict.values())
-        table.update(k="Mean (best params)",    v="`%s`" % mean_config)
-        table.update(k="Mean (all)",            v="`%s`" % mean_all)
+        table.update(k="Mean (best params)",    v=md.code(mean_config))
+        table.update(k="Mean (all)",            v=md.code(mean_all))
 
         if len(self.seeds) >= 2:
             std_config  = statistics.stdev(seeds_results_list)
             std_all     = statistics.stdev(self.results_dict.values())
-            table.update(k="STD (best params)", v="`%s`" %  std_config)
-            table.update(k="STD (all)",         v="`%s`" %  std_all)
+            table.update(k="STD (best params)", v=md.code(std_config))
+            table.update(k="STD (all)",         v=md.code(std_all))
 
         md.heading("Sweep configuration")
         table = util.Table.key_value(md)
@@ -334,10 +334,10 @@ class Sweeper:
 
         table = util.Table(
             util.Column("rank",     "i",    width=-10),
-            util.Column("metric",   ".5f",  title="`%s`" % self.target_str),
+            util.Column("metric",   ".5f",  title=md.code(self.target_str)),
             util.Column("seed",     "i",    title="`seed`"),
             *[
-                util.Column(param_name, title="`%s`" % param_name)
+                util.Column(param_name, title=md.code(param_name))
                 for param_name in self.params.keys()
             ],
             util.Column("model_name"),
