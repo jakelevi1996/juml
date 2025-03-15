@@ -220,11 +220,11 @@ class Trainer:
 
     @classmethod
     def get_summary(cls, args: cli.ParsedArgs) -> str:
-        return "d%s_m%s_t%s_s%s" % tuple(
+        return "d%s_l%s_m%s_t%s_s%s" % tuple(
             a.get_value_summary() + a.get_summary()
             for a in [
                 args.get_arg(name)
-                for name in ["dataset", "model", "trainer", "seed"]
+                for name in ["dataset", "loss", "model", "trainer", "seed"]
             ]
         )
 
