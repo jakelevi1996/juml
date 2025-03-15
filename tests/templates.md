@@ -1,6 +1,6 @@
 # Unit test templates
 
-See [link](URL).
+See [`tests/templates.md` on GitHub](https://github.com/jakelevi1996/juml/blob/main/tests/templates.md).
 
 ## Models
 
