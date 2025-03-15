@@ -92,6 +92,7 @@ class Framework:
             commands.Sweep,
             commands.Profile,
             commands.PlotConfusionMatrix,
+            commands.Plot1dRegression,
         ]
 
     @classmethod
