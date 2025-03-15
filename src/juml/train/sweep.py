@@ -25,11 +25,7 @@ class Sweeper:
 
         Trainer.apply_configs(args, configs, list(params.keys()))
 
-        with cli.verbose:
-            dataset = args.init_object("dataset")
-            assert isinstance(dataset, Dataset)
-
-        self.dataset        = dataset
+        self.dataset        = Trainer.init_dataset(args)
         self.params         = params
         self.seeds          = seeds
         self.target_str     = target_metric

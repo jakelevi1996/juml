@@ -41,16 +41,8 @@ class Trainer:
         device.set_visible(devices)
         torch.manual_seed(seed)
 
-        with cli.verbose:
-            dataset = args.init_object("dataset")
-            assert isinstance(dataset, Dataset)
-
-            model = args.init_object(
-                "model",
-                input_shape=dataset.get_input_shape(),
-                output_shape=dataset.get_output_shape(),
-            )
-            assert isinstance(model, Model)
+        dataset = cls.init_dataset(args)
+        model   = cls.init_model(args, dataset)
 
         gpu = (len(devices) > 0)
         if gpu:
@@ -98,6 +90,33 @@ class Trainer:
                 )
 
             args.update(config_dict)
+
+    @classmethod
+    def init_dataset(
+        cls,
+        args: cli.ParsedArgs,
+    ) -> Dataset:
+        with cli.verbose:
+            dataset = args.init_object("dataset")
+            assert isinstance(dataset, Dataset)
+
+        return dataset
+
+    @classmethod
+    def init_model(
+        cls,
+        args:       cli.ParsedArgs,
+        dataset:    Dataset,
+    ) -> Model:
+        with cli.verbose:
+            model = args.init_object(
+                "model",
+                input_shape=dataset.get_input_shape(),
+                output_shape=dataset.get_output_shape(),
+            )
+            assert isinstance(model, Model)
+
+        return model
 
     @classmethod
     def init_sub_objects(
