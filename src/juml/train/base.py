@@ -119,6 +119,26 @@ class Trainer:
         return model
 
     @classmethod
+    def init_loss(
+        cls,
+        args:       cli.ParsedArgs,
+        dataset:    Dataset,
+        model:      Model,
+    ) -> Loss:
+        loss_arg = args.get_arg("loss")
+        loss_arg.set_default_choice(  model.get_default_loss())
+        loss_arg.set_default_choice(dataset.get_default_loss())
+
+        with cli.verbose:
+            loss = args.init_object("loss")
+            assert isinstance(loss, Loss)
+
+        if loss.needs_weights():
+            loss.set_weights(dataset.get_loss_weights())
+
+        return loss
+
+    @classmethod
     def init_sub_objects(
         cls,
         args:       cli.ParsedArgs,
