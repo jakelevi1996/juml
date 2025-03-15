@@ -1,4 +1,5 @@
 import torch
+from jutility import cli
 from juml.loss.base import Loss
 
 class ChamferMse(Loss):
@@ -31,3 +32,7 @@ class ChamferMse(Loss):
 
     def needs_weights(self) -> bool:
         return True
+
+    @classmethod
+    def get_cli_arg(cls):
+        return cli.ObjectArg(cls, tag="CH")

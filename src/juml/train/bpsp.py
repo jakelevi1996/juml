@@ -101,6 +101,7 @@ class BpSp(Trainer):
                     torch.optim.AdamW,
                     cli.Arg("lr",           type=float, default=0.001),
                     cli.Arg("weight_decay", type=float, default=0.01),
+                    tag="AW",
                 ),
                 cli.ObjectArg(
                     torch.optim.SGD,
