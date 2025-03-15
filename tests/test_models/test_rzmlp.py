@@ -63,3 +63,40 @@ def test_rzmlp():
         g = layer.f1.w_io.grad
         assert isinstance(g, torch.Tensor)
         assert list(g.shape) == [model_dim, hidden_dim]
+
+def test_rzmlp_num_params():
+    juml.test_utils.set_torch_seed("test_rzmlp_num_params")
+    printer = util.Printer("test_rzmlp_num_params", dir_name=OUTPUT_DIR)
+
+    input_dim   = 7
+    output_dim  = 11
+    nhl         = 3
+    model_dim   = 23
+    ratio       = 2
+    hidden_dim  = model_dim * ratio
+
+    model = juml.models.RzMlp(
+        input_shape=[input_dim],
+        output_shape=[output_dim],
+        model_dim=model_dim,
+        expand_ratio=ratio,
+        num_hidden_layers=nhl,
+        embedder=juml.models.embed.Identity(),
+        pooler=juml.models.pool.Identity(),
+    )
+
+    def linear_layer_params(i, o):
+        return i*o + o
+
+    def rezero_mlp_layer_params(m, e):
+        return linear_layer_params(m, e*m) + linear_layer_params(e*m, m)
+
+    assert isinstance(model.num_params(), int)
+    assert model.num_params() == (
+        linear_layer_params(input_dim, model_dim)
+        + (nhl * rezero_mlp_layer_params(model_dim, ratio))
+        + linear_layer_params(model_dim, output_dim)
+        + nhl
+    )
+    assert model.num_params() == 7006
+    assert repr(model) == "RzMlp(num_params=7.0k)"
