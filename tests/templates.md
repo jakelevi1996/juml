@@ -29,8 +29,8 @@ def test_{<model_type>}():
 
     input_dim   = {<input_dim>}
     output_dim  = {<output_dim>}
-    x = torch.rand([{<input_shape>}, {<input_dim>}])
-    t = torch.rand([{<output_shape>}, {<output_dim>}])
+    x = torch.rand([{<input_shape>}, input_dim])
+    t = torch.rand([{<output_shape>}, output_dim])
 
     model = juml.models.{<ModelType>}(
         input_shape=list(x.shape),
