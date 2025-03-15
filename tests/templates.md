@@ -2,6 +2,18 @@
 
 See [`tests/templates.md` on GitHub](https://github.com/jakelevi1996/juml/blob/main/tests/templates.md).
 
+## Contents
+
+- [Unit test templates](#unit-test-templates)
+  - [Contents](#contents)
+  - [Models](#models)
+    - [Embed](#embed)
+    - [Pool](#pool)
+  - [Datasets](#datasets)
+  - [Loss](#loss)
+  - [Trainers](#trainers)
+  - [Commands](#commands)
+
 ## Models
 
 ```py
@@ -48,6 +60,10 @@ def test_<model_type>():
 
     assert loss_1.item() < loss_0.item()
 ```
+
+### Embed
+
+### Pool
 
 ## Datasets
 
@@ -96,3 +112,9 @@ def test_<dataset_type>():
     assert t.max().item() <= <t_max>
     assert t.min().item() >= <t_min>
 ```
+
+## Loss
+
+## Trainers
+
+## Commands
