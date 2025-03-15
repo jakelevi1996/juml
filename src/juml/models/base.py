@@ -14,9 +14,6 @@ class Model(torch.nn.Module):
     def num_params(self):
         return sum(p.numel() for p in self.parameters())
 
-    def get_default_loss(self) -> str | None:
-        return None
-
     @classmethod
     def get_cli_arg(cls):
         return cli.ObjectArg(

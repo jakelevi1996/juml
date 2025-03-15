@@ -47,7 +47,7 @@ class Trainer:
 
         dataset = cls.init_dataset(args)
         model   = cls.init_model(args, dataset)
-        loss    = cls.init_loss(args, dataset, model)
+        loss    = cls.init_loss(args, dataset)
 
         gpu = (len(devices) > 0)
         if gpu:
@@ -129,10 +129,8 @@ class Trainer:
         cls,
         args:       cli.ParsedArgs,
         dataset:    Dataset,
-        model:      Model,
     ) -> Loss:
         loss_arg = args.get_arg("loss")
-        loss_arg.set_default_choice(  model.get_default_loss())
         loss_arg.set_default_choice(dataset.get_default_loss())
 
         with cli.verbose:
