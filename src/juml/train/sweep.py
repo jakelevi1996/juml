@@ -3,7 +3,6 @@ import multiprocessing
 import queue
 import statistics
 from jutility import plotting, util, cli
-from juml.datasets.base import Dataset
 from juml.train.base import Trainer
 
 class Sweeper:
@@ -24,8 +23,9 @@ class Sweeper:
         printer.heading("Sweeper: Initialise experiments")
 
         Trainer.apply_configs(args, configs, list(params.keys()))
+        dataset     = Trainer.init_dataset(args)
+        self.loss   = Trainer.init_loss(args, dataset)
 
-        self.dataset        = Trainer.init_dataset(args)
         self.params         = params
         self.seeds          = seeds
         self.target_str     = target_metric
@@ -193,7 +193,7 @@ class Sweeper:
         best_val    = self.best_arg_dict[param_name]
         best_seed   = self.best_arg_dict["seed"]
 
-        metric_info = self.dataset.loss.metric_info()
+        metric_info = self.loss.metric_info()
         log_y       = metric_info.get("log_y", False)
         log_x       = (True if (param_name in self.log_x) else False)
 
