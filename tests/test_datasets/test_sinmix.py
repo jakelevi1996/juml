@@ -1,3 +1,4 @@
+import pytest
 import torch
 import torch.utils.data
 from jutility import util
@@ -54,5 +55,6 @@ def test_sinmix():
     assert t.max().item() > 0
     assert t.min().item() < 0
 
-    assert isinstance(dataset.loss, juml.datasets.loss.Loss)
-    assert isinstance(dataset.loss, juml.datasets.loss.Mse)
+    assert dataset.get_default_loss() == "Mse"
+    with pytest.raises(NotImplementedError):
+        dataset.get_loss_weights()
