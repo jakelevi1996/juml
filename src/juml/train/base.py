@@ -262,6 +262,8 @@ class Trainer:
         args_dict = util.load_json(args_path)
         args.update(args_dict, allow_new_keys=True)
 
+        torch.manual_seed(args.get_value("seed"))
+
         dataset = cls.init_dataset(args)
         model   = cls.init_model(args, dataset)
 
