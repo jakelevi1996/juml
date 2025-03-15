@@ -22,6 +22,7 @@ class Framework:
         return [
             datasets.LinearDataset,
             datasets.SinMix,
+            datasets.RandomImage,
             datasets.Mnist,
             datasets.Cifar10,
         ]
