@@ -11,8 +11,8 @@ class Model(torch.nn.Module):
     def init_batch(self, x: torch.Tensor, t: torch.Tensor):
         return
 
-    def num_params(self):
-        return sum(p.numel() for p in self.parameters())
+    def num_params(self) -> int:
+        return sum(int(p.numel()) for p in self.parameters())
 
     @classmethod
     def get_cli_arg(cls):
