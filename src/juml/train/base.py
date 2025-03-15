@@ -238,16 +238,8 @@ class Trainer:
         args_dict = util.load_json(args_path)
         args.update(args_dict, allow_new_keys=True)
 
-        with cli.verbose:
-            dataset = args.init_object("dataset")
-            assert isinstance(dataset, Dataset)
-
-            model = args.init_object(
-                "model",
-                input_shape=dataset.get_input_shape(),
-                output_shape=dataset.get_output_shape(),
-            )
-            assert isinstance(model, Model)
+        dataset = cls.init_dataset(args)
+        model   = cls.init_model(args, dataset)
 
         model_path = util.get_full_path("model.pth", model_dir, loading=True)
         state_dict = torch.load(model_path, map_location="cpu")
