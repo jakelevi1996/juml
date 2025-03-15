@@ -3,7 +3,6 @@ from juml.datasets.base import Dataset
 
 class DatasetFromDict(Dataset):
     def __init__(self):
-        self._init_loss()
         self._init_split_dict()
 
     def _init_split_dict(self):

@@ -1,6 +1,5 @@
 import torch
 from jutility import cli
-from juml.datasets import loss
 from juml.datasets.synthetic import Synthetic
 
 class LinearDataset(Synthetic):
@@ -29,8 +28,8 @@ class LinearDataset(Synthetic):
         t_no = x_ni @ self.w_io + self.b_o
         return t_no
 
-    def _get_loss(self) -> loss.Loss:
-        return loss.Mse()
+    def get_default_loss(self) -> str | None:
+        return "Mse"
 
     @classmethod
     def get_cli_arg(cls):

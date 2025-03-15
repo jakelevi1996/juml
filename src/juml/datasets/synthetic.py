@@ -1,7 +1,6 @@
 import torch
 import torch.utils.data
 from jutility import cli
-from juml.datasets import loss
 from juml.datasets.split import DataSplit
 from juml.datasets.fromdict import DatasetFromDict
 
@@ -21,7 +20,6 @@ class Synthetic(DatasetFromDict):
         self._n_test        = n_test
         self._x_std         = x_std
         self._t_std         = t_std
-        self._init_loss()
         self._init_split_dict()
 
     def _get_split_dict(self) -> dict[str, torch.utils.data.Dataset]:

@@ -1,15 +1,8 @@
 import torch.utils.data
 from jutility import cli, util, units
 from juml.datasets.split import DataSplit
-from juml.datasets import loss
 
 class Dataset:
-    def __init__(self):
-        self._init_loss()
-
-    def _init_loss(self):
-        self.loss = self._get_loss()
-
     def get_data_loader(
         self,
         split: str,
@@ -57,7 +50,10 @@ class Dataset:
     def get_output_shape(self) -> list[int]:
         raise NotImplementedError()
 
-    def _get_loss(self) -> loss.Loss:
+    def get_default_loss(self) -> str | None:
+        return None
+
+    def get_loss_weights(self) -> torch.Tensor:
         raise NotImplementedError()
 
     @classmethod
