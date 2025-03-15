@@ -7,3 +7,4 @@ from juml.models.linear import LinearModel, Linear, MultiHeadLinear
 from juml.models.mlp import Mlp
 from juml.models.rzmlp import RzMlp, ReZeroMlpLayer
 from juml.models.cnn import Cnn
+from juml.models.rzcnn import RzCnn

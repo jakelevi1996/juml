@@ -14,6 +14,7 @@ class Framework:
             models.Mlp,
             models.RzMlp,
             models.Cnn,
+            models.RzCnn,
         ]
 
     @classmethod
