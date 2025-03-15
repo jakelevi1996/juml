@@ -9,16 +9,16 @@ from juml.loss.base import Loss
 class BpSp(Trainer):
     def __init__(
         self,
-        args:           cli.ParsedArgs,
-        model:          Model,
-        dataset:        Dataset,
-        loss:           Loss,
-        gpu:            bool,
-        table:          util.Table,
-        batch_size:     int,
-        epochs:         int,
-        optimiser:      torch.optim.Optimizer,
-        lrs:            torch.optim.lr_scheduler.LRScheduler,
+        args:       cli.ParsedArgs,
+        model:      Model,
+        dataset:    Dataset,
+        loss:       Loss,
+        gpu:        bool,
+        table:      util.Table,
+        batch_size: int,
+        epochs:     int,
+        optimiser:  torch.optim.Optimizer,
+        lrs:        torch.optim.lr_scheduler.LRScheduler,
     ):
         self._init_trainer(model, dataset, loss, table)
 
