@@ -4,6 +4,7 @@ from jutility import cli, util, plotting
 from juml import device
 from juml.models.base import Model
 from juml.datasets.base import Dataset
+from juml.loss.base import Loss
 
 class Trainer:
     def __init__(
@@ -11,6 +12,7 @@ class Trainer:
         args:       cli.ParsedArgs,
         model:      Model,
         dataset:    Dataset,
+        loss:       Loss,
         gpu:        bool,
         table:      util.Table,
         **kwargs,
@@ -21,10 +23,12 @@ class Trainer:
         self,
         model:      Model,
         dataset:    Dataset,
+        loss:       Loss,
         table:      util.Table,
     ):
         self.model      = model
         self.dataset    = dataset
+        self.loss       = loss
         self.table      = table
 
     @classmethod
@@ -43,11 +47,12 @@ class Trainer:
 
         dataset = cls.init_dataset(args)
         model   = cls.init_model(args, dataset)
+        loss    = cls.init_loss(args, dataset, model)
 
         gpu = (len(devices) > 0)
         if gpu:
             model.cuda()
-            dataset.loss.cuda()
+            loss.cuda()
 
         trainer_type = args.get_type("trainer")
         assert issubclass(trainer_type, Trainer)
@@ -58,6 +63,7 @@ class Trainer:
             args=args,
             model=model,
             dataset=dataset,
+            loss=loss,
             gpu=gpu,
             table=util.Table(
                 *trainer_type.get_table_columns(),
@@ -235,14 +241,14 @@ class Trainer:
             plotting.Subplot(
                 plotting.Line(batch_loss),
                 xlabel="Batch",
-                **self.dataset.loss.info(),
+                **self.loss.info(),
             ),
             plotting.Subplot(
                 plotting.Line(train_metric, c="b", label=train_label),
                 plotting.Line(test_metric,  c="r", label=test_label),
                 plotting.Legend(),
                 xlabel="Epoch",
-                **self.dataset.loss.metric_info(),
+                **self.loss.metric_info(),
             ),
             title="%r\n%r" % (self.model, self.dataset),
             title_font_size=15,

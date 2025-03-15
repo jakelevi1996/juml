@@ -4,6 +4,7 @@ from juml import device
 from juml.train.base import Trainer
 from juml.models.base import Model
 from juml.datasets.base import Dataset
+from juml.loss.base import Loss
 
 class BpSp(Trainer):
     def __init__(
@@ -11,6 +12,7 @@ class BpSp(Trainer):
         args:           cli.ParsedArgs,
         model:          Model,
         dataset:        Dataset,
+        loss:           Loss,
         gpu:            bool,
         table:          util.Table,
         batch_size:     int,
@@ -18,17 +20,17 @@ class BpSp(Trainer):
         optimiser:      torch.optim.Optimizer,
         lrs:            torch.optim.lr_scheduler.LRScheduler,
     ):
-        self._init_trainer(model, dataset, table)
+        self._init_trainer(model, dataset, loss, table)
 
         train_loader = dataset.get_data_loader("train", batch_size)
         test_loader  = dataset.get_data_loader("test" , batch_size)
 
         table.get_column("train_metric").set_callback(
-            lambda: dataset.loss.metric(model, train_loader, gpu),
+            lambda: loss.metric(model, train_loader, gpu),
             level=1,
         )
         table.get_column("test_metric").set_callback(
-            lambda: dataset.loss.metric(model, test_loader, gpu),
+            lambda: loss.metric(model, test_loader, gpu),
             level=1,
         )
 
@@ -37,13 +39,13 @@ class BpSp(Trainer):
             for i, (x, t) in enumerate(train_loader):
                 x, t = device.to_device([x, t], gpu)
                 y = model.forward(x)
-                loss = dataset.loss.forward(y, t)
+                batch_loss = loss.forward(y, t)
 
                 optimiser.zero_grad()
-                loss.backward()
+                batch_loss.backward()
                 optimiser.step()
 
-                table.update(epoch=e, batch=i, batch_loss=loss.item())
+                table.update(epoch=e, batch=i, batch_loss=batch_loss.item())
 
             table.print_last()
             lrs.step()
