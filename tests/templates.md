@@ -15,10 +15,10 @@ def test_<model_type>():
     printer = util.Printer("test_<model_type>", dir_name=OUTPUT_DIR)
     juml.test_utils.set_torch_seed("test_<model_type>")
 
-    input_dim   = 7
-    output_dim  = 11
-    x = torch.rand([3, 4, 5, input_dim])
-    t = torch.rand([3, 6, 7, 8, output_dim])
+    input_dim   = <input_dim>
+    output_dim  = <output_dim>
+    x = torch.rand([<input_shape>, <input_dim>])
+    t = torch.rand([<output_shape>, <output_dim>])
 
     model = juml.models.<ModelType>(
         input_shape=list(x.shape),
@@ -30,14 +30,14 @@ def test_<model_type>():
     loss        = juml.loss.<LossType>()
     optimiser   = torch.optim.Adam(model.parameters())
 
-    assert repr(model) == "<ModelType>(num_params=1234)"
-    assert model.num_params() == 1234
+    assert repr(model) == "<ModelType>(num_params=<num_params_str>)"
+    assert model.num_params() == <num_params>
 
     y_0 = model.forward(x)
     assert isinstance(y_0, torch.Tensor)
     assert y_0.dtype is torch.float32
     assert y_0.dtype is not torch.int64
-    assert list(y_0.shape) == [9, 10, output_dim]
+    assert list(y_0.shape) == <model_output_shape>
 
     loss_0 = loss.forward(y_0, t)
     loss_0.backward()
