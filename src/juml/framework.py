@@ -1,7 +1,8 @@
 from jutility import cli, util
-from juml import models, datasets, train, commands
+from juml import models, datasets, loss, train, commands
 from juml.models.base import Model
 from juml.datasets.base import Dataset
+from juml.loss.base import Loss
 from juml.train.base import Trainer
 from juml.commands.base import Command
 
@@ -25,6 +26,15 @@ class Framework:
         ]
 
     @classmethod
+    def get_losses(cls) -> list[type[Loss]]:
+        return [
+            loss.CrossEntropy,
+            loss.Mse,
+            loss.WeightedSetMse,
+            loss.ChamferMse,
+        ]
+
+    @classmethod
     def get_trainers(cls) -> list[type[Trainer]]:
         return [
             train.BpSp,
@@ -35,6 +45,7 @@ class Framework:
         return {
             "model":    None,
             "dataset":  None,
+            "loss":     None,
             "trainer":  "BpSp",
         }
 
@@ -42,6 +53,13 @@ class Framework:
     def get_train_args(cls) -> list[cli.Arg]:
         defaults = cls.get_defaults()
         return [
+            cli.ObjectChoice(
+                "loss",
+                *[t.get_cli_arg() for t in cls.get_losses()],
+                default=defaults["loss"],
+                is_group=True,
+                required=False,
+            ),
             cli.ObjectChoice(
                 "dataset",
                 *[t.get_cli_arg() for t in cls.get_datasets()],
