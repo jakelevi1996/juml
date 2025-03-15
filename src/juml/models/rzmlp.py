@@ -25,7 +25,6 @@ class RzMlp(Sequential):
         self.layers.append(layer)
 
         for _ in range(num_hidden_layers):
-            # layer = ReZeroMlpLayer(model_dim, model_dim)
             layer = ReZeroMlpLayer(model_dim, expand_ratio)
             self.layers.append(layer)
 
