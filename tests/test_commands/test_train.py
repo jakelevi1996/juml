@@ -9,7 +9,7 @@ def test_train():
     juml.test_utils.set_torch_seed("test_train")
 
     output_path = (
-        "results/train/dSh1i3o5te100tr100ts0.1x0.0_lM_mMeIh23n2pI_"
+        "results/train/dSh1i3o5te200tr200ts0.1x0.0_lM_mMeIh23n2pI_"
         "tBb57e7lCle1E-05oAol0.001_s0/model.pth"
     )
     if os.path.isfile(output_path):
