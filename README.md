@@ -5,3 +5,26 @@ A Judicious, Unified and extendable framework for multi-paradigm Machine Learnin
 > *[Judicious [adjective]: having or showing reason and good judgment in making decisions](https://dictionary.cambridge.org/dictionary/english/judicious)*
 
 ![](scripts/img/logo_black.png)
+
+## Contents
+
+- [juml](#juml)
+  - [Contents](#contents)
+  - [Installation](#installation)
+
+## Installation
+
+The `juml` package is available as [a Python package on PyPI](https://pypi.org/project/juml-toolkit/), and can be installed with `pip` using the following commands:
+
+```
+python -m pip install -U pip
+python -m pip install -U juml-toolkit
+```
+
+Alternatively, `juml` can be installed in "editable mode" from the GitHub repository:
+
+```
+git clone https://github.com/jakelevi1996/juml.git
+python -m pip install -U pip
+python -m pip install -e ./juml
+```
