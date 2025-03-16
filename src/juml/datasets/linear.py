@@ -37,8 +37,8 @@ class LinearDataset(Synthetic):
             cls,
             cli.Arg("input_dim",    type=int,   default=10),
             cli.Arg("output_dim",   type=int,   default=10),
-            cli.Arg("train",        type=int,   default=1000),
-            cli.Arg("test",         type=int,   default=1000),
+            cli.Arg("train",        type=int,   default=200),
+            cli.Arg("test",         type=int,   default=200),
             cli.Arg("x_std",        type=float, default=0.0),
             cli.Arg("t_std",        type=float, default=0.0),
         )

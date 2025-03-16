@@ -43,8 +43,8 @@ class SinMix(Synthetic):
             cli.Arg("input_dim",    type=int,   default=1),
             cli.Arg("hidden_dim",   type=int,   default=1),
             cli.Arg("output_dim",   type=int,   default=1),
-            cli.Arg("train",        type=int,   default=100),
-            cli.Arg("test",         type=int,   default=100),
+            cli.Arg("train",        type=int,   default=200),
+            cli.Arg("test",         type=int,   default=200),
             cli.Arg("x_std",        type=float, default=0.0),
             cli.Arg("t_std",        type=float, default=0.1),
         )
