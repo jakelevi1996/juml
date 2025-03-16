@@ -63,7 +63,53 @@ def test_{<model_type>}():
 
 ### Embed
 
+```py
+...
+
+def test_{<embedder_type>}():
+    printer = util.Printer("test_{<embedder_type>}", dir_name=OUTPUT_DIR)
+    juml.test_utils.set_torch_seed("test_{<embedder_type>}")
+
+    embedder = juml.models.embed.{<EmbedderType>}(...)
+
+    x = torch.rand({<x_shape>})
+
+    embedder.set_input_shape(list(x.shape))
+    assert repr(embedder) == "{<EmbedderType>}(num_params={<num_params_str>})"
+    assert embedder.num_params() == {<num_params>}
+    assert embedder.get_output_shape() == [{<output_shape>}]
+    assert embedder.get_output_dim(-1) == {<output_dim>}
+
+    y = embedder.forward(x)
+    assert isinstance(y, torch.Tensor)
+    assert y.dtype is torch.float32
+    assert list(y.shape) == {<y_shape>}
+```
+
 ### Pool
+
+```py
+...
+
+def test_{<pool_type>}():
+    printer = util.Printer("test_{<pool_type>}", dir_name=OUTPUT_DIR)
+    juml.test_utils.set_torch_seed("test_{<pool_type>}")
+
+    pooler = juml.models.pool.{<PoolType>}(...)
+
+    x = torch.rand([{<x_shape>}])
+
+    pooler.set_shapes(list(x.shape), [{<output_shape>}])
+    assert repr(pooler) == "{<PoolType>}(num_params={<num_params_str>})"
+    assert pooler.num_params() == {<num_params>}
+    assert pooler.get_input_shape() == [{<input_shape>}]
+    assert pooler.get_input_dim(-1) == {<input_dim>}
+
+    y = pooler.forward(x)
+    assert isinstance(y, torch.Tensor)
+    assert y.dtype is torch.float32
+    assert list(y.shape) == {<y_shape>}
+```
 
 ## Datasets
 
