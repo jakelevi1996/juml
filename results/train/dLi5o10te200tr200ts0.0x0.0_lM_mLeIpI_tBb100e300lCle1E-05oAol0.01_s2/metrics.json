@@ -1,0 +1,22 @@
+{
+    "repr_model": "LinearModel(num_params=60)",
+    "model_name": "dLi5o10te200tr200ts0.0x0.0_lM_mLeIpI_tBb100e300lCle1E-05oAol0.01_s2",
+    "model_dir": "results/train/dLi5o10te200tr200ts0.0x0.0_lM_mLeIpI_tBb100e300lCle1E-05oAol0.01_s2",
+    "num_params": 60,
+    "time_str": "1.4916 seconds",
+    "time": 1.491578004002804,
+    "train": {
+        "start": 68.86100341796875,
+        "end": 0.1906886386871338,
+        "max": 68.86100341796875,
+        "min": 0.1906886386871338
+    },
+    "test": {
+        "start": 72.84058349609376,
+        "end": 0.23807397842407227,
+        "max": 72.84058349609376,
+        "min": 0.23807397842407227
+    },
+    "train_summary": "start = 68.86100, end =  0.19069, max = 68.86100, min =  0.19069",
+    "test_summary": "start = 72.84058, end =  0.23807, max = 72.84058, min =  0.23807"
+}
