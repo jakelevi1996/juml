@@ -152,4 +152,51 @@ def test_{<loss_type>}():
 
 ## Trainers
 
+```py
+import torch
+from jutility import util
+import juml
+
+OUTPUT_DIR = juml.test_utils.get_output_dir("test_train/test_{<trainer_type>}")
+
+def test_{<trainer_type>}():
+    printer = util.Printer("test_{<trainer_type>}", dir_name=OUTPUT_DIR)
+    juml.test_utils.set_torch_seed("test_{<trainer_type>}")
+
+    parser  = juml.base.Framework.get_parser()
+    args_str = (
+        "train "
+        "--trainer {<TrainerType>} "
+        ...
+        "--model {<ModelType>} "
+        ...
+        "--dataset {<DatasetType>} "
+        ...
+    )
+    args = parser.parse_args(args_str.split())
+    command = args.get_command()
+    assert isinstance(command, juml.commands.Train)
+
+    trainer = command.run(args)
+    assert isinstance(trainer,          juml.train.{<TrainerType>})
+    assert isinstance(trainer.model,    juml.models.{<ModelType>})
+    assert isinstance(trainer.dataset,  juml.datasets.{<DatasetType>})
+    assert isinstance(trainer.loss,     juml.loss.{<LossType>})
+    assert isinstance(trainer.table,    util.Table)
+
+    batch_loss = trainer.table.get_data("batch_loss")
+    printer(batch_loss)
+    assert batch_loss[-1] < batch_loss[0]
+
+    x, t = next(iter(trainer.dataset.get_data_loader("train", 13)))
+    assert isinstance(x, torch.Tensor)
+    assert x.dtype is torch.float32
+    assert list(x.shape) == [{<x_shape>}]
+
+    y = trainer.model.forward(x)
+    assert isinstance(y, torch.Tensor)
+    assert y.dtype is torch.float32
+    assert list(y.shape) == [{<y_shape>}]
+```
+
 ## Commands
