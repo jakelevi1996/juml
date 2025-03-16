@@ -1,6 +1,4 @@
-import math
 import torch
-import torch.utils.data
 from jutility import util
 import juml
 

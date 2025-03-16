@@ -1,4 +1,3 @@
-import math
 import torch
 from jutility import cli
 from juml.models.base import Model
