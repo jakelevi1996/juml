@@ -30,13 +30,15 @@ python -m pip install -U pip
 python -m pip install -U juml-toolkit
 ```
 
-Alternatively, `juml` can be installed in "editable mode" from the GitHub repository:
+Alternatively, `juml` can be installed in "editable mode" from the [GitHub repository](https://github.com/jakelevi1996/juml):
 
 ```
 git clone https://github.com/jakelevi1996/juml.git
 python -m pip install -U pip
 python -m pip install -e ./juml
 ```
+
+The `juml` package depends on [PyTorch](https://pytorch.org/). The installation instructions for PyTorch depend on which (if any) CUDA version is available, so PyTorch won't be automatically installed by `pip` when installing `juml`. Instead, please install PyTorch following the [official PyTorch installation instructions](https://pytorch.org/get-started/locally/).
 
 ## Overview
 
