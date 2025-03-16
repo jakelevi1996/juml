@@ -115,6 +115,41 @@ def test_{<dataset_type>}():
 
 ## Loss
 
+```py
+import torch
+from jutility import util
+import juml
+
+OUTPUT_DIR = juml.test_utils.get_output_dir("test_loss/test_{<loss_type>}")
+
+def test_{<loss_type>}():
+    printer = util.Printer("test_{<loss_type>}", dir_name=OUTPUT_DIR)
+    juml.test_utils.set_torch_seed("test_{<loss_type>}")
+
+    output_dim = 13
+    batch_size = 87
+
+    y = torch.rand([batch_size, output_dim])
+    t = torch.rand([batch_size, output_dim])
+    # OR
+    t = torch.randint(0, output_dim, [batch_size])
+
+    loss = juml.batch_loss.{<LossType>}()
+
+    batch_loss = loss.forward(y, t)
+    assert isinstance(batch_loss, torch.Tensor)
+    assert list(batch_loss.shape) == []
+    assert batch_loss.item() >= 0
+    assert batch_loss.item() >= 0
+
+    metric = loss.metric_batch(y, t)
+    assert isinstance(metric, float)
+    # OR
+    assert isinstance(metric, int)
+    assert metric >= 0
+    assert metric <= {<max_metric>}
+```
+
 ## Trainers
 
 ## Commands
