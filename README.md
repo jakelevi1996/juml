@@ -11,10 +11,13 @@ A Judicious, Unified and extendable framework for multi-paradigm Machine Learnin
 - [juml](#juml)
   - [Contents](#contents)
   - [Installation](#installation)
+  - [Usage examples](#usage-examples)
+    - [Out of the box](#out-of-the-box)
+    - [Extending `juml`](#extending-juml)
 
 ## Installation
 
-The `juml` package is available as [a Python package on PyPI](https://pypi.org/project/juml-toolkit/), and can be installed with `pip` using the following commands:
+The `juml` package is available as [a Python package on PyPI](https://pypi.org/project/juml-toolkit/), and can be installed using `pip` with the following commands:
 
 ```
 python -m pip install -U pip
@@ -28,3 +31,15 @@ git clone https://github.com/jakelevi1996/juml.git
 python -m pip install -U pip
 python -m pip install -e ./juml
 ```
+
+## Usage examples
+
+*TODO*
+
+### Out of the box
+
+*TODO*
+
+### Extending `juml`
+
+*TODO*
