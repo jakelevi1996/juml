@@ -100,5 +100,5 @@ cd ../../..
 ## `sweep` command
 
 ```
-/home/jakevi/.local/bin/juml sweep --model LinearModel --dataset LinearDataset --dataset.LinearDataset.input_dim 5 --dataset.LinearDataset.output_dim 10 --print_level 1 --Sweeper.seeds 1 2 3 --Sweeper.params {"trainer.BpSp.epochs":[100,200,300],"trainer.BpSp.optimiser.Adam.lr":[1e-5,1e-4,1e-3,1e-2]} --Sweeper.log_x trainer.BpSp.optimiser.Adam.lr --Sweeper.devices [[],[],[],[],[],[]] --Sweeper.no_cache
+juml sweep --model LinearModel --dataset LinearDataset --dataset.LinearDataset.input_dim 5 --dataset.LinearDataset.output_dim 10 --print_level 1 --Sweeper.seeds 1 2 3 --Sweeper.params {"trainer.BpSp.epochs":[100,200,300],"trainer.BpSp.optimiser.Adam.lr":[1e-5,1e-4,1e-3,1e-2]} --Sweeper.log_x trainer.BpSp.optimiser.Adam.lr --Sweeper.devices [[],[],[],[],[],[]] --Sweeper.no_cache
 ```
