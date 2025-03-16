@@ -200,3 +200,37 @@ def test_{<trainer_type>}():
 ```
 
 ## Commands
+
+```py
+import os
+from jutility import util
+import juml
+
+OUTPUT_DIR = juml.test_utils.get_output_dir("test_commands/test_{<command_type>}")
+
+def test_{<command_type>}():
+    printer = util.Printer("test_{<command_type>}", dir_name=OUTPUT_DIR)
+    juml.test_utils.set_torch_seed("test_{<command_type>}")
+
+    output_path = (
+        "results/{<output_path>}"
+    )
+    if os.path.isfile(output_path):
+        os.remove(output_path)
+
+    assert not os.path.isfile(output_path)
+
+    parser = juml.base.Framework.get_parser()
+    args_str = (
+        "{<command_type>} "
+        ...
+    )
+    args = parser.parse_args(args_str.split())
+    command = args.get_command()
+    assert isinstance(command, juml.commands.{<CommandType>})
+
+    {<return_value>} = command.run(args)
+    assert isinstance({<return_value>}, juml.{<ReturnType>})
+
+    assert os.path.isfile(output_path)
+```
