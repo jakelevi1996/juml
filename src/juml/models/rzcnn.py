@@ -62,7 +62,6 @@ class ReZeroCnnLayer(Model):
         self.conv_1 = torch.nn.Conv2d(
             in_channels=model_dim,
             out_channels=model_dim,
-            # out_channels=expand_dim,
             kernel_size=kernel_size,
             groups=model_dim,
             padding="same",
