@@ -9,7 +9,8 @@ class Sweep(Command):
                 "Sweeper",
                 args=args,
                 **self.get_kwargs(),
-        )
+            )
+            assert isinstance(sweeper, Sweeper)
 
         return sweeper
 
