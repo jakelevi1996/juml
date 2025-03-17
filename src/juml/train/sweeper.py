@@ -362,7 +362,7 @@ class Sweeper:
         rm_path = os.path.relpath("README.md", self.output_dir)
 
         md.heading("%s include" % md.make_link(rm_path, "`README.md`"), "\n")
-        md.file_link(md.get_filename(), "`[ sweep_results ]`")
+        md.file_link(md.get_filename(), "`[ full_sweep_results ]`")
 
         md.heading("`sweep` command", end="\n")
         md.code_block(util.get_argv_str())
