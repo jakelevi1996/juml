@@ -21,16 +21,14 @@ import torch
 from jutility import util
 import juml
 
-OUTPUT_DIR = juml.test_utils.get_output_dir("test_models/test_{<model_type>}")
+OUTPUT_DIR = juml.test_utils.get_output_dir("test_models/test_{<modeltype>}")
 
-def test_{<model_type>}():
-    printer = util.Printer("test_{<model_type>}", dir_name=OUTPUT_DIR)
-    juml.test_utils.set_torch_seed("test_{<model_type>}")
+def test_{<modeltype>}():
+    printer = util.Printer("test_{<modeltype>}", dir_name=OUTPUT_DIR)
+    juml.test_utils.set_torch_seed("test_{<modeltype>}")
 
-    input_dim   = {<input_dim>}
-    output_dim  = {<output_dim>}
-    x = torch.rand([{<input_shape>}, input_dim])
-    t = torch.rand([{<output_shape>}, output_dim])
+    x = torch.rand([{<input_shape>}])
+    t = torch.rand([{<output_shape>}])
 
     model = juml.models.{<ModelType>}(
         input_shape=list(x.shape),
@@ -39,8 +37,8 @@ def test_{<model_type>}():
         embedder=juml.models.embed.Identity(),
         pooler=juml.models.pool.Identity(),
     )
-    loss        = juml.loss.{<LossType>}()
-    optimiser   = torch.optim.Adam(model.parameters())
+    loss = juml.loss.{<LossType>}()
+    optimiser = torch.optim.Adam(model.parameters())
 
     assert repr(model) == "{<ModelType>}(num_params={<num_params_str>})"
     assert model.num_params() == {<num_params>}
@@ -50,6 +48,8 @@ def test_{<model_type>}():
     assert y_0.dtype is torch.float32
     assert y_0.dtype is not torch.int64
     assert list(y_0.shape) == [{<model_output_shape>}]
+    assert y_0.max().item() <= {<y_0_max>}
+    assert y_0.min().item() >= {<y_0_min>}
 
     loss_0 = loss.forward(y_0, t)
     loss_0.backward()
@@ -64,11 +64,15 @@ def test_{<model_type>}():
 ### Embed
 
 ```py
-...
+import torch
+from jutility import util
+import juml
 
-def test_{<embedder_type>}():
-    printer = util.Printer("test_{<embedder_type>}", dir_name=OUTPUT_DIR)
-    juml.test_utils.set_torch_seed("test_{<embedder_type>}")
+OUTPUT_DIR = juml.test_utils.get_output_dir("test_models/test_embed")
+
+def test_{<embeddertype>}():
+    printer = util.Printer("test_{<embeddertype>}", dir_name=OUTPUT_DIR)
+    juml.test_utils.set_torch_seed("test_{<embeddertype>}")
 
     embedder = juml.models.embed.{<EmbedderType>}(...)
 
@@ -83,17 +87,24 @@ def test_{<embedder_type>}():
     y = embedder.forward(x)
     assert isinstance(y, torch.Tensor)
     assert y.dtype is torch.float32
+    assert y.dtype is not torch.int64
     assert list(y.shape) == {<y_shape>}
+    assert y.max().item() <= {<y_max>}
+    assert y.min().item() >= {<y_min>}
 ```
 
 ### Pool
 
 ```py
-...
+import torch
+from jutility import util
+import juml
 
-def test_{<pool_type>}():
-    printer = util.Printer("test_{<pool_type>}", dir_name=OUTPUT_DIR)
-    juml.test_utils.set_torch_seed("test_{<pool_type>}")
+OUTPUT_DIR = juml.test_utils.get_output_dir("test_models/test_pool")
+
+def test_{<pooltype>}():
+    printer = util.Printer("test_{<pooltype>}", dir_name=OUTPUT_DIR)
+    juml.test_utils.set_torch_seed("test_{<pooltype>}")
 
     pooler = juml.models.pool.{<PoolType>}(...)
 
@@ -108,7 +119,10 @@ def test_{<pool_type>}():
     y = pooler.forward(x)
     assert isinstance(y, torch.Tensor)
     assert y.dtype is torch.float32
+    assert y.dtype is not torch.int64
     assert list(y.shape) == {<y_shape>}
+    assert y.max().item() <= {<y_max>}
+    assert y.min().item() >= {<y_min>}
 ```
 
 ## Datasets
@@ -119,11 +133,11 @@ import torch.utils.data
 from jutility import util
 import juml
 
-OUTPUT_DIR = juml.test_utils.get_output_dir("test_datasets/test_{<dataset_type>}")
+OUTPUT_DIR = juml.test_utils.get_output_dir("test_datasets/test_{<datasettype>}")
 
-def test_{<dataset_type>}():
-    printer = util.Printer("test_{<dataset_type>}", dir_name=OUTPUT_DIR)
-    juml.test_utils.set_torch_seed("test_{<dataset_type>}")
+def test_{<datasettype>}():
+    printer = util.Printer("test_{<datasettype>}", dir_name=OUTPUT_DIR)
+    juml.test_utils.set_torch_seed("test_{<datasettype>}")
 
     dataset = juml.datasets.{<DatasetType>}(
         ...,
@@ -140,21 +154,21 @@ def test_{<dataset_type>}():
     assert isinstance(test_split, torch.utils.data.Dataset)
     assert len(test_split) == {<n_test>}
 
-    batch_size = 83
+    batch_size = {<batch_size>}
     data_loader = dataset.get_data_loader("train", batch_size)
     x, t = next(iter(data_loader))
 
     assert isinstance(x, torch.Tensor)
-    assert list(x.shape) == [batch_size, {<x_shape>}]
     assert x.dtype is torch.float32
     assert x.dtype is not torch.int64
+    assert list(x.shape) == [batch_size, {<x_shape>}]
     assert x.max().item() <= {<x_max>}
     assert x.min().item() >= {<x_min>}
 
     assert isinstance(t, torch.Tensor)
-    assert list(t.shape) == [batch_size, {<t_shape>}]
     assert t.dtype is torch.{<output_type>}
     assert t.dtype is not torch.{<not_output_type>}
+    assert list(t.shape) == [batch_size, {<t_shape>}]
     assert t.max().item() <= {<t_max>}
     assert t.min().item() >= {<t_min>}
 ```
@@ -166,27 +180,31 @@ import torch
 from jutility import util
 import juml
 
-OUTPUT_DIR = juml.test_utils.get_output_dir("test_loss/test_{<loss_type>}")
+OUTPUT_DIR = juml.test_utils.get_output_dir("test_loss/test_{<losstype>}")
 
-def test_{<loss_type>}():
-    printer = util.Printer("test_{<loss_type>}", dir_name=OUTPUT_DIR)
-    juml.test_utils.set_torch_seed("test_{<loss_type>}")
+def test_{<losstype>}():
+    printer = util.Printer("test_{<losstype>}", dir_name=OUTPUT_DIR)
+    juml.test_utils.set_torch_seed("test_{<losstype>}")
 
-    output_dim = 13
-    batch_size = 87
-
+    batch_size = {<batch_size>}
+    output_dim = {<output_dim>}
     y = torch.rand([batch_size, output_dim])
     t = torch.rand([batch_size, output_dim])
     # OR
-    t = torch.randint(0, output_dim, [batch_size])
+    batch_size  = {<batch_size>}
+    num_classes = {<num_classes>}
+    y = torch.rand([batch_size, num_classes])
+    t = torch.randint(0, num_classes, [batch_size])
 
     loss = juml.batch_loss.{<LossType>}()
 
     batch_loss = loss.forward(y, t)
     assert isinstance(batch_loss, torch.Tensor)
+    assert t.dtype is torch.float32
+    assert t.dtype is not torch.int64
     assert list(batch_loss.shape) == []
     assert batch_loss.item() >= 0
-    assert batch_loss.item() >= 0
+    assert batch_loss.item() <= {<max_batch_loss>}
 
     metric = loss.metric_batch(y, t)
     assert isinstance(metric, float)
@@ -203,11 +221,11 @@ import torch
 from jutility import util
 import juml
 
-OUTPUT_DIR = juml.test_utils.get_output_dir("test_train/test_{<trainer_type>}")
+OUTPUT_DIR = juml.test_utils.get_output_dir("test_train/test_{<trainertype>}")
 
-def test_{<trainer_type>}():
-    printer = util.Printer("test_{<trainer_type>}", dir_name=OUTPUT_DIR)
-    juml.test_utils.set_torch_seed("test_{<trainer_type>}")
+def test_{<trainertype>}():
+    printer = util.Printer("test_{<trainertype>}", dir_name=OUTPUT_DIR)
+    juml.test_utils.set_torch_seed("test_{<trainertype>}")
 
     parser  = juml.base.Framework.get_parser()
     args_str = (
@@ -234,15 +252,29 @@ def test_{<trainer_type>}():
     printer(batch_loss)
     assert batch_loss[-1] < batch_loss[0]
 
-    x, t = next(iter(trainer.dataset.get_data_loader("train", 13)))
+    batch_size = {<batch_size>}
+    x, t = next(iter(trainer.dataset.get_data_loader("train", batch_size)))
     assert isinstance(x, torch.Tensor)
     assert x.dtype is torch.float32
+    assert x.dtype is not torch.int64
     assert list(x.shape) == [{<x_shape>}]
+    assert x.max().item() <= {<x_max>}
+    assert x.min().item() >= {<x_min>}
+
+    assert isinstance(t, torch.Tensor)
+    assert t.dtype is torch.float32
+    assert t.dtype is not torch.int64
+    assert list(t.shape) == [{<t_shape>}]
+    assert t.max().item() <= {<t_max>}
+    assert t.min().item() >= {<t_min>}
 
     y = trainer.model.forward(x)
     assert isinstance(y, torch.Tensor)
     assert y.dtype is torch.float32
+    assert y.dtype is not torch.int64
     assert list(y.shape) == [{<y_shape>}]
+    assert y.max().item() <= {<y_max>}
+    assert y.min().item() >= {<y_min>}
 ```
 
 ## Commands
@@ -252,11 +284,11 @@ import os
 from jutility import util
 import juml
 
-OUTPUT_DIR = juml.test_utils.get_output_dir("test_commands/test_{<command_type>}")
+OUTPUT_DIR = juml.test_utils.get_output_dir("test_commands/test_{<commandtype>}")
 
-def test_{<command_type>}():
-    printer = util.Printer("test_{<command_type>}", dir_name=OUTPUT_DIR)
-    juml.test_utils.set_torch_seed("test_{<command_type>}")
+def test_{<commandtype>}():
+    printer = util.Printer("test_{<commandtype>}", dir_name=OUTPUT_DIR)
+    juml.test_utils.set_torch_seed("test_{<commandtype>}")
 
     output_path = (
         "results/{<output_path>}"
@@ -268,7 +300,7 @@ def test_{<command_type>}():
 
     parser = juml.base.Framework.get_parser()
     args_str = (
-        "{<command_type>} "
+        "{<CommandType>} "
         ...
     )
     args = parser.parse_args(args_str.split())
