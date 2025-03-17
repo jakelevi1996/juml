@@ -1,39 +1,22 @@
 import torch
-from jutility import cli, util
+from jutility import cli
 from juml.commands.base import Command
-from juml.train.base import Trainer
+from juml.train.profiler import Profiler
 
 class Profile(Command):
-    def run(self, args: cli.ParsedArgs):
-        batch_size = args.get_value("batch_size")
-        model_dir, model, dataset = Trainer.load(args)
-        train_loader = dataset.get_data_loader("train", batch_size)
-        x, t = next(iter(train_loader))
+    def run(self, args: cli.ParsedArgs) -> Profiler:
+        with cli.verbose:
+            profiler = args.init_object(
+                "Profiler",
+                args=args,
+            )
+            assert isinstance(profiler, Profiler)
 
-        for _ in range(args.get_value("num_warmup")):
-            y = model.forward(x)
-
-        profiler_kwargs = {
-            "activities":       [
-                torch.profiler.ProfilerActivity.CPU,
-                torch.profiler.ProfilerActivity.CUDA,
-            ],
-            "profile_memory":   True,
-            "with_flops":       True,
-        }
-        with torch.profiler.profile(**profiler_kwargs) as prof:
-            with torch.profiler.record_function("model.forward"):
-                for _ in range(args.get_value("num_profile")):
-                    y = model.forward(x)
-
-        printer = util.Printer("profile", dir_name=model_dir)
-        printer(prof.key_averages().table(sort_by="cpu_time_total"))
+        return profiler
 
     @classmethod
     def get_args(cls, train_args: list[cli.Arg]) -> list[cli.Arg]:
         return [
             *train_args,
-            cli.Arg("batch_size",   type=int, default=100),
-            cli.Arg("num_warmup",   type=int, default=10),
-            cli.Arg("num_profile",  type=int, default=10),
+            Profiler.get_cli_arg(),
         ]
