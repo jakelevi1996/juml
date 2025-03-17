@@ -56,7 +56,12 @@ The JUML framework defines 6 fundamental classes (and several example subclasses
 
 ## Usage examples
 
-The JUML framework is designed to be extended in downstream research projects, but nontheless contains enough built-in functionality to run some simple ML experiments and visualise the results from the command line (without writing any Python code). The following subsections demonstrate (1) the built-in functionality of JUML and (2) a simple example demonstrating how to extend JUML with a new model and dataset.
+The JUML framework is designed to be extended in downstream research projects, but nontheless contains enough built-in functionality to run some simple ML experiments and visualise the results from the command line (without writing any Python code). The following subsections demonstrate:
+
+1. The built-in functionality of JUML
+2. A simple example demonstrating how to extend JUML with a new model and dataset
+
+JUML can be used with GPUs, however all of the below usage examples run purely on CPUs (using multiple processes for the hyperparameter sweeps) in under a minute (not including downloading datasets). These commands can be run on GPUs by specifying `--devices`.
 
 ### Out of the box
 
