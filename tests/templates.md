@@ -47,7 +47,7 @@ def test_{<modeltype>}():
     assert isinstance(y_0, torch.Tensor)
     assert y_0.dtype is torch.float32
     assert y_0.dtype is not torch.int64
-    assert list(y_0.shape) == [{<model_output_shape>}]
+    assert list(y_0.shape) == list(t.shape)
     printer(y_0.max(), y_0.min())
     assert y_0.max().item() <= {<y_0_max>}
     assert y_0.min().item() >= {<y_0_min>}

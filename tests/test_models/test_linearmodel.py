@@ -29,7 +29,7 @@ def test_linearmodel():
     assert isinstance(y_0, torch.Tensor)
     assert y_0.dtype is torch.float32
     assert y_0.dtype is not torch.int64
-    assert list(y_0.shape) == [3, 4, 5, output_dim]
+    assert list(y_0.shape) == list(t.shape)
     printer(y_0.max(), y_0.min())
     assert y_0.max().item() <= 2
     assert y_0.min().item() >= -2
