@@ -65,6 +65,8 @@ The JUML framework is designed to be extended in downstream research projects, b
 ```sh
 juml -h
 juml train -h
+juml sweep -h
+juml profile -h
 ```
 
 #### Train a model
@@ -128,8 +130,6 @@ juml plotconfusionmatrix --model_name dM_lC_mMeFen3h100n3pI_tBb100e3lCle1E-05oAo
 #### Sweep over parameters
 
 ```
-juml sweep -h
-
 juml sweep --model LinearModel --dataset LinearDataset --dataset.LinearDataset.input_dim 5 --dataset.LinearDataset.output_dim 10 --print_level 1 --Sweeper.seeds 1 2 3 --Sweeper.params '{"trainer.BpSp.epochs":[100,200,300],"trainer.BpSp.optimiser.Adam.lr":[1e-5,1e-4,1e-3,1e-2]}' --Sweeper.log_x trainer.BpSp.optimiser.Adam.lr --Sweeper.devices "[[],[],[],[],[],[]]" --Sweeper.no_cache
 ```
 
