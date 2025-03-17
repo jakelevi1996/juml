@@ -1,4 +1,4 @@
-# juml
+# JUML
 
 A Judicious, Unified and extendable framework for multi-paradigm Machine Learning research, powered by [`jutility`](https://github.com/jakelevi1996/jutility) and [PyTorch](https://pytorch.org/).
 
@@ -8,7 +8,7 @@ A Judicious, Unified and extendable framework for multi-paradigm Machine Learnin
 
 ## Contents
 
-- [juml](#juml)
+- [JUML](#juml)
   - [Contents](#contents)
   - [Installation](#installation)
   - [Overview](#overview)
