@@ -1,4 +1,3 @@
-import torch
 from jutility import cli
 from juml.commands.base import Command
 from juml.train.profiler import Profiler
