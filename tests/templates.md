@@ -166,8 +166,8 @@ def test_{<datasettype>}():
     assert x.min().item() >= {<x_min>}
 
     assert isinstance(t, torch.Tensor)
-    assert t.dtype is torch.{<output_type>}
-    assert t.dtype is not torch.{<not_output_type>}
+    assert t.dtype is torch.float32
+    assert t.dtype is not torch.int64
     assert list(t.shape) == [batch_size, {<t_shape>}]
     assert t.max().item() <= {<t_max>}
     assert t.min().item() >= {<t_min>}
