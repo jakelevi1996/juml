@@ -42,7 +42,7 @@ The `juml` package depends on [PyTorch](https://pytorch.org/). The installation 
 
 ## Overview
 
-The `juml` framework defines 6 fundamental classes (and several example subclasses), available in the `juml.base` namespace module, which are expected to be subclassed in downstream projects:
+The `juml` framework defines 6 fundamental classes (and several example subclasses), available in the [`juml.base`](https://github.com/jakelevi1996/juml/blob/main/src/juml/base.py) namespace module, which are expected to be subclassed in downstream projects:
 
 - [`juml.base.Model`](src/juml/models/base.py)
 - [`juml.base.Dataset`](src/juml/datasets/base.py)
