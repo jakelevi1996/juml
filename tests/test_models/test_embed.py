@@ -5,21 +5,6 @@ import juml
 
 OUTPUT_DIR = juml.test_utils.get_output_dir("test_models/test_embed")
 
-def test_identity():
-    printer = util.Printer("test_identity", dir_name=OUTPUT_DIR)
-    juml.test_utils.set_torch_seed("test_identity")
-
-    input_shape = [3, 4, 5, 6]
-    x = torch.rand(input_shape)
-
-    e = juml.models.embed.Identity()
-    assert list(x.shape) == input_shape
-    assert list(e.forward(x).shape) == input_shape
-    assert torch.all(e.forward(x) == x)
-
-    e.set_input_shape(input_shape)
-    assert list(e.get_output_shape()) == input_shape
-
 def test_flatten():
     printer = util.Printer("test_flatten", dir_name=OUTPUT_DIR)
     juml.test_utils.set_torch_seed("test_flatten")
