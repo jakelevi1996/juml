@@ -44,6 +44,7 @@ def test_{<modeltype>}():
     assert model.num_params() == {<num_params>}
 
     y_0 = model.forward(x)
+    printer(y_0.max(), y_0.min())
     assert isinstance(y_0, torch.Tensor)
     assert y_0.dtype is torch.float32
     assert y_0.dtype is not torch.int64
@@ -85,6 +86,7 @@ def test_{<embeddertype>}():
     assert embedder.get_output_dim(-1) == {<output_dim>}
 
     y = embedder.forward(x)
+    printer(y.max(), y.min())
     assert isinstance(y, torch.Tensor)
     assert y.dtype is torch.float32
     assert y.dtype is not torch.int64
@@ -117,6 +119,7 @@ def test_{<pooltype>}():
     assert pooler.get_input_dim(-1) == {<input_dim>}
 
     y = pooler.forward(x)
+    printer(y.max(), y.min())
     assert isinstance(y, torch.Tensor)
     assert y.dtype is torch.float32
     assert y.dtype is not torch.int64
@@ -158,6 +161,7 @@ def test_{<datasettype>}():
     data_loader = dataset.get_data_loader("train", batch_size)
     x, t = next(iter(data_loader))
 
+    printer(x.max(), x.min())
     assert isinstance(x, torch.Tensor)
     assert x.dtype is torch.float32
     assert x.dtype is not torch.int64
@@ -165,6 +169,7 @@ def test_{<datasettype>}():
     assert x.max().item() <= {<x_max>}
     assert x.min().item() >= {<x_min>}
 
+    printer(t.max(), t.min())
     assert isinstance(t, torch.Tensor)
     assert t.dtype is torch.float32
     assert t.dtype is not torch.int64
@@ -199,6 +204,7 @@ def test_{<losstype>}():
     loss = juml.batch_loss.{<LossType>}()
 
     batch_loss = loss.forward(y, t)
+    printer(batch_loss.max(), batch_loss.min())
     assert isinstance(batch_loss, torch.Tensor)
     assert t.dtype is torch.float32
     assert t.dtype is not torch.int64
@@ -207,6 +213,7 @@ def test_{<losstype>}():
     assert batch_loss.item() <= {<max_batch_loss>}
 
     metric = loss.metric_batch(y, t)
+    printer(max(metric), min(metric))
     assert isinstance(metric, float)
     # OR
     assert isinstance(metric, int)
@@ -254,6 +261,7 @@ def test_{<trainertype>}():
 
     batch_size = {<batch_size>}
     x, t = next(iter(trainer.dataset.get_data_loader("train", batch_size)))
+    printer(x.max(), x.min())
     assert isinstance(x, torch.Tensor)
     assert x.dtype is torch.float32
     assert x.dtype is not torch.int64
@@ -261,6 +269,7 @@ def test_{<trainertype>}():
     assert x.max().item() <= {<x_max>}
     assert x.min().item() >= {<x_min>}
 
+    printer(t.max(), t.min())
     assert isinstance(t, torch.Tensor)
     assert t.dtype is torch.float32
     assert t.dtype is not torch.int64
@@ -269,6 +278,7 @@ def test_{<trainertype>}():
     assert t.min().item() >= {<t_min>}
 
     y = trainer.model.forward(x)
+    printer(y.max(), y.min())
     assert isinstance(y, torch.Tensor)
     assert y.dtype is torch.float32
     assert y.dtype is not torch.int64
