@@ -59,6 +59,7 @@ def test_{<modeltype>}():
     y_1 = model.forward(x)
     loss_1 = loss.forward(y_1, t)
 
+    printer(loss_0, loss_1)
     assert loss_1.item() < loss_0.item()
 ```
 
