@@ -8,26 +8,18 @@ def test_rzmlp():
     juml.test_utils.set_torch_seed("test_rzmlp")
     printer = util.Printer("test_rzmlp", dir_name=OUTPUT_DIR)
 
-    input_dim   = 7
-    output_dim  = 11
-    n_train     = 50
+    input_dim  = 7
+    output_dim = 11
+    x = torch.rand([3, 4, 5, input_dim])
+    t = torch.rand([3, 4, 5, output_dim])
 
     model_dim   = 23
     ratio       = 2
     hidden_dim  = model_dim * ratio
 
-    dataset = juml.datasets.SinMix(
-        input_dim=input_dim,
-        output_dim=output_dim,
-        hidden_dim=3,
-        train=n_train,
-        test=60,
-        x_std=0,
-        t_std=0.1,
-    )
     model = juml.models.RzMlp(
-        input_shape=dataset.get_input_shape(),
-        output_shape=dataset.get_output_shape(),
+        input_shape=list(x.shape),
+        output_shape=list(t.shape),
         model_dim=model_dim,
         expand_ratio=ratio,
         num_hidden_layers=3,
@@ -37,13 +29,14 @@ def test_rzmlp():
     loss = juml.loss.Mse()
     optimiser = torch.optim.Adam(model.parameters())
 
-    x, t = next(iter(dataset.get_data_loader("train", 100)))
-    assert isinstance(x, torch.Tensor)
-    assert list(x.shape) == [n_train, input_dim]
-
     y_0 = model.forward(x)
     assert isinstance(y_0, torch.Tensor)
-    assert list(y_0.shape) == [n_train, output_dim]
+    assert y_0.dtype is torch.float32
+    assert y_0.dtype is not torch.int64
+    assert list(y_0.shape) == [3, 4, 5, output_dim]
+    printer(y_0.max(), y_0.min())
+    assert y_0.max().item() <= 2
+    assert y_0.min().item() >= -2
 
     loss_0 = loss.forward(y_0, t)
     loss_0.backward()
@@ -52,6 +45,7 @@ def test_rzmlp():
     y_1 = model.forward(x)
     loss_1 = loss.forward(y_1, t)
 
+    printer(loss_0, loss_1)
     assert loss_1.item() < loss_0.item()
 
     for i in [1, 2]:
