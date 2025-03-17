@@ -27,8 +27,8 @@ def test_{<modeltype>}():
     printer = util.Printer("test_{<modeltype>}", dir_name=OUTPUT_DIR)
     juml.test_utils.set_torch_seed("test_{<modeltype>}")
 
-    x = torch.rand([{<input_shape>}])
-    t = torch.rand([{<output_shape>}])
+    x = torch.rand([{<x_shape>}])
+    t = torch.rand([{<t_shape>}])
 
     model = juml.models.{<ModelType>}(
         input_shape=list(x.shape),
@@ -101,8 +101,8 @@ def test_{<embeddertype>}_model():
 
     embedder = juml.models.embed.{<EmbedderType>}(...)
 
-    x = torch.rand([{<input_shape>}])
-    t = torch.rand([{<output_shape>}])
+    x = torch.rand([{<x_shape>}])
+    t = torch.rand([{<t_shape>}])
 
     model = juml.models.{<ModelType>}(
         input_shape=list(x.shape),
@@ -172,8 +172,8 @@ def test_{<pooltype>}_model():
 
     pooler = juml.models.pool.{<PoolType>}(...)
 
-    x = torch.rand([{<input_shape>}])
-    t = torch.rand([{<output_shape>}])
+    x = torch.rand([{<x_shape>}])
+    t = torch.rand([{<t_shape>}])
 
     model = juml.models.{<ModelType>}(
         input_shape=list(x.shape),
