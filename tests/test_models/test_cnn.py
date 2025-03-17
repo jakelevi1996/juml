@@ -49,9 +49,12 @@ def test_cnn():
 
     assert repr(model.embed) == "Identity(num_params=0)"
     assert repr(list(model.layers)) == (
-        "[InputReluCnnLayer(num_params=333), ReluCnnLayer(num_params=738), "
-        "ReluCnnLayer(num_params=738), StridedReluCnnLayer(num_params=738), "
-        "ReluCnnLayer(num_params=738), ReluCnnLayer(num_params=738), "
+        "[InputReluCnnLayer(num_params=333), "
+        "ReluCnnLayer(num_params=738), "
+        "ReluCnnLayer(num_params=738), "
+        "StridedReluCnnLayer(num_params=738), "
+        "ReluCnnLayer(num_params=738), "
+        "ReluCnnLayer(num_params=738), "
         "ReluCnnLayer(num_params=738)]"
     )
     assert repr(model.pool) == "Identity(num_params=0)"
