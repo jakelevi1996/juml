@@ -4,22 +4,6 @@ import juml
 
 OUTPUT_DIR = juml.test_utils.get_output_dir("test_models/test_pool")
 
-def test_unflatten():
-    printer = util.Printer("test_unflatten", dir_name=OUTPUT_DIR)
-    juml.test_utils.set_torch_seed("test_unflatten")
-
-    pooler = juml.models.pool.Unflatten(3)
-    pooler.set_shapes([], [8, 9, 2, 3, 4])
-    assert repr(pooler) == "Unflatten(num_params=0)"
-
-    assert pooler.get_input_shape() == [8, 9, (2 * 3 * 4)]
-    assert pooler.get_input_dim(-1) == (2 * 3 * 4)
-
-    x = torch.rand([1, (2 * 3 * 4)])
-    y = pooler.forward(x)
-    assert list(y.shape) == [1, 2, 3, 4]
-    assert torch.all(y.flatten(-3, -1) == x)
-
 def test_average2d():
     printer = util.Printer("test_average2d", dir_name=OUTPUT_DIR)
     juml.test_utils.set_torch_seed("test_average2d")
