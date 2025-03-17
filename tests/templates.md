@@ -44,11 +44,11 @@ def test_{<modeltype>}():
     assert model.num_params() == {<num_params>}
 
     y_0 = model.forward(x)
-    printer(y_0.max(), y_0.min())
     assert isinstance(y_0, torch.Tensor)
     assert y_0.dtype is torch.float32
     assert y_0.dtype is not torch.int64
     assert list(y_0.shape) == [{<model_output_shape>}]
+    printer(y_0.max(), y_0.min())
     assert y_0.max().item() <= {<y_0_max>}
     assert y_0.min().item() >= {<y_0_min>}
 
@@ -86,11 +86,11 @@ def test_{<embeddertype>}():
     assert embedder.get_output_dim(-1) == {<output_dim>}
 
     y = embedder.forward(x)
-    printer(y.max(), y.min())
     assert isinstance(y, torch.Tensor)
     assert y.dtype is torch.float32
     assert y.dtype is not torch.int64
     assert list(y.shape) == {<y_shape>}
+    printer(y.max(), y.min())
     assert y.max().item() <= {<y_max>}
     assert y.min().item() >= {<y_min>}
 ```
@@ -119,11 +119,11 @@ def test_{<pooltype>}():
     assert pooler.get_input_dim(-1) == {<input_dim>}
 
     y = pooler.forward(x)
-    printer(y.max(), y.min())
     assert isinstance(y, torch.Tensor)
     assert y.dtype is torch.float32
     assert y.dtype is not torch.int64
     assert list(y.shape) == {<y_shape>}
+    printer(y.max(), y.min())
     assert y.max().item() <= {<y_max>}
     assert y.min().item() >= {<y_min>}
 ```
@@ -161,19 +161,19 @@ def test_{<datasettype>}():
     data_loader = dataset.get_data_loader("train", batch_size)
     x, t = next(iter(data_loader))
 
-    printer(x.max(), x.min())
     assert isinstance(x, torch.Tensor)
     assert x.dtype is torch.float32
     assert x.dtype is not torch.int64
     assert list(x.shape) == [batch_size, {<x_shape>}]
+    printer(x.max(), x.min())
     assert x.max().item() <= {<x_max>}
     assert x.min().item() >= {<x_min>}
 
-    printer(t.max(), t.min())
     assert isinstance(t, torch.Tensor)
     assert t.dtype is torch.float32
     assert t.dtype is not torch.int64
     assert list(t.shape) == [batch_size, {<t_shape>}]
+    printer(t.max(), t.min())
     assert t.max().item() <= {<t_max>}
     assert t.min().item() >= {<t_min>}
 ```
@@ -204,11 +204,11 @@ def test_{<losstype>}():
     loss = juml.batch_loss.{<LossType>}()
 
     batch_loss = loss.forward(y, t)
-    printer(batch_loss.max(), batch_loss.min())
     assert isinstance(batch_loss, torch.Tensor)
     assert t.dtype is torch.float32
     assert t.dtype is not torch.int64
     assert list(batch_loss.shape) == []
+    printer(batch_loss.max(), batch_loss.min())
     assert batch_loss.item() >= 0
     assert batch_loss.item() <= {<max_batch_loss>}
 
@@ -261,28 +261,28 @@ def test_{<trainertype>}():
 
     batch_size = {<batch_size>}
     x, t = next(iter(trainer.dataset.get_data_loader("train", batch_size)))
-    printer(x.max(), x.min())
     assert isinstance(x, torch.Tensor)
     assert x.dtype is torch.float32
     assert x.dtype is not torch.int64
     assert list(x.shape) == [{<x_shape>}]
+    printer(x.max(), x.min())
     assert x.max().item() <= {<x_max>}
     assert x.min().item() >= {<x_min>}
 
-    printer(t.max(), t.min())
     assert isinstance(t, torch.Tensor)
     assert t.dtype is torch.float32
     assert t.dtype is not torch.int64
     assert list(t.shape) == [{<t_shape>}]
+    printer(t.max(), t.min())
     assert t.max().item() <= {<t_max>}
     assert t.min().item() >= {<t_min>}
 
     y = trainer.model.forward(x)
-    printer(y.max(), y.min())
     assert isinstance(y, torch.Tensor)
     assert y.dtype is torch.float32
     assert y.dtype is not torch.int64
     assert list(y.shape) == [{<y_shape>}]
+    printer(y.max(), y.min())
     assert y.max().item() <= {<y_max>}
     assert y.min().item() >= {<y_min>}
 ```
