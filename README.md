@@ -18,7 +18,7 @@ A Judicious, Unified and extendable framework for multi-paradigm Machine Learnin
       - [Train a model](#train-a-model)
       - [Profile model](#profile-model)
       - [Plot confusion matrix](#plot-confusion-matrix)
-      - [Sweep over parameters](#sweep-over-parameters)
+      - [Sweep hyperparameters](#sweep-hyperparameters)
     - [Extending JUML](#extending-juml)
   - [Citation](#citation)
 
@@ -127,7 +127,7 @@ juml plotconfusionmatrix --model_name dM_lC_mMeFen3h100n3pI_tBb100e3lCle1E-05oAo
 
 ![](results/train/dM_lC_mMeFen3h100n3pI_tBb100e3lCle1E-05oAol0.001_s0/Confusion_matrix.png)
 
-#### Sweep over parameters
+#### Sweep hyperparameters
 
 ```
 juml sweep --model LinearModel --dataset LinearDataset --dataset.LinearDataset.input_dim 5 --dataset.LinearDataset.output_dim 10 --print_level 1 --Sweeper.seeds 1 2 3 --Sweeper.params '{"trainer.BpSp.epochs":[100,200,300],"trainer.BpSp.optimiser.Adam.lr":[1e-5,1e-4,1e-3,1e-2]}' --Sweeper.log_x trainer.BpSp.optimiser.Adam.lr --Sweeper.devices "[[],[],[],[],[],[]]" --Sweeper.no_cache
