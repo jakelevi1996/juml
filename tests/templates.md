@@ -94,6 +94,44 @@ def test_{<embeddertype>}():
     printer(y.max(), y.min())
     assert y.max().item() <= {<y_max>}
     assert y.min().item() >= {<y_min>}
+
+def test_{<embeddertype>}_model():
+    printer = util.Printer("test_{<embeddertype>}_model", dir_name=OUTPUT_DIR)
+    juml.test_utils.set_torch_seed("test_{<embeddertype>}_model")
+
+    embedder = juml.models.embed.{<EmbedderType>}(...)
+
+    x = torch.rand([{<input_shape>}])
+    t = torch.rand([{<output_shape>}])
+
+    model = juml.models.{<ModelType>}(
+        input_shape=list(x.shape),
+        output_shape=list(t.shape),
+        ...,
+        embedder=embedder,
+        pooler=juml.models.pool.Identity(),
+    )
+    loss = juml.loss.{<LossType>}()
+    optimiser = torch.optim.Adam(model.parameters())
+
+    y_0 = model.forward(x)
+    assert isinstance(y_0, torch.Tensor)
+    assert y_0.dtype is torch.float32
+    assert y_0.dtype is not torch.int64
+    assert list(y_0.shape) == list(t.shape)
+    printer(y_0.max(), y_0.min())
+    assert y_0.max().item() <= {<y_0_max>}
+    assert y_0.min().item() >= {<y_0_min>}
+
+    loss_0 = loss.forward(y_0, t)
+    loss_0.backward()
+    optimiser.step()
+
+    y_1 = model.forward(x)
+    loss_1 = loss.forward(y_1, t)
+
+    printer(loss_0, loss_1)
+    assert loss_1.item() < loss_0.item()
 ```
 
 ### Pool
@@ -127,6 +165,44 @@ def test_{<pooltype>}():
     printer(y.max(), y.min())
     assert y.max().item() <= {<y_max>}
     assert y.min().item() >= {<y_min>}
+
+def test_{<pooltype>}_model():
+    printer = util.Printer("test_{<pooltype>}_model", dir_name=OUTPUT_DIR)
+    juml.test_utils.set_torch_seed("test_{<pooltype>}_model")
+
+    pooler = juml.models.pool.{<PoolType>}(...)
+
+    x = torch.rand([{<input_shape>}])
+    t = torch.rand([{<output_shape>}])
+
+    model = juml.models.{<ModelType>}(
+        input_shape=list(x.shape),
+        output_shape=list(t.shape),
+        ...,
+        embedder=juml.models.embed.Identity(),
+        pooler=pooler,
+    )
+    loss = juml.loss.{<LossType>}()
+    optimiser = torch.optim.Adam(model.parameters())
+
+    y_0 = model.forward(x)
+    assert isinstance(y_0, torch.Tensor)
+    assert y_0.dtype is torch.float32
+    assert y_0.dtype is not torch.int64
+    assert list(y_0.shape) == list(t.shape)
+    printer(y_0.max(), y_0.min())
+    assert y_0.max().item() <= {<y_0_max>}
+    assert y_0.min().item() >= {<y_0_min>}
+
+    loss_0 = loss.forward(y_0, t)
+    loss_0.backward()
+    optimiser.step()
+
+    y_1 = model.forward(x)
+    loss_1 = loss.forward(y_1, t)
+
+    printer(loss_0, loss_1)
+    assert loss_1.item() < loss_0.item()
 ```
 
 ## Datasets
