@@ -27,7 +27,7 @@ def test_identity():
     assert y.max().item() <= 1
     assert y.min().item() >= 0
 
-    assert torch.all(x == y)
+    assert torch.all(y == x)
 
 def test_identity_model():
     printer = util.Printer("test_identity_model", dir_name=OUTPUT_DIR)
