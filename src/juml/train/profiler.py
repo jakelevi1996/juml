@@ -73,12 +73,12 @@ class Profiler:
         )
         table.update(k="Model",             v="`%s`" % repr(model))
         for name, dict_key in [
-            ("Time (total)",      "t_total_str"),
-            ("Time (average)",    "t_sample_str"),
-            ("Throughput",        "throughput_str"),
-            ("FLOPS",             "flops_str"),
-            ("Number of samples", "n_samples_str"),
-            ("Batch size",        "batch_size"),
+            ("Time (total)",            "t_total_str"),
+            ("Time (average)",          "t_sample_str"),
+            ("Throughput",              "throughput_str"),
+            ("FLOPS",                   "flops_str"),
+            ("Total number of samples", "n_samples_str"),
+            ("Batch size",              "batch_size"),
         ]:
             table.update(k=name, v=profile_dict[dict_key])
 
