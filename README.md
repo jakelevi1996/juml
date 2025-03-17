@@ -20,6 +20,7 @@ A Judicious, Unified and extendable framework for multi-paradigm Machine Learnin
       - [Plot confusion matrix](#plot-confusion-matrix)
       - [Sweep over parameters](#sweep-over-parameters)
     - [Extending `juml`](#extending-juml)
+  - [Citation](#citation)
 
 ## Installation
 
@@ -137,3 +138,18 @@ juml sweep --model LinearModel --dataset LinearDataset --dataset.LinearDataset.i
 ### Extending `juml`
 
 *TODO*
+
+## Citation
+
+If you find JUML helpful in your research, please cite:
+
+```
+@misc{levi_juml_2025,
+	title = {{JUML}: {A} {Judicious}, {Unified} and extendable framework for multi-paradigm {Machine} {Learning} research},
+	shorttitle = {{JUML}},
+	url = {https://github.com/jakelevi1996/juml},
+	abstract = {A Judicious, Unified and extendable framework for multi-paradigm Machine Learning research, powered by jutility and PyTorch.},
+	author = {Levi, Jake},
+	year = {2025},
+}
+```
