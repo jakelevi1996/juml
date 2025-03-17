@@ -48,6 +48,7 @@ def test_identity_model():
     )
     loss = juml.loss.Mse()
     optimiser = torch.optim.Adam(model.parameters())
+    assert model.embed is embedder
 
     y_0 = model.forward(x)
     assert isinstance(y_0, torch.Tensor)

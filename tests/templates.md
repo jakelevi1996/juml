@@ -113,6 +113,7 @@ def test_{<embeddertype>}_model():
     )
     loss = juml.loss.{<LossType>}()
     optimiser = torch.optim.Adam(model.parameters())
+    assert model.embed is embedder
 
     y_0 = model.forward(x)
     assert isinstance(y_0, torch.Tensor)
@@ -184,6 +185,7 @@ def test_{<pooltype>}_model():
     )
     loss = juml.loss.{<LossType>}()
     optimiser = torch.optim.Adam(model.parameters())
+    assert model.pool is pooler
 
     y_0 = model.forward(x)
     assert isinstance(y_0, torch.Tensor)
