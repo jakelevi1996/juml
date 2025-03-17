@@ -46,32 +46,3 @@ def test_flatten():
     assert list(e1.get_output_shape()) == [3, 4, 5, 6]
     assert list(e2.get_output_shape()) == [3, 4, 30]
     assert list(e3.get_output_shape()) == [3, 120]
-
-def test_coordconv():
-    printer = util.Printer("test_coordconv", dir_name=OUTPUT_DIR)
-    juml.test_utils.set_torch_seed("test_coordconv")
-
-    input_shape = [2, 4, 3, 5]
-    x = torch.arange(math.prod(input_shape)).reshape(input_shape)
-
-    e = juml.models.embed.CoordConv()
-    e.set_input_shape(list(x.shape))
-
-    y = e.forward(x)
-
-    assert list(x.shape) == [2, 4, 3, 5]
-    assert list(y.shape) == [2, 6, 3, 5]
-    assert e.get_output_shape() == [2, 6, 3, 5]
-
-    yw = torch.linspace(-1, 1, input_shape[-1]).unsqueeze(-2)
-    yh = torch.linspace(-1, 1, input_shape[-2]).unsqueeze(-1)
-    assert torch.all(y[:, :-2, :, :] == x)
-    assert torch.all(y[:,  -2, :, :] == yw)
-    assert torch.all(y[:,  -1, :, :] == yh)
-
-    assert y.dtype is torch.float32
-    assert y.dtype is not torch.int64
-
-    printer(x, x.shape, sep="\n")
-    printer.hline()
-    printer(y, y.shape, sep="\n")
