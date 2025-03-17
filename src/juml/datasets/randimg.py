@@ -7,13 +7,14 @@ class RandomImage(Synthetic):
     def __init__(
         self,
         input_shape:    list[int],
-        output_shape:   list[int],
+        num_classes:    int,
         train:          int,
         test:           int,
     ):
+        self._num_classes = num_classes
         self._init_synthetic(
             input_shape=input_shape,
-            output_shape=output_shape,
+            output_shape=[num_classes],
             n_train=train,
             n_test=test,
             x_std=0,
@@ -23,7 +24,7 @@ class RandomImage(Synthetic):
     def _make_split(self, n: int) -> DataSplit:
         return DataSplit(
             x=torch.rand([n, *self._input_shape]),
-            t=torch.rand([n, *self._output_shape]),
+            t=torch.randint(0, self._num_classes, [n]),
             n=n,
         )
 
@@ -35,7 +36,7 @@ class RandomImage(Synthetic):
         return cli.ObjectArg(
             cls,
             cli.Arg("input_shape",  type=int, nargs="+", default=[3, 32, 32]),
-            cli.Arg("output_shape", type=int, nargs="+", default=[10]),
+            cli.Arg("num_classes",  type=int, default=10),
             cli.Arg("train",        type=int, default=200),
             cli.Arg("test",         type=int, default=200),
         )
