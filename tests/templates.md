@@ -50,7 +50,7 @@ def test_{<modeltype>}():
     assert list(y_0.shape) == list(t.shape)
     printer(y_0.max(), y_0.min())
     assert y_0.max().item() <= {<y_0_max>}
-    assert y_0.min().item() >= {<y_0_min>}
+    assert y_0.min().item() >= -{<y_0_max>}
 
     loss_0 = loss.forward(y_0, t)
     loss_0.backward()
@@ -93,7 +93,7 @@ def test_{<embeddertype>}():
     assert list(y.shape) == {<y_shape>}
     printer(y.max(), y.min())
     assert y.max().item() <= {<y_max>}
-    assert y.min().item() >= {<y_min>}
+    assert y.min().item() >= -{<y_max>}
 
 def test_{<embeddertype>}_model():
     printer = util.Printer("test_{<embeddertype>}_model", dir_name=OUTPUT_DIR)
@@ -121,7 +121,7 @@ def test_{<embeddertype>}_model():
     assert list(y_0.shape) == list(t.shape)
     printer(y_0.max(), y_0.min())
     assert y_0.max().item() <= {<y_0_max>}
-    assert y_0.min().item() >= {<y_0_min>}
+    assert y_0.min().item() >= -{<y_0_max>}
 
     loss_0 = loss.forward(y_0, t)
     loss_0.backward()
@@ -164,7 +164,7 @@ def test_{<pooltype>}():
     assert list(y.shape) == {<y_shape>}
     printer(y.max(), y.min())
     assert y.max().item() <= {<y_max>}
-    assert y.min().item() >= {<y_min>}
+    assert y.min().item() >= -{<y_max>}
 
 def test_{<pooltype>}_model():
     printer = util.Printer("test_{<pooltype>}_model", dir_name=OUTPUT_DIR)
@@ -192,7 +192,7 @@ def test_{<pooltype>}_model():
     assert list(y_0.shape) == list(t.shape)
     printer(y_0.max(), y_0.min())
     assert y_0.max().item() <= {<y_0_max>}
-    assert y_0.min().item() >= {<y_0_min>}
+    assert y_0.min().item() >= -{<y_0_max>}
 
     loss_0 = loss.forward(y_0, t)
     loss_0.backward()
@@ -244,7 +244,7 @@ def test_{<datasettype>}():
     assert list(x.shape) == [batch_size, {<x_shape>}]
     printer(x.max(), x.min())
     assert x.max().item() <= {<x_max>}
-    assert x.min().item() >= {<x_min>}
+    assert x.min().item() >= -{<x_max>}
 
     assert isinstance(t, torch.Tensor)
     assert t.dtype is torch.float32
@@ -252,7 +252,7 @@ def test_{<datasettype>}():
     assert list(t.shape) == [batch_size, {<t_shape>}]
     printer(t.max(), t.min())
     assert t.max().item() <= {<t_max>}
-    assert t.min().item() >= {<t_min>}
+    assert t.min().item() >= -{<t_max>}
 ```
 
 ## Loss
@@ -344,7 +344,7 @@ def test_{<trainertype>}():
     assert list(x.shape) == [{<x_shape>}]
     printer(x.max(), x.min())
     assert x.max().item() <= {<x_max>}
-    assert x.min().item() >= {<x_min>}
+    assert x.min().item() >= -{<x_max>}
 
     assert isinstance(t, torch.Tensor)
     assert t.dtype is torch.float32
@@ -352,7 +352,7 @@ def test_{<trainertype>}():
     assert list(t.shape) == [{<t_shape>}]
     printer(t.max(), t.min())
     assert t.max().item() <= {<t_max>}
-    assert t.min().item() >= {<t_min>}
+    assert t.min().item() >= -{<t_max>}
 
     y = trainer.model.forward(x)
     assert isinstance(y, torch.Tensor)
@@ -361,7 +361,7 @@ def test_{<trainertype>}():
     assert list(y.shape) == [{<y_shape>}]
     printer(y.max(), y.min())
     assert y.max().item() <= {<y_max>}
-    assert y.min().item() >= {<y_min>}
+    assert y.min().item() >= -{<y_max>}
 ```
 
 ## Commands
