@@ -19,19 +19,19 @@ A Judicious, Unified and extendable framework for multi-paradigm Machine Learnin
       - [Profile model](#profile-model)
       - [Plot confusion matrix](#plot-confusion-matrix)
       - [Sweep over parameters](#sweep-over-parameters)
-    - [Extending `juml`](#extending-juml)
+    - [Extending JUML](#extending-juml)
   - [Citation](#citation)
 
 ## Installation
 
-The `juml` package is available as [a Python package on PyPI](https://pypi.org/project/juml-toolkit/), and can be installed using `pip` with the following commands:
+JUML is available as [a Python package on PyPI](https://pypi.org/project/juml-toolkit/), and can be installed using `pip` with the following commands:
 
 ```
 python -m pip install -U pip
 python -m pip install -U juml-toolkit
 ```
 
-Alternatively, `juml` can be installed in "editable mode" from the [GitHub repository](https://github.com/jakelevi1996/juml):
+Alternatively, JUML can be installed in "editable mode" from the [GitHub repository](https://github.com/jakelevi1996/juml):
 
 ```
 git clone https://github.com/jakelevi1996/juml.git
@@ -39,11 +39,11 @@ python -m pip install -U pip
 python -m pip install -e ./juml
 ```
 
-The `juml` package depends on [PyTorch](https://pytorch.org/). The installation instructions for PyTorch depend on which (if any) CUDA version is available, so PyTorch won't be automatically installed by `pip` when installing `juml`. Instead, please install PyTorch following the [official PyTorch installation instructions](https://pytorch.org/get-started/locally/).
+JUML depends on [PyTorch](https://pytorch.org/). The installation instructions for PyTorch depend on which (if any) CUDA version is available, so PyTorch won't be automatically installed by `pip` when installing JUML. Instead, please install PyTorch following the [official PyTorch installation instructions](https://pytorch.org/get-started/locally/).
 
 ## Overview
 
-The `juml` framework defines 6 fundamental classes (and several example subclasses), available in the [`juml.base`](https://github.com/jakelevi1996/juml/blob/main/src/juml/base.py) namespace module, which are expected to be subclassed in downstream projects:
+The JUML framework defines 6 fundamental classes (and several example subclasses), available in the [`juml.base`](https://github.com/jakelevi1996/juml/blob/main/src/juml/base.py) namespace module, which are expected to be subclassed in downstream projects:
 
 - [`juml.base.Model`](src/juml/models/base.py)
 - [`juml.base.Dataset`](src/juml/datasets/base.py)
@@ -56,7 +56,7 @@ The `juml` framework defines 6 fundamental classes (and several example subclass
 
 ## Usage examples
 
-The `juml` framework is designed to be extended in downstream research projects, but nontheless contains enough built-in functionality to run some simple ML experiments and visualise the results from the command line (without writing any Python code). The following subsections demonstrate (1) the built-in functionality of `juml` and (2) a simple example demonstrating how to extend `juml` with a new model and dataset.
+The JUML framework is designed to be extended in downstream research projects, but nontheless contains enough built-in functionality to run some simple ML experiments and visualise the results from the command line (without writing any Python code). The following subsections demonstrate (1) the built-in functionality of JUML and (2) a simple example demonstrating how to extend JUML with a new model and dataset.
 
 ### Out of the box
 
@@ -135,7 +135,7 @@ juml sweep --model LinearModel --dataset LinearDataset --dataset.LinearDataset.i
 
 [`[ sweep_results ]`](results/sweep/dLi5o10te200tr200ts0.0x0.0lMmLeIpItBb100e1,2,300lCle1E-05oAol,1E-0.0001,.001,.01,5s1,2,3/results.md)
 
-### Extending `juml`
+### Extending JUML
 
 *TODO*
 
