@@ -1,6 +1,6 @@
 from jutility import cli
 from juml.commands.base import Command
-from juml.train.sweep import Sweeper
+from juml.train.sweeper import Sweeper
 
 class Sweep(Command):
     def run(self, args: cli.ParsedArgs):
