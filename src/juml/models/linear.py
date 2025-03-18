@@ -1,36 +1,11 @@
 import math
 import torch
-from jutility import cli
-from juml.models import embed, pool
 from juml.models.base import Model
-from juml.models.sequential import Sequential
-
-class LinearModel(Sequential):
-    def __init__(
-        self,
-        input_shape: list[int],
-        output_shape: list[int],
-        embedder: embed.Embedder,
-        pooler: pool.Pooler,
-    ):
-        self._init_sequential(embedder, pooler)
-        self.embed.set_input_shape(input_shape)
-        self.pool.set_shapes([], output_shape)
-
-        layer = Linear(
-            input_dim=self.embed.get_output_dim(-1),
-            output_dim=self.pool.get_input_dim(-1),
-        )
-        self.layers.append(layer)
-
-    @classmethod
-    def get_cli_options(cls) -> list[cli.Arg]:
-        return []
 
 class Linear(Model):
     def __init__(
         self,
-        input_dim: int,
+        input_dim:  int,
         output_dim: int,
     ):
         self._torch_module_init()
@@ -46,10 +21,10 @@ class Linear(Model):
 class MultiHeadLinear(Model):
     def __init__(
         self,
-        input_dim: int,
+        input_dim:  int,
         output_dim: int,
-        num_heads: int,
-        w_scale: float,
+        num_heads:  int,
+        w_scale:    float,
     ):
         self._torch_module_init()
         w_shape = [num_heads, input_dim, output_dim]
