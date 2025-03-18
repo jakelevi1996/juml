@@ -289,15 +289,15 @@ def test_{<losstype>}():
 
     batch_loss = loss.forward(y, t)
     assert isinstance(batch_loss, torch.Tensor)
-    assert t.dtype is torch.float32
-    assert t.dtype is not torch.int64
+    assert batch_loss.dtype is torch.float32
+    assert batch_loss.dtype is not torch.int64
     assert list(batch_loss.shape) == []
-    printer(batch_loss.max(), batch_loss.min())
+    printer(batch_loss)
     assert batch_loss.item() >= 0
     assert batch_loss.item() <= {<max_batch_loss>}
 
     metric = loss.metric_batch(y, t)
-    printer(max(metric), min(metric))
+    printer(metric)
     assert isinstance(metric, float)
     # OR
     assert isinstance(metric, int)
