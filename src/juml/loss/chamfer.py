@@ -3,12 +3,11 @@ from jutility import cli
 from juml.loss.base import Loss
 
 class ChamferMse(Loss):
-    def chamfer_components(self, y_bchw: torch.Tensor, t_bpc: torch.Tensor):
-        y_bcq   = y_bchw.flatten(-2, -1)
-        y_b1cq  = y_bcq.unsqueeze(-3)
-        t_bpc1  = t_bpc.unsqueeze(-1)
-        e_bpcq  = self.weights * (y_b1cq - t_bpc1)
-        mse_bpq = e_bpcq.square().sum(dim=-2)
+    def chamfer_components(self, y_bqc: torch.Tensor, t_bpc: torch.Tensor):
+        t_bp1c  = t_bpc.unsqueeze(-2)
+        y_b1qc  = y_bqc.unsqueeze(-3)
+        e_bpqc  = self.weights * (t_bp1c - y_b1qc)
+        mse_bpq = e_bpqc.square().sum(dim=-1)
         mse_bp  = mse_bpq.min(dim=-1).values
         mse_bq  = mse_bpq.min(dim=-2).values
         return mse_bp, mse_bq
