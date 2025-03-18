@@ -1,7 +1,7 @@
 import torch
 from juml.loss.mse import Mse
 
-class WeightedSetMse(Mse):
+class AlignedSetMse(Mse):
     def forward(self, y_npo: torch.Tensor, t_npo: torch.Tensor):
         e_npo = self.weights * (y_npo - t_npo)
         return e_npo.square().sum(dim=-1).mean()

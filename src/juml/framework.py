@@ -32,7 +32,7 @@ class Framework:
         return [
             loss.CrossEntropy,
             loss.Mse,
-            loss.WeightedSetMse,
+            loss.AlignedSetMse,
             loss.ChamferMse,
         ]
 
