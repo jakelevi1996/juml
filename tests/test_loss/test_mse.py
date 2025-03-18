@@ -38,6 +38,7 @@ def test_mse_cli():
     args_str = (
         "train "
         "--dataset LinearDataset "
+        "--dataset.LinearDataset.input_dim 17 "
         "--model RzMlp "
         "--model.RzMlp.model_dim 7 "
         "--model.RzMlp.num_hidden_layers 2 "
@@ -58,6 +59,14 @@ def test_mse_cli():
     x, t = next(iter(trainer.dataset.get_data_loader("train", batch_size)))
     y_0 = trainer.model.forward(x)
     loss_0 = loss.forward(y_0, t)
+    assert isinstance(x,        torch.Tensor)
+    assert isinstance(t,        torch.Tensor)
+    assert isinstance(y_0,      torch.Tensor)
+    assert isinstance(loss_0,   torch.Tensor)
+    assert list(x.shape         ) == [11, 17]
+    assert list(t.shape         ) == [11, 10]
+    assert list(y_0.shape       ) == [11, 10]
+    assert list(loss_0.shape    ) == []
 
     optimiser.zero_grad()
     loss_0.backward()

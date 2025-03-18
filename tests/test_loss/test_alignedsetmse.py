@@ -67,11 +67,19 @@ def test_alignedsetmse_cli():
     assert isinstance(loss.weights, torch.Tensor)
     assert loss.weights is not None
 
-    batch_size = 11
+    batch_size = 17
     optimiser = torch.optim.Adam(trainer.model.parameters())
     x, t = next(iter(trainer.dataset.get_data_loader("train", batch_size)))
     y_0 = trainer.model.forward(x)
     loss_0 = loss.forward(y_0, t)
+    assert isinstance(x,        torch.Tensor)
+    assert isinstance(t,        torch.Tensor)
+    assert isinstance(y_0,      torch.Tensor)
+    assert isinstance(loss_0,   torch.Tensor)
+    assert list(x.shape         ) == [17, 19, 11]
+    assert list(t.shape         ) == [17, 19, 13]
+    assert list(y_0.shape       ) == [17, 19, 13]
+    assert list(loss_0.shape    ) == []
 
     optimiser.zero_grad()
     loss_0.backward()

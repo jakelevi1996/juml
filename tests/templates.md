@@ -336,6 +336,15 @@ def test_{<losstype>}_cli():
     x, t = next(iter(trainer.dataset.get_data_loader("train", batch_size)))
     y_0 = trainer.model.forward(x)
     loss_0 = loss.forward(y_0, t)
+    assert isinstance(x,        torch.Tensor)
+    assert isinstance(t,        torch.Tensor)
+    assert isinstance(y_0,      torch.Tensor)
+    assert isinstance(loss_0,   torch.Tensor)
+    assert list(x.shape         ) == [{<x_shape>}]
+    assert list(t.shape         ) == [{<t_shape>}]
+    assert list(y_0.shape       ) == [{<y_0_shape>}]
+    assert list(loss_0.shape    ) == [{<loss_0_shape>}]
+
 
     optimiser.zero_grad()
     loss_0.backward()
