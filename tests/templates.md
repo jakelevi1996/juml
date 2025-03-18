@@ -330,6 +330,22 @@ def test_{<losstype>}_cli():
     # OR
     assert isinstance(loss.weights, torch.Tensor)
     assert loss.weights is not None
+
+    batch_size = {<batch_size>}
+    optimiser = torch.optim.Adam(trainer.model.parameters())
+    x, t = next(iter(trainer.dataset.get_data_loader("train", batch_size)))
+    y_0 = trainer.model.forward(x)
+    loss_0 = loss.forward(y_0, t)
+
+    optimiser.zero_grad()
+    loss_0.backward()
+    optimiser.step()
+
+    y_1 = trainer.model.forward(x)
+    loss_1 = loss.forward(y_1, t)
+
+    printer(loss_0, loss_1)
+    assert loss_1.item() < loss_0.item()
 ```
 
 ## Trainers
