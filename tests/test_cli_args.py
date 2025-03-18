@@ -98,7 +98,7 @@ def test_cli_args_cnn():
     args = parser.parse_args(arg_str.split())
 
     assert args.get_summary() == (
-        "dMmCmb2mc64meImk5mn3mpAVms2"
+        "dMmCmb2mc64meImk5mn3mpAms2"
     )
 
     cli.verbose.set_printer(printer)

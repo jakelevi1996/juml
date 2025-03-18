@@ -91,7 +91,7 @@ class Max2d(Pooler):
         x_no  = self.linear.forward(x_nc)
         return x_no
 
-class Attention2d(Pooler):
+class SoftmaxAverage2d(Pooler):
     def set_shapes(
         self,
         input_shape:  list[int],
@@ -145,7 +145,7 @@ def get_types() -> list[type[Pooler]]:
         Unflatten,
         Average2d,
         Max2d,
-        Attention2d,
+        SoftmaxAverage2d,
         LinearSet2d,
         GatedLinearSet2d,
     ]
