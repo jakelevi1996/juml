@@ -9,10 +9,11 @@ def test_alignedsetmse():
     printer = util.Printer("test_alignedsetmse", dir_name=OUTPUT_DIR)
     juml.test_utils.set_torch_seed("test_alignedsetmse")
 
-    batch_size = 87
-    output_dim = 11
-    y = torch.rand([batch_size, output_dim])
-    t = torch.rand([batch_size, output_dim])
+    batch_size  = 87
+    set_size    = 19
+    output_dim  = 11
+    y = torch.rand([batch_size, set_size, output_dim])
+    t = torch.rand([batch_size, set_size, output_dim])
 
     loss = juml.loss.AlignedSetMse()
 
