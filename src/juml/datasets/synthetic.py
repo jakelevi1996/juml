@@ -22,7 +22,7 @@ class Synthetic(DatasetFromDict):
         self._t_std         = t_std
         self._init_split_dict()
 
-    def _get_split_dict(self) -> dict[str, torch.utils.data.Dataset]:
+    def _get_split_dict(self) -> dict[str, DataSplit]:
         return {
             "train": self._make_split(self._n_train),
             "test":  self._make_split(self._n_test),
