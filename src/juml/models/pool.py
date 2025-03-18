@@ -133,11 +133,10 @@ class GatedLinearSet2d(Pooler):
         self.f_x = Linear(input_shape[-3], output_shape[-1])
 
     def forward(self, x_nchw: torch.Tensor) -> torch.Tensor:
-        x_npc   = x_nchw.flatten(-2, -1).transpose(-1, -2)
-        p_np1   = self.f_p.forward(x_npc)
-        p_np1   = torch.sigmoid(p_np1)
-        x_npo   = self.f_x.forward(x_npc)
-        x_npo   = p_np1 * x_npo
+        x_npc = x_nchw.flatten(-2, -1).transpose(-1, -2)
+        p_np1 = self.f_p.forward(x_npc)
+        x_npo = self.f_x.forward(x_npc)
+        x_npo = torch.sigmoid(p_np1) * x_npo
         return x_npo
 
 def get_types() -> list[type[Pooler]]:
