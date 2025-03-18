@@ -40,7 +40,7 @@ def test_get_data_loader():
         assert t.dtype is torch.float32
         assert t.dtype is not torch.int64
 
-    batch_size = 17
+    batch_size = 43
     batch_size_list = []
 
     data_loader = dataset.get_data_loader("train", batch_size)
@@ -54,12 +54,9 @@ def test_get_data_loader():
 
         batch_size_list.append(x.shape[0])
 
-    assert sum(batch_size_list) == n_train
-    assert set(batch_size_list) == set([batch_size, n_train % batch_size])
-    assert len(batch_size_list) == math.ceil(n_train / batch_size)
-    assert len(set(batch_size_list)) == 2
-
     printer(batch_size_list)
+    assert batch_size_list == [43, 43, 43, 43, 28]
+    assert sum(batch_size_list) == n_train
 
 def test_get_subset_loader():
     printer = util.Printer("test_get_subset_loader", dir_name=OUTPUT_DIR)
@@ -94,12 +91,10 @@ def test_get_subset_loader():
 
         batch_size_list.append(x.shape[0])
 
+    printer(batch_size_list)
+    assert batch_size_list == [17, 17, 3]
     assert sum(batch_size_list) == n_subset
     assert sum(batch_size_list) <  n_train
-    assert set(batch_size_list) == set([batch_size, n_subset % batch_size])
-    assert len(batch_size_list) == math.ceil(n_subset / batch_size)
-
-    printer(batch_size_list)
 
     full_dl     = dataset.get_data_loader(  "train", n_train)
     subset_dl   = dataset.get_subset_loader("train", n_subset, n_subset)
