@@ -122,7 +122,7 @@ class Conv2d(Pooler):
         x_nohw = self.conv.forward(x_nchw)
         return x_nohw
 
-class SigmoidProduct2d(Pooler):
+class GatedLinearSet2d(Pooler):
     def set_shapes(
         self,
         input_shape:  list[int],
@@ -147,7 +147,7 @@ def get_types() -> list[type[Pooler]]:
         Max2d,
         Attention2d,
         Conv2d,
-        SigmoidProduct2d,
+        GatedLinearSet2d,
     ]
 
 def get_cli_choice() -> cli.ObjectChoice:

@@ -21,7 +21,7 @@ def test_sequential():
         blocks_per_stage=3,
         stride=2,
         embedder=juml.models.embed.CoordConv(),
-        pooler=juml.models.pool.SigmoidProduct2d(),
+        pooler=juml.models.pool.GatedLinearSet2d(),
     )
     assert repr(model) == "Cnn(num_params=5.1k)"
     assert len(model) == 7
