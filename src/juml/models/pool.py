@@ -2,6 +2,7 @@ import math
 import torch
 from jutility import cli
 from juml.models.base import Model
+from juml.models.linear import Linear
 
 class Pooler(Model):
     def set_shapes(
@@ -127,15 +128,16 @@ class SigmoidProduct2d(Pooler):
         input_shape:  list[int],
         output_shape: list[int],
     ):
-        self.conv_p = torch.nn.Conv2d(input_shape[-3], 1, 1)
-        self.conv_x = torch.nn.Conv2d(input_shape[-3], output_shape[-1], 1)
+        self.f_p = Linear(input_shape[-3], 1)
+        self.f_x = Linear(input_shape[-3], output_shape[-1])
 
     def forward(self, x_nchw: torch.Tensor) -> torch.Tensor:
-        p_n1hw = self.conv_p.forward(x_nchw)
-        p_n1hw = torch.sigmoid(p_n1hw)
-        x_nohw = self.conv_x.forward(x_nchw)
-        x_nohw = p_n1hw * x_nohw
-        return x_nohw
+        x_npc   = x_nchw.flatten(-2, -1).transpose(-1, -2)
+        p_np1   = self.f_p.forward(x_npc)
+        p_np1   = torch.sigmoid(p_np1)
+        x_npo   = self.f_x.forward(x_npc)
+        x_npo   = p_np1 * x_npo
+        return x_npo
 
 def get_types() -> list[type[Pooler]]:
     return [
