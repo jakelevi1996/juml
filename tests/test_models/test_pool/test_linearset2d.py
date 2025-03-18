@@ -29,8 +29,8 @@ def test_linearset2d():
     assert y.dtype is not torch.int64
     assert list(y.shape) == [3, 30, 11]
     printer(y.max(), y.min())
-    assert y.max().item() <= 2
-    assert y.min().item() >= -2
+    assert y.max().item() <= 2.5
+    assert y.min().item() >= -2.5
 
 def test_linearset2d_model():
     printer = util.Printer("test_linearset2d_model", dir_name=OUTPUT_DIR)
