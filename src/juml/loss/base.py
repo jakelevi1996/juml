@@ -17,7 +17,7 @@ class Loss:
         raise NotImplementedError()
 
     def metric_info(self) -> dict:
-        raise NotImplementedError()
+        return self.info()
 
     def metric(
         self,
