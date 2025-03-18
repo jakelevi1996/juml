@@ -29,3 +29,27 @@ def test_crossentropy():
     assert isinstance(metric, int)
     assert metric >= 0
     assert metric <= batch_size
+
+def test_crossentropy_cli():
+    printer = util.Printer("test_crossentropy_cli", dir_name=OUTPUT_DIR)
+    juml.test_utils.set_torch_seed("test_crossentropy_cli")
+
+    parser  = juml.base.Framework.get_parser()
+    args_str = (
+        "train "
+        "--dataset RandomImage "
+        "--model RzCnn "
+        "--model.RzCnn.model_dim 7 "
+        "--model.RzCnn.num_stages 2 "
+        "--model.RzCnn.pooler Average2d "
+        "--trainer BpSp "
+        "--trainer.BpSp.epochs 1"
+    )
+    args = parser.parse_args(args_str.split())
+    trainer = args.get_command().run(args)
+    assert isinstance(trainer, juml.train.BpSp)
+
+    loss = trainer.loss
+    assert isinstance(loss, juml.loss.CrossEntropy)
+    assert loss.weights is None
+    assert not isinstance(loss.weights, torch.Tensor)
