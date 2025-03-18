@@ -303,6 +303,33 @@ def test_{<losstype>}():
     assert isinstance(metric, int)
     assert metric >= 0
     assert metric <= {<max_metric>}
+
+def test_{<losstype>}_cli():
+    printer = util.Printer("test_{<losstype>}_cli", dir_name=OUTPUT_DIR)
+    juml.test_utils.set_torch_seed("test_{<losstype>}_cli")
+
+    parser  = juml.base.Framework.get_parser()
+    args_str = (
+        "train "
+        "--loss {<LossType>} "
+        "--dataset {<DatasetType>} "
+        ...
+        "--model {<ModelType>} "
+        ...
+        "--trainer {<TrainerType>} "
+        ...
+    )
+    args = parser.parse_args(args_str.split())
+    trainer = args.get_command().run(args)
+    assert isinstance(trainer, juml.train.{<TrainerType>})
+
+    loss = trainer.loss
+    assert isinstance(loss, juml.loss.{<LossType>})
+    assert loss.weights is None
+    assert not isinstance(loss.weights, torch.Tensor)
+    # OR
+    assert isinstance(loss.weights, torch.Tensor)
+    assert loss.weights is not None
 ```
 
 ## Trainers
