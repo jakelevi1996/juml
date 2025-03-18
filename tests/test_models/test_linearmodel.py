@@ -43,3 +43,8 @@ def test_linearmodel():
 
     printer(loss_0, loss_1)
     assert loss_1.item() < loss_0.item()
+
+    printer(repr(list(model.layers)))
+    assert repr(list(model.layers)) == (
+        "[Linear(num_params=88)]"
+    )

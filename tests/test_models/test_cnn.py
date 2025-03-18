@@ -47,7 +47,7 @@ def test_cnn():
     printer(loss_0, loss_1)
     assert loss_1.item() < loss_0.item()
 
-    assert repr(model.embed) == "Identity(num_params=0)"
+    printer(repr(list(model.layers)))
     assert repr(list(model.layers)) == (
         "[InputReluCnnLayer(num_params=333), "
         "ReluCnnLayer(num_params=738), "
@@ -57,4 +57,3 @@ def test_cnn():
         "ReluCnnLayer(num_params=738), "
         "ReluCnnLayer(num_params=738)]"
     )
-    assert repr(model.pool) == "Identity(num_params=0)"

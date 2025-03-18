@@ -56,6 +56,15 @@ def test_rzmlp():
         assert isinstance(g, torch.Tensor)
         assert list(g.shape) == [model_dim, hidden_dim]
 
+    printer(repr(list(model.layers)))
+    assert repr(list(model.layers)) == (
+        "[Linear(num_params=184), "
+        "ReZeroMlpLayer(num_params=2.2k), "
+        "ReZeroMlpLayer(num_params=2.2k), "
+        "ReZeroMlpLayer(num_params=2.2k), "
+        "Linear(num_params=264)]"
+    )
+
 def test_rzmlp_num_params():
     juml.test_utils.set_torch_seed("test_rzmlp_num_params")
     printer = util.Printer("test_rzmlp_num_params", dir_name=OUTPUT_DIR)

@@ -43,3 +43,10 @@ def test_mlp():
 
     printer(loss_0, loss_1)
     assert loss_1.item() < loss_0.item()
+
+    printer(repr(list(model.layers)))
+    assert repr(list(model.layers)) == (
+        "[ReluMlpLayer(num_params=104), "
+        "ReluMlpLayer(num_params=182), "
+        "Linear(num_params=154)]"
+    )

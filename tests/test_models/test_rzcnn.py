@@ -48,7 +48,6 @@ def test_rzcnn():
     printer(loss_0, loss_1)
     assert loss_1.item() < loss_0.item()
 
-    assert repr(model.embed) == "Identity(num_params=0)"
     printer(repr(list(model.layers)))
     assert repr(list(model.layers)) == (
         "[InputCnnLayer(num_params=333), "
@@ -59,4 +58,3 @@ def test_rzcnn():
         "ReZeroCnnLayer(num_params=442), "
         "ReZeroCnnLayer(num_params=442)]"
     )
-    assert repr(model.pool) == "Identity(num_params=0)"

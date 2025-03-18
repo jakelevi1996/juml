@@ -61,6 +61,11 @@ def test_{<modeltype>}():
 
     printer(loss_0, loss_1)
     assert loss_1.item() < loss_0.item()
+
+    printer(repr(list(model.layers)))
+    assert repr(list(model.layers)) == (
+        "[{<repr_layers>}]"
+    )
 ```
 
 ### Embed
