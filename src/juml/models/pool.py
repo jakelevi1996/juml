@@ -116,11 +116,12 @@ class Conv2d(Pooler):
         input_shape:  list[int],
         output_shape: list[int],
     ):
-        self.conv = torch.nn.Conv2d(input_shape[-3], output_shape[-1], 1)
+        self.linear = Linear(input_shape[-3], output_shape[-1])
 
     def forward(self, x_nchw: torch.Tensor) -> torch.Tensor:
-        x_nohw = self.conv.forward(x_nchw)
-        return x_nohw
+        x_npc = x_nchw.flatten(-2, -1).transpose(-1, -2)
+        x_npo = self.linear.forward(x_npc)
+        return x_npo
 
 class GatedLinearSet2d(Pooler):
     def set_shapes(
