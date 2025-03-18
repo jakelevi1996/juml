@@ -97,17 +97,16 @@ class SoftmaxAverage2d(Pooler):
         input_shape:  list[int],
         output_shape: list[int],
     ):
-        self.linear = torch.nn.Linear(input_shape[-3], output_shape[-1])
-        self.conv   = torch.nn.Conv2d(input_shape[-3], 1, 1)
+        self.f_p = Linear(input_shape[-3], 1)
+        self.f_x = Linear(input_shape[-3], output_shape[-1])
 
     def forward(self, x_nchw: torch.Tensor) -> torch.Tensor:
-        p_n1hw = self.conv.forward(x_nchw)
-        p_n11i = p_n1hw.flatten(-2, -1).unsqueeze(-2)
-        p_n11i = torch.softmax(p_n11i, dim=-1)
-        x_nci1 = x_nchw.flatten(-2, -1).unsqueeze(-1)
-        x_nc11 = p_n11i @ x_nci1
-        x_nc   = x_nc11.squeeze(-2).squeeze(-1)
-        x_no   = self.linear.forward(x_nc)
+        x_nic   = x_nchw.flatten(-2, -1).transpose(-1, -2)
+        p_ni1   = self.f_p.forward(x_nic)
+        p_n1i   = p_ni1.squeeze(-1).unsqueeze(-2)
+        x_n1c   = torch.softmax(p_n1i, dim=-1) @ x_nic
+        x_nc    = x_n1c.squeeze(-2)
+        x_no    = self.f_x.forward(x_nc)
         return x_no
 
 class LinearSet2d(Pooler):
