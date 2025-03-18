@@ -3,27 +3,27 @@ from jutility import cli
 from juml.loss.base import Loss
 
 class ChamferMse(Loss):
-    def chamfer_components(self, y_bqc: torch.Tensor, t_bpc: torch.Tensor):
-        t_bp1c  = t_bpc.unsqueeze(-2)
-        y_b1qc  = y_bqc.unsqueeze(-3)
-        e_bpqc  = self.weights * (t_bp1c - y_b1qc)
-        mse_bpq = e_bpqc.square().sum(dim=-1)
-        mse_bp  = mse_bpq.min(dim=-1).values
-        mse_bq  = mse_bpq.min(dim=-2).values
-        return mse_bp, mse_bq
+    def chamfer_components(self, y_nqc: torch.Tensor, t_npc: torch.Tensor):
+        t_np1c  = t_npc.unsqueeze(-2)
+        y_n1qc  = y_nqc.unsqueeze(-3)
+        e_npqc  = self.weights * (t_np1c - y_n1qc)
+        mse_npq = e_npqc.square().sum(dim=-1)
+        mse_np  = mse_npq.min(dim=-1).values
+        mse_nq  = mse_npq.min(dim=-2).values
+        return mse_np, mse_nq
 
     def forward(self, y, t):
-        mse_bp, mse_bq = self.chamfer_components(y, t)
-        return mse_bp.mean() + mse_bq.mean()
+        mse_np, mse_nq = self.chamfer_components(y, t)
+        return mse_np.mean() + mse_nq.mean()
 
     def info(self):
         return {"ylabel": "Chamfer loss", "log_y": True}
 
     def metric_batch(self, y, t):
-        mse_bp, mse_bq = self.chamfer_components(y, t)
+        mse_np, mse_nq = self.chamfer_components(y, t)
         return (
-            mse_bp.mean(dim=-1).sum().item() +
-            mse_bq.mean(dim=-1).sum().item()
+            mse_np.mean(dim=-1).sum().item() +
+            mse_nq.mean(dim=-1).sum().item()
         )
 
     def metric_info(self):
