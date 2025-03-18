@@ -73,3 +73,37 @@ def test_unflatten_model():
 
     printer(loss_0, loss_1)
     assert loss_1.item() < loss_0.item()
+
+def test_unflatten_different_n():
+    printer = util.Printer("test_unflatten_different_n", dir_name=OUTPUT_DIR)
+    juml.test_utils.set_torch_seed("test_unflatten_different_n")
+
+    x = torch.rand([3, 4, 5, 6])
+
+    p1 = juml.models.pool.Unflatten(n=1)
+    p2 = juml.models.pool.Unflatten(n=2)
+    p3 = juml.models.pool.Unflatten(n=3)
+
+    p1.set_shapes([], list(x.shape))
+    p2.set_shapes([], list(x.shape))
+    p3.set_shapes([], list(x.shape))
+
+    assert list(p1.forward(x).shape) == list(x.shape)
+    assert list(p2.forward(x.flatten(-2, -1)).shape) == list(x.shape)
+    assert list(p3.forward(x.flatten(-3, -1)).shape) == list(x.shape)
+    with pytest.raises(RuntimeError):
+        p2.forward(x)
+    with pytest.raises(RuntimeError):
+        p3.forward(x)
+
+    assert torch.all(p1.forward(x) == x)
+    assert torch.all(p2.forward(x.flatten(-2, -1)) == x)
+    assert torch.all(p3.forward(x.flatten(-3, -1)) == x)
+
+    assert p1.get_input_shape() == [3, 4, 5, 6]
+    assert p2.get_input_shape() == [3, 4, 30]
+    assert p3.get_input_shape() == [3, 120]
+
+    assert p1.get_input_dim(-1) == 6
+    assert p2.get_input_dim(-1) == 30
+    assert p3.get_input_dim(-1) == 120
