@@ -1,3 +1,4 @@
+import os
 import torch
 import pytest
 from jutility import util, cli
@@ -54,13 +55,13 @@ def test_apply_configs():
 def test_get_model_name():
     parser = juml.base.Framework.get_parser()
 
-    s = "train --model Mlp --dataset Mnist --loss CrossEntropy"
-    args = parser.parse_args(s.split())
+    args_str = "train --model Mlp --dataset Mnist --loss CrossEntropy"
+    args = parser.parse_args(args_str.split())
     assert juml.base.Trainer.get_model_name(args) == (
         "dM_lC_mMeIh100n3pI_tBb100e10lCle1E-05oAol0.001_s0"
     )
 
-    s = (
+    args_str = (
         "train "
         "--seed 999 "
         "--model Cnn "
@@ -72,11 +73,49 @@ def test_get_model_name():
         "--trainer.BpSp.optimiser.AdamW.weight_decay 6.789 "
         "--trainer.BpSp.lrs.CosineAnnealingLR.eta_min 0 "
     )
-    args = parser.parse_args(s.split())
+    args = parser.parse_args(args_str.split())
     assert juml.base.Trainer.get_model_name(args) == (
         "dC_lC_mCb2c64eIk42n3pIs2_tBb1234e10lCle0.0oAWol0.001ow6.789_s999"
     )
 
-    s = "train --model_name abcdef"
-    args = parser.parse_args(s.split())
+    args_str = "train --model_name abcdef"
+    args = parser.parse_args(args_str.split())
     assert juml.base.Trainer.get_model_name(args) == "abcdef"
+
+def test_load():
+    printer = util.Printer("test_load", dir_name=OUTPUT_DIR)
+
+    output_path = (
+        "results/train/dSh1i1o1te200tr200ts0.1x0.0_lM_mMeIh11n1pI_"
+        "tBb100e2lCle1E-05oAol0.001_s0/model.pth"
+    )
+    if os.path.isfile(output_path):
+        os.remove(output_path)
+
+    assert not os.path.isfile(output_path)
+
+
+    parser = juml.base.Framework.get_parser()
+    args_str = (
+        "train "
+        "--loss Mse "
+        "--model Mlp "
+        "--model.Mlp.hidden_dim 11 "
+        "--model.Mlp.num_hidden_layers 1 "
+        "--dataset SinMix "
+        "--trainer.BpSp.epochs 2 "
+    )
+    args = parser.parse_args(args_str.split())
+
+    with pytest.raises(FileNotFoundError):
+        juml.base.Trainer.load(args)
+
+    args.get_command().run(args)
+    assert os.path.isfile(output_path)
+
+    model_dir, model, dataset = juml.base.Trainer.load(args)
+    assert isinstance(model_dir,    str)
+    assert isinstance(model,        juml.models.Mlp)
+    assert isinstance(dataset,      juml.datasets.SinMix)
+    assert os.path.isdir(model_dir)
+    assert model_dir in output_path
