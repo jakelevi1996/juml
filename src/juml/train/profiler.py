@@ -19,7 +19,7 @@ class Profiler:
         x, t = next(iter(train_loader))
         gpu = (len(devices) > 0)
         if gpu:
-            x = x.cuda()
+            [x] = device.to_device([x], gpu)
             model.cuda()
 
         for _ in range(num_warmup):
