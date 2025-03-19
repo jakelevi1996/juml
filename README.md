@@ -19,6 +19,7 @@ A Judicious, Unified and extendable framework for multi-paradigm Machine Learnin
       - [Plot confusion matrix](#plot-confusion-matrix)
       - [Sweep hyperparameters](#sweep-hyperparameters)
       - [Profile](#profile)
+      - [Further examples](#further-examples)
     - [Extending JUML](#extending-juml)
   - [Citation](#citation)
 
@@ -183,6 +184,10 @@ Throughput                             | 5.1k samples/second
 FLOPS                                  | 7.2MFLOPS/sample
 Total number of samples                | 1.0k
 Batch size                             | 100
+
+#### Further examples
+
+See [`scripts/further_examples.sh`](scripts/further_examples.sh) for some further examples of `juml` commands with some explanations.
 
 ### Extending JUML
 
