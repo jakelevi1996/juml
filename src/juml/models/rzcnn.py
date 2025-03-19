@@ -43,7 +43,7 @@ class RzCnn(Sequential):
         return [
             cli.Arg("kernel_size",      type=int,   default=5),
             cli.Arg("model_dim",        type=int,   default=64),
-            cli.Arg("expand_ratio",     type=float, default=2.0),
+            cli.Arg("expand_ratio",     type=float, default=2.0, tag="x"),
             cli.Arg("num_stages",       type=int,   default=3),
             cli.Arg("blocks_per_stage", type=int,   default=2),
             cli.Arg("stride",           type=int,   default=2),

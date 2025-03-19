@@ -34,7 +34,7 @@ class RzMlp(Sequential):
     def get_cli_options(cls) -> list[cli.Arg]:
         return [
             cli.Arg("model_dim",            type=int,   default=100),
-            cli.Arg("expand_ratio",         type=float, default=2.0),
+            cli.Arg("expand_ratio",         type=float, default=2.0, tag="x"),
             cli.Arg("num_hidden_layers",    type=int,   default=3),
         ]
 

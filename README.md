@@ -172,7 +172,7 @@ Batch size                             | 100
 
 ```
 juml train --dataset RandomImage --model RzCnn --model.RzCnn.pooler Average2d --trainer BpSp --trainer.BpSp.epochs 1
-juml profile --model_name dRfFi3,32,32o10te200tr200_lC_mRZCb2emIex2.0k5m64n3pAs2_tBb100e1lCle1E-05oAol0.001_s0
+juml profile --model_name dRfFi3,32,32o10te200tr200_lC_mRZCb2eIk5m64n3pAs2x2.0_tBb100e1lCle1E-05oAol0.001_s0
 ```
 
 Key                                    | Value
@@ -267,7 +267,7 @@ python scripts/demo_extend_juml.py sweep --model PolynomialRegression1d --datase
 python scripts/demo_extend_juml.py plot1dregression --model_name dST_lM_mPn5_tBb100e1000lCle1E-05oAol0.001_s0
 
 python scripts/demo_extend_juml.py train --model RzMlp --dataset Step1d --trainer.BpSp.epochs 1000 --print_level 1
-python scripts/demo_extend_juml.py plot1dregression --model_name dST_lM_mRZMemIex2.0m100n3pI_tBb100e1000lCle1E-05oAol0.001_s0
+python scripts/demo_extend_juml.py plot1dregression --model_name dST_lM_mRZMeIm100n3pIx2.0_tBb100e1000lCle1E-05oAol0.001_s0
 ```
 
 ## Citation
