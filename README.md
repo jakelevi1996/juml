@@ -16,9 +16,9 @@ A Judicious, Unified and extendable framework for multi-paradigm Machine Learnin
     - [Out of the box](#out-of-the-box)
       - [Help interface](#help-interface)
       - [Train a model](#train-a-model)
-      - [Profile model](#profile-model)
       - [Plot confusion matrix](#plot-confusion-matrix)
       - [Sweep hyperparameters](#sweep-hyperparameters)
+      - [Profile](#profile)
     - [Extending JUML](#extending-juml)
   - [Citation](#citation)
 
@@ -118,12 +118,6 @@ Time taken for `train` = 13.9629 seconds
 
 ![](results/train/dM_lC_mMeFen3h100n3pI_tBb100e3lCle1E-05oAol0.001_s0/metrics.png)
 
-#### Profile model
-
-```
-juml profile --model_name dM_lC_mMeFen3h100n3pI_tBb100e3lCle1E-05oAol0.001_s0
-```
-
 #### Plot confusion matrix
 
 ```
@@ -143,6 +137,52 @@ juml sweep --model LinearModel --dataset LinearDataset --dataset.LinearDataset.i
 ![](results/sweep/dLi5o10te200tr200ts0.0x0.0lMmLeIpItBb100e1,2,300lCle1E-05oAol,1E-0.0001,.001,.01,5s1,2,3/trainer.BpSp.epochs.png)
 
 ![](results/sweep/dLi5o10te200tr200ts0.0x0.0lMmLeIpItBb100e1,2,300lCle1E-05oAol,1E-0.0001,.001,.01,5s1,2,3/trainer.BpSp.optimiser.Adam.lr.png)
+
+#### Profile
+
+```
+juml profile --model_name dM_lC_mMeFen3h100n3pI_tBb100e3lCle1E-05oAol0.001_s0 --Profiler.num_warmup 1000 --Profiler.num_profile 1000 --Profiler.batch_size 100
+```
+
+Key                                    | Value
+-------------------------------------- | --------------------------------------
+Model                                  | `Mlp(num_params=99.7k)`
+Time (total)                           | 0.44410 s
+Time (average)                         | 0.00444 ms/sample
+Throughput                             | 225.2k samples/second
+FLOPS                                  | 199.1KFLOPS/sample
+Total number of samples                | 100.0k
+Batch size                             | 100
+
+```
+juml train --dataset RandomImage --model Cnn --model.Cnn.pooler Average2d --trainer BpSp --trainer.BpSp.epochs 1
+juml profile --model_name dRfFi3,32,32o10te200tr200_lC_mCb2c64eIk5n3pAs2_tBb100e1lCle1E-05oAol0.001_s0
+```
+
+Key                                    | Value
+-------------------------------------- | --------------------------------------
+Model                                  | `Cnn(num_params=620.3k)`
+Time (total)                           | 0.83186 s
+Time (average)                         | 0.83186 ms/sample
+Throughput                             | 1.2k samples/second
+FLOPS                                  | 45.3MFLOPS/sample
+Total number of samples                | 1.0k
+Batch size                             | 100
+
+```
+juml train --dataset RandomImage --model RzCnn --model.RzCnn.pooler Average2d --trainer BpSp --trainer.BpSp.epochs 1
+juml profile --model_name dRfFi3,32,32o10te200tr200_lC_mRZCb2emIex2.0k5m64n3pAs2_tBb100e1lCle1E-05oAol0.001_s0
+```
+
+Key                                    | Value
+-------------------------------------- | --------------------------------------
+Model                                  | `RzCnn(num_params=283.4k)`
+Time (total)                           | 0.19533 s
+Time (average)                         | 0.19533 ms/sample
+Throughput                             | 5.1k samples/second
+FLOPS                                  | 7.2MFLOPS/sample
+Total number of samples                | 1.0k
+Batch size                             | 100
 
 ### Extending JUML
 
