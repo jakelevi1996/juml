@@ -53,5 +53,5 @@ class RandomImage(Synthetic):
             cli.Arg("output_shape", type=int, nargs="+", default=[10]),
             cli.Arg("train",        type=int, default=200),
             cli.Arg("test",         type=int, default=200),
-            cli.Arg("output_float", action="store_true"),
+            cli.Arg("output_float", action="store_true", tag="f"),
         )
