@@ -56,5 +56,5 @@ def test_sinmix():
     assert t.min().item() < 0
 
     assert dataset.get_default_loss() == "Mse"
-    with pytest.raises(NotImplementedError):
-        dataset.get_loss_weights()
+    assert isinstance(dataset.get_loss_weights(), torch.Tensor)
+    assert list(dataset.get_loss_weights().shape) == [output_dim]

@@ -40,11 +40,6 @@ class RandomImage(Synthetic):
     def get_default_loss(self) -> str | None:
         return "Mse" if self._output_float else "CrossEntropy"
 
-    def get_loss_weights(self) -> torch.Tensor:
-        split_dict  = self._get_split_dict()
-        train_split = split_dict["train"]
-        return train_split.t.flatten(0, -2).mean(-2)
-
     @classmethod
     def get_cli_arg(cls):
         return cli.ObjectArg(

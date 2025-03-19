@@ -43,6 +43,11 @@ class Synthetic(DatasetFromDict):
     def _compute_target(self, x: torch.Tensor) -> torch.Tensor:
         raise NotImplementedError()
 
+    def get_loss_weights(self) -> torch.Tensor:
+        split_dict  = self._get_split_dict()
+        train_split = split_dict["train"]
+        return 1.0 / train_split.t.flatten(0, -2).std(dim=-2)
+
     def get_input_shape(self) -> list[int]:
         return self._input_shape
 

@@ -98,3 +98,6 @@ def test_randomimage_output_float():
     printer(t.max(), t.min())
     assert t.max().item() <= 1
     assert t.min().item() >= 0
+
+    assert isinstance(dataset.get_loss_weights(), torch.Tensor)
+    assert list(dataset.get_loss_weights().shape) == [output_shape[-1]]
