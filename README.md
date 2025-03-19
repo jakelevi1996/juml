@@ -4,7 +4,7 @@ A Judicious, Unified and extendable framework for multi-paradigm Machine Learnin
 
 > *[Judicious [adjective]: having or showing reason and good judgment in making decisions](https://dictionary.cambridge.org/dictionary/english/judicious)*
 
-![](scripts/img/logo_black.png)
+![](https://github.com/jakelevi1996/juml/raw/main/scripts/img/logo_black.png)
 
 ## Contents
 
@@ -46,12 +46,12 @@ JUML depends on [PyTorch](https://pytorch.org/). The installation instructions f
 
 The JUML framework defines 6 fundamental classes (and several example subclasses), available in the [`juml.base`](https://github.com/jakelevi1996/juml/blob/main/src/juml/base.py) namespace module, which are expected to be subclassed in downstream projects:
 
-- [`juml.base.Model`](src/juml/models/base.py)
-- [`juml.base.Dataset`](src/juml/datasets/base.py)
-- [`juml.base.Loss`](src/juml/loss/base.py)
-- [`juml.base.Trainer`](src/juml/train/base.py)
-- [`juml.base.Command`](src/juml/commands/base.py)
-- [`juml.base.Framework`](src/juml/framework.py)
+- [`juml.base.Model`](https://github.com/jakelevi1996/juml/blob/main/src/juml/models/base.py)
+- [`juml.base.Dataset`](https://github.com/jakelevi1996/juml/blob/main/src/juml/datasets/base.py)
+- [`juml.base.Loss`](https://github.com/jakelevi1996/juml/blob/main/src/juml/loss/base.py)
+- [`juml.base.Trainer`](https://github.com/jakelevi1996/juml/blob/main/src/juml/train/base.py)
+- [`juml.base.Command`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/base.py)
+- [`juml.base.Framework`](https://github.com/jakelevi1996/juml/blob/main/src/juml/framework.py)
 
 *Coming soon: `juml.base.Environment` for RL*
 
@@ -117,7 +117,7 @@ Final metrics = 0.97862 (train), 0.97010 (test)
 Time taken for `train` = 13.9629 seconds
 ```
 
-![](results/train/dM_lC_mMeFen3h100n3pI_tBb100e3lCle1E-05oAol0.001_s0/metrics.png)
+![](https://github.com/jakelevi1996/juml/raw/main/results/train/dM_lC_mMeFen3h100n3pI_tBb100e3lCle1E-05oAol0.001_s0/metrics.png)
 
 #### Plot confusion matrix
 
@@ -125,7 +125,7 @@ Time taken for `train` = 13.9629 seconds
 juml plotconfusionmatrix --model_name dM_lC_mMeFen3h100n3pI_tBb100e3lCle1E-05oAol0.001_s0
 ```
 
-![](results/train/dM_lC_mMeFen3h100n3pI_tBb100e3lCle1E-05oAol0.001_s0/Confusion_matrix.png)
+![](https://github.com/jakelevi1996/juml/raw/main/results/train/dM_lC_mMeFen3h100n3pI_tBb100e3lCle1E-05oAol0.001_s0/Confusion_matrix.png)
 
 #### Sweep hyperparameters
 
@@ -133,11 +133,11 @@ juml plotconfusionmatrix --model_name dM_lC_mMeFen3h100n3pI_tBb100e3lCle1E-05oAo
 juml sweep --model LinearModel --dataset LinearDataset --dataset.LinearDataset.input_dim 5 --dataset.LinearDataset.output_dim 10 --print_level 1 --Sweeper.seeds 1 2 3 --Sweeper.params '{"trainer.BpSp.epochs":[100,200,300],"trainer.BpSp.optimiser.Adam.lr":[1e-5,1e-4,1e-3,1e-2]}' --Sweeper.log_x trainer.BpSp.optimiser.Adam.lr --Sweeper.devices "[[],[],[],[],[],[]]" --Sweeper.no_cache
 ```
 
-[`[ full_sweep_results ]`](results/sweep/dLi5o10te200tr200ts0.0x0.0lMmLeIpItBb100e1,2,300lCle1E-05oAol,1E-0.0001,.001,.01,5s1,2,3/results.md)
+[`[ full_sweep_results ]`](https://github.com/jakelevi1996/juml/blob/main/results/sweep/dLi5o10te200tr200ts0.0x0.0lMmLeIpItBb100e1,2,300lCle1E-05oAol,1E-0.0001,.001,.01,5s1,2,3/results.md)
 
-![](results/sweep/dLi5o10te200tr200ts0.0x0.0lMmLeIpItBb100e1,2,300lCle1E-05oAol,1E-0.0001,.001,.01,5s1,2,3/trainer.BpSp.epochs.png)
+![](https://github.com/jakelevi1996/juml/raw/main/results/sweep/dLi5o10te200tr200ts0.0x0.0lMmLeIpItBb100e1,2,300lCle1E-05oAol,1E-0.0001,.001,.01,5s1,2,3/trainer.BpSp.epochs.png)
 
-![](results/sweep/dLi5o10te200tr200ts0.0x0.0lMmLeIpItBb100e1,2,300lCle1E-05oAol,1E-0.0001,.001,.01,5s1,2,3/trainer.BpSp.optimiser.Adam.lr.png)
+![](https://github.com/jakelevi1996/juml/raw/main/results/sweep/dLi5o10te200tr200ts0.0x0.0lMmLeIpItBb100e1,2,300lCle1E-05oAol,1E-0.0001,.001,.01,5s1,2,3/trainer.BpSp.optimiser.Adam.lr.png)
 
 #### Profile
 
@@ -187,11 +187,11 @@ Batch size                             | 100
 
 #### Further examples
 
-See [`scripts/further_examples.sh`](scripts/further_examples.sh) for some further examples of `juml` commands with some explanations.
+See [`scripts/further_examples.sh`](https://github.com/jakelevi1996/juml/blob/main/scripts/further_examples.sh) for some further examples of `juml` commands with some explanations.
 
 ### Extending JUML
 
-The script [`scripts/demo_extend_juml.py`](scripts/demo_extend_juml.py) (also shown below) is a simple demonstration of how the JUML framework can be extended with a simple new model and synthetic dataset. Despite being only 61 lines (including whitespace), this script's integration with JUML provides it with "free" access to a CLI interface, training loop, hyperparameter sweeps, visualisation, profiling, and other models that can be compared against by calling appropriate CLI arguments, without writing any additional code.
+The script [`scripts/demo_extend_juml.py`](https://github.com/jakelevi1996/juml/blob/main/scripts/demo_extend_juml.py) (also shown below) is a simple demonstration of how the JUML framework can be extended with a simple new model and synthetic dataset. Despite being only 61 lines (including whitespace), this script's integration with JUML provides it with "free" access to a CLI interface, training loop, hyperparameter sweeps, visualisation, profiling, and other models that can be compared against by calling appropriate CLI arguments, without writing any additional code.
 
 ```py
 import math
