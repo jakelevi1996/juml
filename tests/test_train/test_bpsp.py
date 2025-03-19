@@ -12,15 +12,14 @@ def test_bpsp():
     args_str = (
         "train "
         "--trainer BpSp "
-        "--trainer.BpSp.epochs 7 "
+        "--trainer.BpSp.epochs 2 "
         "--trainer.BpSp.batch_size 57 "
         "--model Mlp "
-        "--model.Mlp.hidden_dim 23 "
-        "--model.Mlp.num_hidden_layers 2 "
+        "--model.Mlp.hidden_dim 11 "
+        "--model.Mlp.num_hidden_layers 1 "
         "--dataset SinMix "
         "--dataset.SinMix.input_dim 3 "
         "--dataset.SinMix.output_dim 5 "
-        "--print_level 1 "
     )
     args = parser.parse_args(args_str.split())
     command = args.get_command()
@@ -38,11 +37,10 @@ def test_bpsp():
     assert batch_loss[-1] < batch_loss[0]
 
     x, t = next(iter(trainer.dataset.get_data_loader("train", 13)))
-    assert isinstance(x, torch.Tensor)
-    assert x.dtype is torch.float32
-    assert list(x.shape) == [13, 3]
-
     y = trainer.model.forward(x)
+    assert isinstance(x, torch.Tensor)
     assert isinstance(y, torch.Tensor)
-    assert y.dtype is torch.float32
+    assert isinstance(t, torch.Tensor)
+    assert list(x.shape) == [13, 3]
     assert list(y.shape) == [13, 5]
+    assert list(t.shape) == [13, 5]

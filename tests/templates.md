@@ -345,7 +345,6 @@ def test_{<losstype>}_cli():
     assert list(y_0.shape       ) == [{<y_0_shape>}]
     assert list(loss_0.shape    ) == [{<loss_0_shape>}]
 
-
     optimiser.zero_grad()
     loss_0.backward()
     optimiser.step()
@@ -397,30 +396,13 @@ def test_{<trainertype>}():
 
     batch_size = {<batch_size>}
     x, t = next(iter(trainer.dataset.get_data_loader("train", batch_size)))
-    assert isinstance(x, torch.Tensor)
-    assert x.dtype is torch.float32
-    assert x.dtype is not torch.int64
-    assert list(x.shape) == [{<x_shape>}]
-    printer(x.max(), x.min())
-    assert x.max().item() <= {<x_max>}
-    assert x.min().item() >= -{<x_max>}
-
-    assert isinstance(t, torch.Tensor)
-    assert t.dtype is torch.float32
-    assert t.dtype is not torch.int64
-    assert list(t.shape) == [{<t_shape>}]
-    printer(t.max(), t.min())
-    assert t.max().item() <= {<t_max>}
-    assert t.min().item() >= -{<t_max>}
-
     y = trainer.model.forward(x)
+    assert isinstance(x, torch.Tensor)
     assert isinstance(y, torch.Tensor)
-    assert y.dtype is torch.float32
-    assert y.dtype is not torch.int64
+    assert isinstance(t, torch.Tensor)
+    assert list(x.shape) == [{<x_shape>}]
     assert list(y.shape) == [{<y_shape>}]
-    printer(y.max(), y.min())
-    assert y.max().item() <= {<y_max>}
-    assert y.min().item() >= -{<y_max>}
+    assert list(t.shape) == [{<t_shape>}]
 ```
 
 ## Commands

@@ -92,9 +92,6 @@ def test_load():
     if os.path.isfile(output_path):
         os.remove(output_path)
 
-    assert not os.path.isfile(output_path)
-
-
     parser = juml.base.Framework.get_parser()
     args_str = (
         "train "
@@ -110,6 +107,7 @@ def test_load():
     with pytest.raises(FileNotFoundError):
         juml.base.Trainer.load(args)
 
+    assert not os.path.isfile(output_path)
     args.get_command().run(args)
     assert os.path.isfile(output_path)
 
