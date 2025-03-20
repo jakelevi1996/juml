@@ -20,10 +20,7 @@ class Synthetic(DatasetFromDict):
         self._n_test        = n_test
         self._x_std         = x_std
         self._t_std         = t_std
-        self._init_split_dict()
-
-    def _get_split_dict(self) -> dict[str, DataSplit]:
-        return {
+        self._split_dict    = {
             "train": self._make_split(self._n_train),
             "test":  self._make_split(self._n_test),
         }
@@ -44,9 +41,7 @@ class Synthetic(DatasetFromDict):
         raise NotImplementedError()
 
     def get_loss_weights(self) -> torch.Tensor:
-        split_dict  = self._get_split_dict()
-        train_split = split_dict["train"]
-        return 1.0 / train_split.t.flatten(0, -2).std(dim=-2)
+        return 1.0 / self._split_dict["train"].t.flatten(0, -2).std(dim=-2)
 
     def get_input_shape(self) -> list[int]:
         return self._input_shape
