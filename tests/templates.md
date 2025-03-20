@@ -215,6 +215,7 @@ def test_{<pooltype>}_model():
 ## Datasets
 
 ```py
+import pytest
 import torch
 import torch.utils.data
 from jutility import util
@@ -232,6 +233,7 @@ def test_{<datasettype>}():
     assert repr(dataset) == "{<DatasetType>}(n_train={<n_train_str>}, n_test={<n_test_str>})"
     assert dataset.get_input_shape()    == [{<input_shape>}]
     assert dataset.get_output_shape()   == [{<output_shape>}]
+    assert dataset.get_default_loss()   == {<"LossType">}
 
     train_split = dataset.get_data_split("train")
     assert isinstance(train_split, torch.utils.data.Dataset)
@@ -260,6 +262,13 @@ def test_{<datasettype>}():
     printer(t.max(), t.min())
     assert t.max().item() <= {<t_max>}
     assert t.min().item() >= -{<t_max>}
+
+    printer(dataset.get_loss_weights())
+    assert isinstance(dataset.get_loss_weights(), torch.Tensor)
+    assert list(dataset.get_loss_weights().shape) == [output_dim]
+    # OR
+    with pytest.raises(NotImplementedError):
+        dataset.get_loss_weights()
 ```
 
 ## Loss

@@ -23,6 +23,7 @@ def test_randomimage():
     assert repr(dataset) == "RandomImage(n_train=123, n_test=456)"
     assert dataset.get_input_shape()    == input_shape
     assert dataset.get_output_shape()   == [num_classes]
+    assert dataset.get_default_loss()   == "CrossEntropy"
 
     train_split = dataset.get_data_split("train")
     assert isinstance(train_split, torch.utils.data.Dataset)
@@ -70,6 +71,7 @@ def test_randomimage_output_float():
     assert repr(dataset) == "RandomImage(n_train=123, n_test=456)"
     assert dataset.get_input_shape()    == input_shape
     assert dataset.get_output_shape()   == output_shape
+    assert dataset.get_default_loss()   == "Mse"
 
     train_split = dataset.get_data_split("train")
     assert isinstance(train_split, torch.utils.data.Dataset)
@@ -99,5 +101,6 @@ def test_randomimage_output_float():
     assert t.max().item() <= 1
     assert t.min().item() >= 0
 
+    printer(dataset.get_loss_weights())
     assert isinstance(dataset.get_loss_weights(), torch.Tensor)
     assert list(dataset.get_loss_weights().shape) == [output_shape[-1]]

@@ -29,6 +29,7 @@ def test_sinmix():
     assert repr(dataset) == "SinMix(n_train=23, n_test=27)"
     assert dataset.get_input_shape()  == [input_dim ]
     assert dataset.get_output_shape() == [output_dim]
+    assert dataset.get_default_loss() == "Mse"
 
     train_split = dataset.get_data_split("train")
     assert isinstance(train_split, torch.utils.data.Dataset)
@@ -55,6 +56,6 @@ def test_sinmix():
     assert t.max().item() > 0
     assert t.min().item() < 0
 
-    assert dataset.get_default_loss() == "Mse"
+    printer(dataset.get_loss_weights())
     assert isinstance(dataset.get_loss_weights(), torch.Tensor)
     assert list(dataset.get_loss_weights().shape) == [output_dim]

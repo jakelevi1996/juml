@@ -1,3 +1,4 @@
+import pytest
 import torch
 import torch.utils.data
 from jutility import util
@@ -13,6 +14,7 @@ def test_mnist():
     assert repr(dataset) == "Mnist(n_train=60.0k, n_test=10.0k)"
     assert dataset.get_input_shape()  == [1, 28, 28]
     assert dataset.get_output_shape() == [10]
+    assert dataset.get_default_loss() == "CrossEntropy"
 
     train_split = dataset.get_data_split("train")
     assert isinstance(train_split, torch.utils.data.Dataset)
@@ -39,3 +41,6 @@ def test_mnist():
     assert t.dtype is not torch.float32
     assert t.max().item() == 9
     assert t.min().item() == 0
+
+    with pytest.raises(NotImplementedError):
+        dataset.get_loss_weights()
