@@ -39,12 +39,23 @@ class Sweeper:
 
         printer.heading("Sweeper: Run experiments")
 
-        self.run(
-            args=args,
-            devices=devices,
-            no_cache=no_cache,
-            train_args=train_args,
-        )
+        if len(devices) == 1:
+            [d] = devices
+            cli.verbose.reset()
+            self.run_single_process(
+                args=args,
+                devices=d,
+                no_cache=no_cache,
+                train_args=train_args,
+                printer=printer,
+            )
+        else:
+            self.run_multi_process(
+                args=args,
+                devices=devices,
+                no_cache=no_cache,
+                train_args=train_args,
+            )
 
         printer.heading("Sweeper: display results")
 
@@ -128,7 +139,25 @@ class Sweeper:
     def init_output_dir(self):
         self.output_dir = os.path.join("results", "sweep", self.name)
 
-    def run(
+    def run_single_process(
+        self,
+        args:       cli.ParsedArgs,
+        devices:    list[int],
+        no_cache:   bool,
+        train_args: dict,
+        printer:    util.Printer,
+    ):
+        for e in self.experiment_list:
+            run_experiment(
+                args=args,
+                devices=devices,
+                no_cache=no_cache,
+                train_args=train_args,
+                args_update_dict=e,
+                printer=printer,
+            )
+
+    def run_multi_process(
         self,
         args:       cli.ParsedArgs,
         devices:    list[list[int]],
@@ -426,24 +455,41 @@ def sweeper_subprocess(
         except queue.Empty:
             return
 
-        args.update(args_update_dict)
-        for key in args_update_dict:
-            if key in train_args:
-                train_args[key] = args_update_dict[key]
+        run_experiment(
+            args=args,
+            devices=devices,
+            no_cache=no_cache,
+            train_args=train_args,
+            args_update_dict=args_update_dict,
+            printer=printer,
+        )
 
-        metrics_path = Trainer.get_metrics_path(args)
-        if (not os.path.isfile(metrics_path)) or no_cache:
-            with util.Timer(
-                name=str(args_update_dict),
+def run_experiment(
+    args:               cli.ParsedArgs,
+    devices:            list[int],
+    no_cache:           bool,
+    train_args:         dict,
+    args_update_dict:   dict,
+    printer:            util.Printer,
+):
+    args.update(args_update_dict)
+    for key in args_update_dict:
+        if key in train_args:
+            train_args[key] = args_update_dict[key]
+
+    metrics_path = Trainer.get_metrics_path(args)
+    if (not os.path.isfile(metrics_path)) or no_cache:
+        with util.Timer(
+            name=str(args_update_dict),
+            printer=printer,
+            hline=True,
+        ):
+            Trainer.from_args(
+                args,
+                devices=devices,
+                configs=[],
                 printer=printer,
-                hline=True,
-            ):
-                Trainer.from_args(
-                    args,
-                    devices=devices,
-                    configs=[],
-                    printer=printer,
-                    **train_args,
-                )
-        else:
-            print("Found cached results `%s` -> skip" % metrics_path)
+                **train_args,
+            )
+    else:
+        print("Found cached results `%s` -> skip" % metrics_path)
