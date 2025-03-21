@@ -58,7 +58,7 @@ def test_get_model_name():
     args_str = "train --model Mlp --dataset Mnist --loss CrossEntropy"
     args = parser.parse_args(args_str.split())
     assert juml.base.Trainer.get_model_name(args) == (
-        "dM_lC_mMeIh100n3pI_tBb100e10lCle1E-05oAol0.001_s0"
+        "dM_lC_mMeIh100n3pI_tBb100e1lCle1E-05oAol0.001_s0"
     )
 
     args_str = (
@@ -75,7 +75,7 @@ def test_get_model_name():
     )
     args = parser.parse_args(args_str.split())
     assert juml.base.Trainer.get_model_name(args) == (
-        "dC_lC_mCb2c64eIk42n3pIs2_tBb1234e10lCle0.0oAWol0.001ow6.789_s999"
+        "dC_lC_mCb2c64eIk42n3pIs2_tBb1234e1lCle0.0oAWol0.001ow6.789_s999"
     )
 
     args_str = "train --model_name abcdef"

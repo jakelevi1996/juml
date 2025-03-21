@@ -90,7 +90,7 @@ class BpSp(Trainer):
     def get_cli_options(cls) -> list[cli.Arg]:
         return [
             cli.Arg("batch_size",   type=int, default=100),
-            cli.Arg("epochs",       type=int, default=10),
+            cli.Arg("epochs",       type=int, default=1),
             cli.ObjectChoice(
                 "optimiser",
                 cli.ObjectArg(
