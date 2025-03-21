@@ -191,10 +191,9 @@ See [`scripts/further_examples.sh`](https://github.com/jakelevi1996/juml/blob/ma
 
 ### Extending JUML
 
-The script [`scripts/demo_extend_juml.py`](https://github.com/jakelevi1996/juml/blob/main/scripts/demo_extend_juml.py) (also shown below) is a simple demonstration of how the JUML framework can be extended with a simple new model and synthetic dataset. Despite being only 61 lines (including whitespace), this script's integration with JUML provides it with "free" access to a CLI interface, training loop, hyperparameter sweeps, visualisation, profiling, and other models that can be compared against by calling appropriate CLI arguments, without writing any additional code.
+The script [`scripts/demo_extend_juml.py`](https://github.com/jakelevi1996/juml/blob/main/scripts/demo_extend_juml.py) (also shown below) is a simple demonstration of how the JUML framework can be extended with a simple new model and synthetic dataset. Despite being only 58 lines (including whitespace), this script's integration with JUML provides it with "free" access to a CLI interface, training loop, hyperparameter sweeps, visualisation, profiling, and other models that can be compared against by calling appropriate CLI arguments, without writing any additional code.
 
 ```py
-import math
 import torch
 from jutility import cli
 import juml
@@ -208,9 +207,7 @@ class PolynomialRegression1d(juml.base.Model):
     ):
         self._torch_module_init()
         self.p_i    = torch.arange(n)
-        self.w_i1   = torch.nn.Parameter(
-            torch.normal(0, 1/math.sqrt(n), [n, 1]),
-        )
+        self.w_i1   = torch.nn.Parameter(torch.zeros([n, 1]))
 
     def forward(self, x_n1: torch.Tensor) -> torch.Tensor:
         x_ni = (x_n1 ** self.p_i)
@@ -228,8 +225,8 @@ class Step1d(juml.datasets.Synthetic):
             output_shape=[1],
             n_train=200,
             n_test=200,
-            x_std=0,
-            t_std=0,
+            x_std=0.1,
+            t_std=0.02,
         )
 
     def _compute_target(self, x: torch.Tensor) -> torch.Tensor:
@@ -263,8 +260,9 @@ Example usage:
 python scripts/demo_extend_juml.py -h
 python scripts/demo_extend_juml.py train -h
 python scripts/demo_extend_juml.py train --model PolynomialRegression1d --dataset Step1d --trainer.BpSp.epochs 1000 --print_level 1
-python scripts/demo_extend_juml.py sweep --model PolynomialRegression1d --dataset Step1d --trainer.BpSp.epochs 1000 --print_level 1 --Sweeper.params '{"model.PolynomialRegression1d.n":[3,4,5,6,7,8,9,10]}' --Sweeper.devices "[[],[],[],[],[],[]]" --Sweeper.no_cache
 python scripts/demo_extend_juml.py plot1dregression --model_name dST_lM_mPn5_tBb100e1000lCle1E-05oAol0.001_s0
+python scripts/demo_extend_juml.py sweep --model PolynomialRegression1d --dataset Step1d --trainer.BpSp.epochs 1000 --print_level 1 --Sweeper.params '{"model.PolynomialRegression1d.n":[3,4,5,6,7,8,9,10]}' --Sweeper.devices "[[],[],[],[],[],[]]" --Sweeper.no_cache
+python scripts/demo_extend_juml.py plot1dregression --model_name dST_lM_mPn6_tBb100e1000lCle1E-05oAol0.001_s0
 
 python scripts/demo_extend_juml.py train --model RzMlp --dataset Step1d --trainer.BpSp.epochs 1000 --print_level 1
 python scripts/demo_extend_juml.py plot1dregression --model_name dST_lM_mRZMeIm100n3pIx2.0_tBb100e1000lCle1E-05oAol0.001_s0

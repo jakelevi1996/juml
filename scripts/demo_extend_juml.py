@@ -1,4 +1,3 @@
-import math
 import torch
 from jutility import cli
 import juml
@@ -12,9 +11,7 @@ class PolynomialRegression1d(juml.base.Model):
     ):
         self._torch_module_init()
         self.p_i    = torch.arange(n)
-        self.w_i1   = torch.nn.Parameter(
-            torch.normal(0, 1/math.sqrt(n), [n, 1]),
-        )
+        self.w_i1   = torch.nn.Parameter(torch.zeros([n, 1]))
 
     def forward(self, x_n1: torch.Tensor) -> torch.Tensor:
         x_ni = (x_n1 ** self.p_i)
@@ -32,8 +29,8 @@ class Step1d(juml.datasets.Synthetic):
             output_shape=[1],
             n_train=200,
             n_test=200,
-            x_std=0,
-            t_std=0,
+            x_std=0.1,
+            t_std=0.02,
         )
 
     def _compute_target(self, x: torch.Tensor) -> torch.Tensor:
