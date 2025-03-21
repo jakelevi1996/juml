@@ -9,7 +9,7 @@ def test_sequential():
     printer = util.Printer("test_sequential", dir_name=OUTPUT_DIR)
     juml.test_utils.set_torch_seed("test_sequential")
 
-    x = torch.rand([3, 4, 5, 6])
+    x = torch.rand([3, 4, 17, 19])
     t = torch.rand([3, 10, 11])
 
     model = juml.models.Cnn(
@@ -23,9 +23,9 @@ def test_sequential():
         embedder=juml.models.embed.CoordConv(),
         pooler=juml.models.pool.GatedLinearSet2d(),
     )
-    assert repr(model) == "Cnn(num_params=5.1k)"
+    assert repr(model) == "Cnn(num_params=5.7k)"
     assert len(model) == 7
-    assert model.num_params() == 5103
+    assert model.num_params() == 5689
 
     p, s = model.split(5)
 
@@ -34,10 +34,10 @@ def test_sequential():
     assert len(p) == 5
     assert len(s) == 2
     assert len(p) + len(s) == len(model)
-    assert p.num_params() == 3507
+    assert p.num_params() == 4093
     assert s.num_params() == 1596
     assert p.num_params() + s.num_params() == model.num_params()
-    assert repr(p) == "Sequential(num_params=3.5k)"
+    assert repr(p) == "Sequential(num_params=4.1k)"
     assert repr(s) == "Sequential(num_params=1.6k)"
 
     y  = model.forward(x)
@@ -47,7 +47,7 @@ def test_sequential():
     assert isinstance(y1, torch.Tensor)
     assert y1.dtype is torch.float32
     assert y1.dtype is not torch.int64
-    assert list(y1.shape) == [3, 9, 2, 2]
+    assert list(y1.shape) == [3, 9, 3, 4]
 
     assert isinstance(y2, torch.Tensor)
     assert y2.dtype is torch.float32

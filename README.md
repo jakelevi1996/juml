@@ -148,9 +148,9 @@ juml profile --model_name dM_lC_mMeFen3h100n3pI_tBb100e3lCle1E-05oAol0.001_s0 --
 Key                                    | Value
 -------------------------------------- | --------------------------------------
 Model                                  | `Mlp(num_params=99.7k)`
-Time (total)                           | 0.44410 s
-Time (average)                         | 0.00444 ms/sample
-Throughput                             | 225.2k samples/second
+Time (total)                           | 0.45093 s
+Time (average)                         | 0.00451 ms/sample
+Throughput                             | 221.8k samples/second
 FLOPS                                  | 199.1KFLOPS/sample
 Total number of samples                | 100.0k
 Batch size                             | 100
@@ -163,10 +163,10 @@ juml profile --model_name dRfFi3,32,32o10te200tr200_lC_mCb2c64eIk5n3pAs2_tBb100e
 Key                                    | Value
 -------------------------------------- | --------------------------------------
 Model                                  | `Cnn(num_params=620.3k)`
-Time (total)                           | 0.83186 s
-Time (average)                         | 0.83186 ms/sample
-Throughput                             | 1.2k samples/second
-FLOPS                                  | 45.3MFLOPS/sample
+Time (total)                           | 0.22285 s
+Time (average)                         | 0.22285 ms/sample
+Throughput                             | 4.5k samples/second
+FLOPS                                  | 7.2MFLOPS/sample
 Total number of samples                | 1.0k
 Batch size                             | 100
 
@@ -178,9 +178,9 @@ juml profile --model_name dRfFi3,32,32o10te200tr200_lC_mRZCb2eIk5m64n3pAs2x2.0_t
 Key                                    | Value
 -------------------------------------- | --------------------------------------
 Model                                  | `RzCnn(num_params=283.4k)`
-Time (total)                           | 0.19533 s
-Time (average)                         | 0.19533 ms/sample
-Throughput                             | 5.1k samples/second
+Time (total)                           | 0.22679 s
+Time (average)                         | 0.22679 ms/sample
+Throughput                             | 4.4k samples/second
 FLOPS                                  | 7.2MFLOPS/sample
 Total number of samples                | 1.0k
 Batch size                             | 100

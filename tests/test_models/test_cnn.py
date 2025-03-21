@@ -9,7 +9,7 @@ def test_cnn():
     juml.test_utils.set_torch_seed("test_cnn")
 
     x = torch.rand([3, 4, 17, 19])
-    t = torch.rand([3, 9, 8, 9])
+    t = torch.rand([3, 9, 3, 4])
 
     model = juml.models.Cnn(
         input_shape=list(x.shape),

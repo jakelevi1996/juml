@@ -93,12 +93,14 @@ def test_cli_args_cnn():
     arg_str = (
         "--model Cnn "
         "--model.Cnn.pooler Average2d "
+        "--model.Cnn.num_stages 2 "
+        "--model.Cnn.blocks_per_stage 3 "
         "--dataset Mnist "
     )
     args = parser.parse_args(arg_str.split())
 
     assert args.get_summary() == (
-        "dMmCmb2mc64meImk5mn3mpAms2"
+        "dMmCmb3mc64meImk5mn2mpAms2"
     )
 
     cli.verbose.set_printer(printer)

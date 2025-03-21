@@ -22,7 +22,7 @@ class Cnn(Sequential):
         self.pool.set_shapes([channel_dim, None, None], output_shape)
 
         input_dim = self.embed.get_output_dim(-3)
-        layer = InputReluCnnLayer(input_dim, channel_dim, kernel_size)
+        layer = InputReluCnnLayer(input_dim, channel_dim, kernel_size, stride)
         self.layers.append(layer)
 
         for _ in range(num_stages - 1):
@@ -69,16 +69,17 @@ class ReluCnnLayer(Model):
 class InputReluCnnLayer(ReluCnnLayer):
     def __init__(
         self,
-        input_channel_dim: int,
+        input_channel_dim:  int,
         output_channel_dim: int,
-        kernel_size: int,
+        kernel_size:        int,
+        stride:             int,
     ):
         self._torch_module_init()
         self.conv = torch.nn.Conv2d(
             in_channels=input_channel_dim,
             out_channels=output_channel_dim,
             kernel_size=kernel_size,
-            padding="same",
+            stride=stride,
         )
 
 class StridedReluCnnLayer(ReluCnnLayer):
