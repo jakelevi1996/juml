@@ -272,7 +272,7 @@ python scripts/demo_extend_juml.py plot1dregression --model_name dST_lM_mRZMeIm1
 
 If you find JUML helpful in your research, please cite:
 
-```
+```txt
 @misc{levi_juml_2025,
 	title = {{JUML}: {A} {Judicious}, {Unified} and extendable framework for multi-paradigm {Machine} {Learning} research},
 	shorttitle = {{JUML}},
