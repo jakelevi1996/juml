@@ -46,14 +46,14 @@ class DemoExtendFramework(juml.base.Framework):
     @classmethod
     def get_models(cls) -> list[type[juml.base.Model]]:
         return [
-            *juml.base.Framework.get_models(),
+            *juml.models.get_all(),
             PolynomialRegression1d,
         ]
 
     @classmethod
     def get_datasets(cls) -> list[type[juml.base.Dataset]]:
         return [
-            *juml.base.Framework.get_datasets(),
+            *juml.datasets.get_all(),
             Step1d,
         ]
 

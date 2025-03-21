@@ -9,38 +9,23 @@ from juml.commands.base import Command
 class Framework:
     @classmethod
     def get_models(cls) -> list[type[Model]]:
-        return [
-            models.LinearModel,
-            models.Mlp,
-            models.RzMlp,
-            models.Cnn,
-            models.RzCnn,
-        ]
+        return models.get_all()
 
     @classmethod
     def get_datasets(cls) -> list[type[Dataset]]:
-        return [
-            datasets.LinearDataset,
-            datasets.SinMix,
-            datasets.RandomImage,
-            datasets.Mnist,
-            datasets.Cifar10,
-        ]
+        return datasets.get_all()
 
     @classmethod
     def get_losses(cls) -> list[type[Loss]]:
-        return [
-            loss.CrossEntropy,
-            loss.Mse,
-            loss.AlignedSetMse,
-            loss.ChamferMse,
-        ]
+        return loss.get_all()
 
     @classmethod
     def get_trainers(cls) -> list[type[Trainer]]:
-        return [
-            train.BpSp,
-        ]
+        return train.get_all()
+
+    @classmethod
+    def get_commands(cls) -> list[type[Command]]:
+        return commands.get_all()
 
     @classmethod
     def get_defaults(cls) -> dict[str, str | None]:
@@ -85,16 +70,6 @@ class Framework:
             cli.Arg("configs",      type=str, default=[],   nargs="*"),
             cli.Arg("model_name",   type=str, default=None, is_kwarg=False),
             cli.Arg("print_level",  type=int, default=0),
-        ]
-
-    @classmethod
-    def get_commands(cls) -> list[type[Command]]:
-        return [
-            commands.Train,
-            commands.Sweep,
-            commands.Profile,
-            commands.PlotConfusionMatrix,
-            commands.Plot1dRegression,
         ]
 
     @classmethod
