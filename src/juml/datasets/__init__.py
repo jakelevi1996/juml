@@ -4,7 +4,7 @@ from juml.datasets.base import Dataset
 from juml.datasets.split import DataSplit
 from juml.datasets.fromdict import DatasetFromDict
 from juml.datasets.synthetic import Synthetic
-from juml.datasets.linear import LinearDataset
+from juml.datasets.lineardataset import LinearDataset
 from juml.datasets.sinmix import SinMix
 from juml.datasets.randimg import RandomImage
 from juml.datasets.mnist import Mnist
