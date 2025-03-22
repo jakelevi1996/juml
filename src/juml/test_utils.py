@@ -6,15 +6,15 @@ CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def torch_set_print_options(
     precision:  int=3,
-    linewidth:  int=10000,
+    threshold:  (int | float)=1e3,
+    linewidth:  (int | float)=1e5,
     sci_mode:   bool=False,
-    threshold:  (int | float)=1e9,
 ):
     torch.set_printoptions(
         precision=precision,
-        linewidth=linewidth,
-        sci_mode=sci_mode,
         threshold=int(threshold),
+        linewidth=int(linewidth),
+        sci_mode=sci_mode,
     )
 
 def get_output_dir(*subdir_names: str):
