@@ -255,6 +255,11 @@ class Sweeper:
         mp = plotting.MultiPlot(
             plotting.Subplot(
                 results_dict["train"].plot(),
+                results_dict["train"].plot_best(
+                    maximise=self.maximise,
+                    label_fmt="(%s, %.5f)",
+                ),
+                plotting.Legend(),
                 **results_dict["train"].get_xtick_kwargs(),
                 **metric_info,
                 xlabel=param_name,
@@ -263,6 +268,11 @@ class Sweeper:
             ),
             plotting.Subplot(
                 results_dict["test"].plot(),
+                results_dict["test"].plot_best(
+                    maximise=self.maximise,
+                    label_fmt="(%s, %.5f)",
+                ),
+                plotting.Legend(),
                 **results_dict["test"].get_xtick_kwargs(),
                 **metric_info,
                 xlabel=param_name,
