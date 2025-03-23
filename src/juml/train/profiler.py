@@ -76,10 +76,10 @@ class Profiler:
             ),
         }
         util.save_json(profile_dict, "profile", model_dir)
-        table = util.Table.key_value(
-            printer=util.MarkdownPrinter("profile", model_dir),
-        )
-        table.update(k="Model",             v="`%s`" % repr(model))
+
+        md = util.MarkdownPrinter("profile", model_dir)
+        table = util.Table.key_value(printer=md)
+        table.update(k="Model", v="`%s`" % repr(model))
         for name, dict_key in [
             ("Time (total)",            "t_total_str"),
             ("Time (average)",          "t_sample_str"),
