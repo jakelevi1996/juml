@@ -21,16 +21,17 @@ class Linear(Model):
         return x_no
 
     def init_batch(self, x: torch.Tensor, t: (torch.Tensor | None)):
-        x = x.flatten(0, -2)
         with torch.no_grad():
             self.b_o.zero_()
             if t is None:
+                x = x.flatten(0, -2)
                 self.w_io *= 1 / (TOL + x.std(-2).unsqueeze(-1))
                 y = self.forward(x)
                 self.w_io *= 1 / (TOL + y.std(-2).unsqueeze(-2))
                 y = self.forward(x)
                 self.b_o.copy_(-y.mean(-2))
             else:
+                x = x.flatten(0, -2)
                 t = t.flatten(0, -2)
                 xm = x.mean(-2, keepdim=True)
                 tm = t.mean(-2, keepdim=True)
