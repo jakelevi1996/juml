@@ -240,8 +240,8 @@ class Step1d(juml.datasets.Synthetic):
     def _compute_target(self, x: torch.Tensor) -> torch.Tensor:
         return torch.where(x > 0, 1.0, 0.0)
 
-    def get_default_loss(self) -> str | None:
-        return "Mse"
+    def get_default_loss(self) -> type[juml.base.Loss] | None:
+        return juml.loss.Mse
 
 class DemoExtendFramework(juml.base.Framework):
     @classmethod

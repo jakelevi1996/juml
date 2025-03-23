@@ -14,7 +14,7 @@ def test_cifar10():
     assert repr(dataset) == "Cifar10(n_train=50.0k, n_test=10.0k)"
     assert dataset.get_input_shape()  == [3, 32, 32]
     assert dataset.get_output_shape() == [10]
-    assert dataset.get_default_loss() == "CrossEntropy"
+    assert dataset.get_default_loss() is juml.loss.CrossEntropy
 
     train_split = dataset.get_data_split("train")
     assert isinstance(train_split, torch.utils.data.Dataset)

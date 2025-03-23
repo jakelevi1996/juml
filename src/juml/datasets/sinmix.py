@@ -1,6 +1,8 @@
 import torch
 from jutility import cli
 from juml.datasets.synthetic import Synthetic
+from juml.loss.base import Loss
+from juml.loss.mse import Mse
 
 class SinMix(Synthetic):
     def __init__(
@@ -33,8 +35,8 @@ class SinMix(Synthetic):
         t_no = z_nh @ self.w2_ho + self.b2_o
         return t_no
 
-    def get_default_loss(self) -> str | None:
-        return "Mse"
+    def get_default_loss(self) -> type[Loss] | None:
+        return Mse
 
     @classmethod
     def get_cli_arg(cls):

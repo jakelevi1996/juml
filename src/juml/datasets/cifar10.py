@@ -2,6 +2,8 @@ import torch.utils.data
 import torchvision
 from juml.datasets import DATA_REL_DIR
 from juml.datasets.fromdict import DatasetFromDict
+from juml.loss.base import Loss
+from juml.loss.crossentropy import CrossEntropy
 
 class Cifar10(DatasetFromDict):
     def _get_split_dict(self) -> dict[str, torch.utils.data.Dataset]:
@@ -26,5 +28,5 @@ class Cifar10(DatasetFromDict):
     def get_output_shape(self) -> list[int]:
         return [10]
 
-    def get_default_loss(self) -> str | None:
-        return "CrossEntropy"
+    def get_default_loss(self) -> type[Loss] | None:
+        return CrossEntropy

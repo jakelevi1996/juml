@@ -233,7 +233,7 @@ def test_{<datasettype>}():
     assert repr(dataset) == "{<DatasetType>}(n_train={<n_train_str>}, n_test={<n_test_str>})"
     assert dataset.get_input_shape()    == [{<input_shape>}]
     assert dataset.get_output_shape()   == [{<output_shape>}]
-    assert dataset.get_default_loss()   == {<"LossType">}
+    assert dataset.get_default_loss()   is juml.loss.{<LossType>}
 
     train_split = dataset.get_data_split("train")
     assert isinstance(train_split, torch.utils.data.Dataset)

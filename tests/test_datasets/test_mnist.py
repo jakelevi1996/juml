@@ -14,7 +14,7 @@ def test_mnist():
     assert repr(dataset) == "Mnist(n_train=60.0k, n_test=10.0k)"
     assert dataset.get_input_shape()  == [1, 28, 28]
     assert dataset.get_output_shape() == [10]
-    assert dataset.get_default_loss() == "CrossEntropy"
+    assert dataset.get_default_loss() is juml.loss.CrossEntropy
 
     train_split = dataset.get_data_split("train")
     assert isinstance(train_split, torch.utils.data.Dataset)

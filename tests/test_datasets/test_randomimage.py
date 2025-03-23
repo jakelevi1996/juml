@@ -23,7 +23,7 @@ def test_randomimage():
     assert repr(dataset) == "RandomImage(n_train=123, n_test=456)"
     assert dataset.get_input_shape()    == input_shape
     assert dataset.get_output_shape()   == [num_classes]
-    assert dataset.get_default_loss()   == "CrossEntropy"
+    assert dataset.get_default_loss()   is juml.loss.CrossEntropy
 
     train_split = dataset.get_data_split("train")
     assert isinstance(train_split, torch.utils.data.Dataset)
@@ -71,7 +71,7 @@ def test_randomimage_output_float():
     assert repr(dataset) == "RandomImage(n_train=123, n_test=456)"
     assert dataset.get_input_shape()    == input_shape
     assert dataset.get_output_shape()   == output_shape
-    assert dataset.get_default_loss()   == "Mse"
+    assert dataset.get_default_loss()   is juml.loss.Mse
 
     train_split = dataset.get_data_split("train")
     assert isinstance(train_split, torch.utils.data.Dataset)

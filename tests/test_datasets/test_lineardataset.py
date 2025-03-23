@@ -27,7 +27,7 @@ def test_linear():
     assert repr(dataset) == "LinearDataset(n_train=23, n_test=27)"
     assert dataset.get_input_shape()  == [input_dim ]
     assert dataset.get_output_shape() == [output_dim]
-    assert dataset.get_default_loss() == "Mse"
+    assert dataset.get_default_loss() is juml.loss.Mse
 
     train_split = dataset.get_data_split("train")
     assert isinstance(train_split, torch.utils.data.Dataset)

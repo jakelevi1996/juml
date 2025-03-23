@@ -2,6 +2,9 @@ import torch
 from jutility import cli
 from juml.datasets.split import DataSplit
 from juml.datasets.synthetic import Synthetic
+from juml.loss.base import Loss
+from juml.loss.mse import Mse
+from juml.loss.crossentropy import CrossEntropy
 
 class RandomImage(Synthetic):
     def __init__(
@@ -37,8 +40,8 @@ class RandomImage(Synthetic):
             n=n,
         )
 
-    def get_default_loss(self) -> str | None:
-        return "Mse" if self._output_float else "CrossEntropy"
+    def get_default_loss(self) -> type[Loss] | None:
+        return Mse if self._output_float else CrossEntropy
 
     @classmethod
     def get_cli_arg(cls):
