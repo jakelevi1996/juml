@@ -191,7 +191,15 @@ See [`scripts/further_examples.sh`](https://github.com/jakelevi1996/juml/blob/ma
 
 ### Extending JUML
 
-The script [`scripts/demo_extend_juml.py`](https://github.com/jakelevi1996/juml/blob/main/scripts/demo_extend_juml.py) (also shown below) is a simple demonstration of how the JUML framework can be extended with a simple new model and synthetic dataset. Despite being only 58 lines (including whitespace), this script's integration with JUML provides it with "free" access to a CLI interface, training loop, hyperparameter sweeps, automated model naming/saving/loading, visualisation, profiling, and other models that can be compared against by calling appropriate CLI arguments, without writing any additional code.
+The script [`scripts/demo_extend_juml.py`](https://github.com/jakelevi1996/juml/blob/main/scripts/demo_extend_juml.py) (also shown below) is a simple demonstration of how the JUML framework can be extended with a simple new model and synthetic dataset. Despite being only 58 lines (including whitespace), this script inherits the following capabilities from JUML without *any* additional code:
+
+1. CLI interface
+2. Training loop
+3. Hyperparameter sweeps
+4. Automated model naming/saving/loading
+5. Visualisation commands
+6. Profiling (from the CLI)
+7. Other models to compare against (by calling appropriate CLI arguments)
 
 ```py
 import torch
