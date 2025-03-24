@@ -1,7 +1,7 @@
 import os
 import torch
 from jutility import cli, util, plotting
-from juml import device
+from juml.device import DeviceConfig
 from juml.models.base import Model
 from juml.datasets.base import Dataset
 from juml.loss.base import Loss
@@ -13,7 +13,7 @@ class Trainer:
         model:      Model,
         dataset:    Dataset,
         loss:       Loss,
-        gpu:        bool,
+        device_cfg: DeviceConfig,
         table:      util.Table,
         **kwargs,
     ):
@@ -42,17 +42,15 @@ class Trainer:
         print_level:    int,
     ) -> "Trainer":
         cls.apply_configs(args, configs, [])
-        device.set_visible(devices)
         torch.manual_seed(seed)
 
         dataset = cls.init_dataset(args)
         model   = cls.init_model(args, dataset)
         loss    = cls.init_loss(args, dataset)
 
-        gpu = (len(devices) > 0)
-        if gpu:
-            model.cuda()
-            loss.cuda()
+        device_cfg = DeviceConfig(devices)
+        device_cfg.set_module_device(model)
+        loss.set_device(device_cfg)
 
         trainer_type = args.get_type("trainer")
         assert issubclass(trainer_type, Trainer)
@@ -64,7 +62,7 @@ class Trainer:
             model=model,
             dataset=dataset,
             loss=loss,
-            gpu=gpu,
+            device_cfg=device_cfg,
             table=util.Table(
                 *trainer_type.get_table_columns(),
                 printer=printer,

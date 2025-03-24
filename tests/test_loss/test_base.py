@@ -37,7 +37,7 @@ def test_loss_metric():
     metric = loss.metric(
         model=model,
         data_loader=data_loader,
-        gpu=False,
+        device_cfg=juml.device.DeviceConfig([]),
     )
     assert isinstance(metric, float)
     assert metric > 0

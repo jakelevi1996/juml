@@ -1,6 +1,6 @@
 import torch
 from jutility import cli, util
-from juml import device
+from juml.device import DeviceConfig
 from juml.train.base import Trainer
 from juml.models.base import Model
 from juml.datasets.base import Dataset
@@ -13,7 +13,7 @@ class BpSp(Trainer):
         model:      Model,
         dataset:    Dataset,
         loss:       Loss,
-        gpu:        bool,
+        device_cfg: DeviceConfig,
         table:      util.Table,
         batch_size: int,
         epochs:     int,
@@ -26,18 +26,18 @@ class BpSp(Trainer):
         test_loader  = dataset.get_data_loader("test" , batch_size)
 
         table.get_column("train_metric").set_callback(
-            lambda: loss.metric(model, train_loader, gpu),
+            lambda: loss.metric(model, train_loader, device_cfg),
             level=1,
         )
         table.get_column("test_metric").set_callback(
-            lambda: loss.metric(model, test_loader, gpu),
+            lambda: loss.metric(model, test_loader, device_cfg),
             level=1,
         )
 
         for e in range(epochs):
             table.update(level=1, epoch=e)
             for i, (x, t) in enumerate(train_loader):
-                x, t = device.to_device([x, t], gpu)
+                x, t = device_cfg.to_device([x, t])
                 y = model.forward(x)
                 batch_loss = loss.forward(y, t)
 

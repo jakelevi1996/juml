@@ -1,7 +1,7 @@
 import torch
 from torch.autograd.profiler_util import FunctionEventAvg
 from jutility import cli, util, units
-from juml import device
+from juml.device import DeviceConfig
 from juml.train.base import Trainer
 
 class Profiler:
@@ -13,20 +13,19 @@ class Profiler:
         num_profile:    int,
         devices:        list[int],
     ):
-        device.set_visible(devices)
+        device_cfg = DeviceConfig(devices)
         model_dir, model, dataset = Trainer.load(args)
+        device_cfg.set_module_device(model)
+
         train_loader = dataset.get_data_loader("train", batch_size)
         x, t = next(iter(train_loader))
-        gpu = (len(devices) > 0)
-        if gpu:
-            [x] = device.to_device([x], gpu)
-            model.cuda()
+        [x] = device_cfg.to_device([x])
 
         for _ in range(num_warmup):
             y = model.forward(x)
 
         activities = [torch.profiler.ProfilerActivity.CPU]
-        if gpu:
+        if len(devices) > 0:
             activities.append(torch.profiler.ProfilerActivity.CUDA)
 
         profiler_kwargs = {

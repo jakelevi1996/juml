@@ -1,12 +1,22 @@
 import os
 import torch
 
-def to_device(args: list[torch.Tensor], gpu: bool) -> list[torch.Tensor]:
-    if gpu:
-        args = [x.cuda() for x in args]
+class DeviceConfig:
+    def __init__(self, devices: list[int]):
+        self._has_devices = (len(devices) > 0)
+        if self._has_devices:
+            devices_str = ",".join(str(d) for d in devices)
+            os.environ["CUDA_VISIBLE_DEVICES"] = devices_str
 
-    return args
+    def set_module_device(self, module: torch.nn.Module):
+        if self._has_devices:
+            module.cuda()
 
-def set_visible(devices: list[int]):
-    devices_str = ",".join(str(d) for d in devices)
-    os.environ["CUDA_VISIBLE_DEVICES"] = devices_str
+    def to_device(
+        self,
+        input_tensors: list[torch.Tensor],
+    ) -> list[torch.Tensor]:
+        if self._has_devices:
+            input_tensors = [x.cuda() for x in input_tensors]
+
+        return input_tensors

@@ -1,7 +1,7 @@
 import torch
 import torch.utils.data
 from jutility import util, cli
-from juml import device
+from juml.device import DeviceConfig
 
 class Loss:
     def __init__(self):
@@ -21,13 +21,13 @@ class Loss:
 
     def metric(
         self,
-        model: torch.nn.Module,
-        data_loader: torch.utils.data.DataLoader,
-        gpu: bool,
+        model:          torch.nn.Module,
+        data_loader:    torch.utils.data.DataLoader,
+        device_cfg:     DeviceConfig,
     ) -> float:
         metric_sum = 0
         for x, t in data_loader:
-            x, t = device.to_device([x, t], gpu)
+            x, t = device_cfg.to_device([x, t])
             y = model.forward(x)
             metric_sum += self.metric_batch(y, t)
 
@@ -39,9 +39,9 @@ class Loss:
     def set_weights(self, weights: torch.Tensor):
         self.weights = weights
 
-    def cuda(self):
+    def set_device(self, device_cfg: DeviceConfig):
         if self.weights is not None:
-            self.weights = self.weights.cuda()
+            [self.weights] = device_cfg.to_device([self.weights])
 
     @classmethod
     def get_cli_arg(cls):
