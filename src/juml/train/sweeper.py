@@ -85,13 +85,13 @@ class Sweeper:
         self.best_arg_dict  = self.experiment_dict  [self.best_arg_str]
 
         best_model_dir      = self.best_metrics["model_dir"]
-        best_model_rel_dir  = os.path.relpath(best_model_dir, self.output_dir)
-        best_metrics_png    = os.path.join(best_model_rel_dir, "metrics.png")
-        self.plot_rel_paths = [best_metrics_png]
+        best_metrics_png    = os.path.join(best_model_dir, "metrics.png")
+        self.plot_paths     = [best_metrics_png]
 
         for param_name in self.params.keys():
             self.plot_param(param_name)
 
+        best_model_rel_dir = os.path.relpath(best_model_dir, self.output_dir)
         self.save_results_markdown(best_model_rel_dir)
 
     def init_experiment_config(self):
@@ -302,9 +302,7 @@ class Sweeper:
             figsize=[10, 8],
         )
         full_path = mp.save(param_name, self.output_dir)
-
-        rel_path = os.path.relpath(full_path, self.output_dir)
-        self.plot_rel_paths.append(rel_path)
+        self.plot_paths.append(full_path)
 
     def save_results_markdown(self, best_model_rel_dir: str):
         md = util.MarkdownPrinter("results", self.output_dir)
@@ -361,7 +359,8 @@ class Sweeper:
         best_metrics_json = os.path.join(best_model_rel_dir, "metrics.json")
         md.file_link(best_metrics_json, "Best metrics (JSON)")
         git_add_images = []
-        for rel_path in self.plot_rel_paths:
+        for full_path in self.plot_paths:
+            rel_path = os.path.relpath(full_path, self.output_dir)
             md.image(rel_path)
             git_add_images.append("git add -f %s" % rel_path)
 
@@ -400,8 +399,13 @@ class Sweeper:
         )
         rm_path = os.path.relpath("README.md", self.output_dir)
 
-        md.heading("%s include" % md.make_link(rm_path, "`README.md`"), "\n")
+        md.heading("%s include" % md.make_link(rm_path, "`README.md`"))
+        md("```md")
         md.file_link(md.get_filename(), "`[ full_sweep_results ]`")
+        for full_path in self.plot_paths:
+            md.image(full_path)
+
+        md("\n```")
 
         md.heading("`sweep` command", end="\n")
         md.code_block(util.get_argv_str())
