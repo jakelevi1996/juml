@@ -17,19 +17,34 @@ class Trainer:
         table:      util.Table,
         **kwargs,
     ):
-        raise NotImplementedError()
-
-    def _init_trainer(
-        self,
-        model:      Model,
-        dataset:    Dataset,
-        loss:       Loss,
-        table:      util.Table,
-    ):
         self.model      = model
         self.dataset    = dataset
         self.loss       = loss
         self.table      = table
+
+        self.train(
+            args=args,
+            model=model,
+            dataset=dataset,
+            loss=loss,
+            device_cfg=device_cfg,
+            table=table,
+            **kwargs,
+        )
+
+        self.save_results(args)
+
+    def train(
+        self,
+        args:       cli.ParsedArgs,
+        model:      Model,
+        dataset:    Dataset,
+        loss:       Loss,
+        device_cfg: DeviceConfig,
+        table:      util.Table,
+        **kwargs,
+    ):
+        raise NotImplementedError()
 
     @classmethod
     def from_args(

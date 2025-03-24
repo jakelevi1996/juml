@@ -7,7 +7,7 @@ from juml.datasets.base import Dataset
 from juml.loss.base import Loss
 
 class BpSp(Trainer):
-    def __init__(
+    def train(
         self,
         args:       cli.ParsedArgs,
         model:      Model,
@@ -20,8 +20,6 @@ class BpSp(Trainer):
         optimiser:  torch.optim.Optimizer,
         lrs:        torch.optim.lr_scheduler.LRScheduler,
     ):
-        self._init_trainer(model, dataset, loss, table)
-
         train_loader = dataset.get_data_loader("train", batch_size)
         test_loader  = dataset.get_data_loader("test" , batch_size)
 
@@ -51,8 +49,6 @@ class BpSp(Trainer):
             lrs.step()
 
         table.update(level=2, epoch=epochs)
-
-        self.save_results(args)
 
     @classmethod
     def init_sub_objects(
