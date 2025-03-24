@@ -4,6 +4,37 @@ import juml
 
 OUTPUT_DIR = juml.test_utils.get_output_dir("test_models/test_linearlayer")
 
+def test_w_scale():
+    printer = util.Printer("test_w_scale", dir_name=OUTPUT_DIR)
+    juml.test_utils.set_torch_seed("test_w_scale")
+
+    input_dim = 19
+    output_dim = 7
+    batch_size = 1000
+    x = torch.normal(0, 1, [batch_size, input_dim])
+
+    m = juml.models.Linear(input_dim, output_dim)
+    y = m.forward(x)
+
+    printer(y.mean(), y.std())
+    assert y.mean().abs().item()    < 0.1
+    assert y.std().abs().item()     < 1.1
+    assert y.std().abs().item()     > 0.9
+
+    m = juml.models.Linear(input_dim, output_dim, w_scale=1.0)
+    y = m.forward(x)
+
+    printer(y.mean(), y.std())
+    assert y.mean().abs().item()    < 0.1
+    assert y.std().abs().item()     > 4.0
+
+    m = juml.models.Linear(input_dim, output_dim, w_scale=(1.0 / input_dim))
+    y = m.forward(x)
+
+    printer(y.mean(), y.std())
+    assert y.mean().abs().item()    < 0.1
+    assert y.std().abs().item()     < 0.3
+
 def test_init_batch_no_target():
     printer = util.Printer("test_init_batch_no_target", dir_name=OUTPUT_DIR)
     juml.test_utils.set_torch_seed("test_init_batch_no_target")

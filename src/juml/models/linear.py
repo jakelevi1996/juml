@@ -9,10 +9,13 @@ class Linear(Model):
         self,
         input_dim:  int,
         output_dim: int,
+        w_scale:    (float | None)=None,
     ):
-        self._torch_module_init()
-        w_scale = 1 / math.sqrt(input_dim)
+        if w_scale is None:
+            w_scale = 1 / math.sqrt(input_dim)
+
         w_shape = [input_dim, output_dim]
+        self._torch_module_init()
         self.w_io = torch.nn.Parameter(torch.normal(0, w_scale, w_shape))
         self.b_o  = torch.nn.Parameter(torch.zeros(output_dim))
 
