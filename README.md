@@ -85,47 +85,47 @@ juml train --model Mlp --model.Mlp.embedder Flatten --model.Mlp.embedder.Flatten
 cli: Mnist()
 cli: Flatten(n=3)
 cli: Identity()
-cli: Mlp(embedder=Flatten(num_params=0), hidden_dim=100, input_shape=[1, 28, 28], num_hidden_layers=3, output_shape=[10], pooler=Identity(num_params=0))
+cli: Mlp(depth=3, embedder=Flatten(num_params=0), hidden_dim=100, input_shape=[1, 28, 28], output_shape=[10], pooler=Identity(num_params=0))
 cli: CrossEntropy()
-cli: Adam(lr=0.001, params=<generator object Module.parameters at 0x71be9c817290>)
+cli: Adam(lr=0.001, params=<generator object Module.parameters at 0x750d7f1f2ea0>)
 Time        | Epoch      | Batch      | Batch loss | Train metric | Test metric
 ----------- | ---------- | ---------- | ---------- | ------------ | ------------
 0.0002s     |          0 |            |            |      0.12013 |      0.11540
-1.7416s     |          0 |          0 |    2.33147 |              |
-2.0020s     |          0 |         63 |    0.34889 |              |
-3.0004s     |          0 |        360 |    0.13585 |              |
-3.8155s     |          0 |        599 |    0.22922 |              |
-3.8166s     |          1 |            |            |      0.95568 |      0.95320
-5.6912s     |          1 |          0 |    0.21946 |              |
-6.0021s     |          1 |         83 |    0.09772 |              |
-7.0001s     |          1 |        368 |    0.10331 |              |
-7.8203s     |          1 |        599 |    0.13859 |              |
-7.8214s     |          2 |            |            |      0.97107 |      0.96400
-9.5837s     |          2 |          0 |    0.05180 |              |
-10.0016s    |          2 |        114 |    0.04135 |              |
-11.0006s    |          2 |        397 |    0.02003 |              |
-11.7184s    |          2 |        599 |    0.08072 |              |
-11.7195s    |          3 |            |            |      0.97862 |      0.97010
-Saving in "results/train/dM_lC_mMeFen3h100n3pI_tBb100e3lCle1E-05oAol0.001_s0/cmd.txt"
-Saving in "results/train/dM_lC_mMeFen3h100n3pI_tBb100e3lCle1E-05oAol0.001_s0/args.json"
-Saving in "results/train/dM_lC_mMeFen3h100n3pI_tBb100e3lCle1E-05oAol0.001_s0/metrics.json"
-Saving in "results/train/dM_lC_mMeFen3h100n3pI_tBb100e3lCle1E-05oAol0.001_s0/metrics.png"
-Saving in "results/train/dM_lC_mMeFen3h100n3pI_tBb100e3lCle1E-05oAol0.001_s0/model.pth"
-Saving in "results/train/dM_lC_mMeFen3h100n3pI_tBb100e3lCle1E-05oAol0.001_s0/table.pkl"
-Model name = `dM_lC_mMeFen3h100n3pI_tBb100e3lCle1E-05oAol0.001_s0`
+1.7009s     |          0 |          0 |    2.33147 |              |
+2.0003s     |          0 |         91 |    0.47548 |              |
+3.0021s     |          0 |        398 |    0.24203 |              |
+3.6553s     |          0 |        599 |    0.22922 |              |
+3.6566s     |          1 |            |            |      0.95568 |      0.95320
+5.3384s     |          1 |          0 |    0.21946 |              |
+6.0018s     |          1 |        200 |    0.07385 |              |
+7.0005s     |          1 |        500 |    0.19840 |              |
+7.8268s     |          1 |        599 |    0.13859 |              |
+7.8288s     |          2 |            |            |      0.97107 |      0.96400
+11.1821s    |          2 |          0 |    0.05180 |              |
+12.0019s    |          2 |        244 |    0.07798 |              |
+13.0009s    |          2 |        538 |    0.03853 |              |
+13.2144s    |          2 |        599 |    0.08072 |              |
+13.2156s    |          3 |            |            |      0.97862 |      0.97010
+Saving in "results/train/dM_lC_mMd3eFen3h100pI_tBb100e3lCle1E-05oAol0.001_s0/cmd.txt"
+Saving in "results/train/dM_lC_mMd3eFen3h100pI_tBb100e3lCle1E-05oAol0.001_s0/args.json"
+Saving in "results/train/dM_lC_mMd3eFen3h100pI_tBb100e3lCle1E-05oAol0.001_s0/metrics.json"
+Saving in "results/train/dM_lC_mMd3eFen3h100pI_tBb100e3lCle1E-05oAol0.001_s0/metrics.png"
+Saving in "results/train/dM_lC_mMd3eFen3h100pI_tBb100e3lCle1E-05oAol0.001_s0/model.pth"
+Saving in "results/train/dM_lC_mMd3eFen3h100pI_tBb100e3lCle1E-05oAol0.001_s0/table.pkl"
+Model name = `dM_lC_mMd3eFen3h100pI_tBb100e3lCle1E-05oAol0.001_s0`
 Final metrics = 0.97862 (train), 0.97010 (test)
-Time taken for `train` = 13.9629 seconds
+Time taken for `train` = 15.2683 seconds
 ```
 
-![](https://github.com/jakelevi1996/juml/raw/main/results/train/dM_lC_mMeFen3h100n3pI_tBb100e3lCle1E-05oAol0.001_s0/metrics.png)
+![](https://github.com/jakelevi1996/juml/raw/main/results/train/dM_lC_mMd3eFen3h100pI_tBb100e3lCle1E-05oAol0.001_s0/metrics.png)
 
 #### Plot confusion matrix
 
 ```
-juml plotconfusionmatrix --model_name dM_lC_mMeFen3h100n3pI_tBb100e3lCle1E-05oAol0.001_s0
+juml plotconfusionmatrix --model_name dM_lC_mMd3eFen3h100pI_tBb100e3lCle1E-05oAol0.001_s0
 ```
 
-![](https://github.com/jakelevi1996/juml/raw/main/results/train/dM_lC_mMeFen3h100n3pI_tBb100e3lCle1E-05oAol0.001_s0/Confusion_matrix.png)
+![](https://github.com/jakelevi1996/juml/raw/main/results/train/dM_lC_mMd3eFen3h100pI_tBb100e3lCle1E-05oAol0.001_s0/Confusion_matrix.png)
 
 #### Sweep hyperparameters
 
@@ -142,7 +142,7 @@ juml sweep --model LinearModel --dataset LinearDataset --dataset.LinearDataset.i
 #### Profile
 
 ```
-juml profile --model_name dM_lC_mMeFen3h100n3pI_tBb100e3lCle1E-05oAol0.001_s0 --Profiler.num_warmup 1000 --Profiler.num_profile 1000 --Profiler.batch_size 100
+juml profile --model_name dM_lC_mMd3eFen3h100pI_tBb100e3lCle1E-05oAol0.001_s0 --Profiler.num_warmup 1000 --Profiler.num_profile 1000 --Profiler.batch_size 100
 ```
 
 Key                                    | Value
@@ -273,7 +273,7 @@ python scripts/demo_extend_juml.py sweep --model PolynomialRegression1d --datase
 python scripts/demo_extend_juml.py plot1dregression --model_name dST_lM_mPn6_tBb100e1000lCle1E-05oAol0.001_s0
 
 python scripts/demo_extend_juml.py train --model RzMlp --dataset Step1d --trainer.BpSp.epochs 1000 --print_level 1
-python scripts/demo_extend_juml.py plot1dregression --model_name dST_lM_mRZMeIm100n3pIx2.0_tBb100e1000lCle1E-05oAol0.001_s0
+python scripts/demo_extend_juml.py plot1dregression --model_name dST_lM_mRZMd3eIm100pIx2.0_tBb100e1000lCle1E-05oAol0.001_s0
 ```
 
 ## Citation
