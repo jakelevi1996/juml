@@ -20,7 +20,7 @@ def test_loss_metric():
         input_shape=[input_dim],
         output_shape=[output_dim],
         hidden_dim=13,
-        num_hidden_layers=2,
+        depth=2,
         embedder=juml.models.embed.Identity(),
         pooler=juml.models.pool.Identity(),
     )

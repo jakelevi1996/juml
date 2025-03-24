@@ -43,7 +43,7 @@ def test_identity_model():
         input_shape=list(x.shape),
         output_shape=list(t.shape),
         hidden_dim=13,
-        num_hidden_layers=2,
+        depth=2,
         embedder=juml.models.embed.Identity(),
         pooler=pooler,
     )

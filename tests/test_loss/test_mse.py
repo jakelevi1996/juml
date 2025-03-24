@@ -41,7 +41,7 @@ def test_mse_cli():
         "--dataset.LinearDataset.input_dim 17 "
         "--model RzMlp "
         "--model.RzMlp.model_dim 7 "
-        "--model.RzMlp.num_hidden_layers 2 "
+        "--model.RzMlp.depth 2 "
         "--trainer BpSp "
         "--trainer.BpSp.epochs 1"
     )

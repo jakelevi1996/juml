@@ -19,20 +19,24 @@ def test_plot1dregression():
     model_path = (
         "results/train/test_commands_test_plot1dregression_model/model.pth"
     )
-    if not os.path.isfile(model_path):
-        parser = juml.base.Framework.get_parser()
-        args_str = (
-            "train "
-            "--trainer BpSp "
-            "--trainer.BpSp.epochs 2 "
-            "--model Mlp "
-            "--model.Mlp.hidden_dim 11 "
-            "--model.Mlp.num_hidden_layers 1 "
-            "--dataset SinMix "
-            "--model_name test_commands_test_plot1dregression_model"
-        )
-        args = parser.parse_args(args_str.split())
-        args.get_command().run(args)
+    if os.path.isfile(model_path):
+        os.remove(model_path)
+
+    assert not os.path.isfile(model_path)
+
+    parser = juml.base.Framework.get_parser()
+    args_str = (
+        "train "
+        "--trainer BpSp "
+        "--trainer.BpSp.epochs 2 "
+        "--model Mlp "
+        "--model.Mlp.hidden_dim 11 "
+        "--model.Mlp.depth 1 "
+        "--dataset SinMix "
+        "--model_name test_commands_test_plot1dregression_model"
+    )
+    args = parser.parse_args(args_str.split())
+    args.get_command().run(args)
 
     assert os.path.isfile(model_path)
 

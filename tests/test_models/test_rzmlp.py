@@ -20,7 +20,7 @@ def test_rzmlp():
         output_shape=list(t.shape),
         model_dim=model_dim,
         expand_ratio=ratio,
-        num_hidden_layers=3,
+        depth=3,
         embedder=juml.models.embed.Identity(),
         pooler=juml.models.pool.Identity(),
     )
@@ -81,7 +81,7 @@ def test_rzmlp_num_params():
         output_shape=[output_dim],
         model_dim=model_dim,
         expand_ratio=ratio,
-        num_hidden_layers=nhl,
+        depth=nhl,
         embedder=juml.models.embed.Identity(),
         pooler=juml.models.pool.Identity(),
     )

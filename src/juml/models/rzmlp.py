@@ -9,13 +9,13 @@ from juml.models.linear import Linear
 class RzMlp(Sequential):
     def __init__(
         self,
-        input_shape:        list[int],
-        output_shape:       list[int],
-        model_dim:          int,
-        expand_ratio:       float,
-        num_hidden_layers:  int,
-        embedder:           Embedder,
-        pooler:             Pooler,
+        input_shape:    list[int],
+        output_shape:   list[int],
+        model_dim:      int,
+        expand_ratio:   float,
+        depth:          int,
+        embedder:       Embedder,
+        pooler:         Pooler,
     ):
         self._init_sequential(embedder, pooler)
         self.embed.set_input_shape(input_shape)
@@ -24,7 +24,7 @@ class RzMlp(Sequential):
         layer = Linear(self.embed.get_output_dim(-1), model_dim)
         self.layers.append(layer)
 
-        for _ in range(num_hidden_layers):
+        for _ in range(depth):
             layer = ReZeroMlpLayer(model_dim, expand_ratio)
             self.layers.append(layer)
 
@@ -34,9 +34,9 @@ class RzMlp(Sequential):
     @classmethod
     def get_cli_options(cls) -> list[cli.Arg]:
         return [
-            cli.Arg("model_dim",            type=int,   default=100),
-            cli.Arg("expand_ratio",         type=float, default=2.0, tag="x"),
-            cli.Arg("num_hidden_layers",    type=int,   default=3),
+            cli.Arg("model_dim",    type=int,   default=100),
+            cli.Arg("expand_ratio", type=float, default=2.0, tag="x"),
+            cli.Arg("depth",        type=int,   default=3),
         ]
 
 class ReZeroMlpLayer(Model):

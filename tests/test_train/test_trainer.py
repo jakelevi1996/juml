@@ -58,7 +58,7 @@ def test_get_model_name():
     args_str = "train --model Mlp --dataset Mnist --loss CrossEntropy"
     args = parser.parse_args(args_str.split())
     assert juml.base.Trainer.get_model_name(args) == (
-        "dM_lC_mMeIh100n3pI_tBb100e1lCle1E-05oAol0.001_s0"
+        "dM_lC_mMd3eIh100pI_tBb100e1lCle1E-05oAol0.001_s0"
     )
 
     args_str = (
@@ -86,7 +86,7 @@ def test_load():
     printer = util.Printer("test_load", dir_name=OUTPUT_DIR)
 
     output_path = (
-        "results/train/dSh1i1o1te200tr200ts0.1x0.0_lM_mMeIh11n1pI_"
+        "results/train/dSh1i1o1te200tr200ts0.1x0.0_lM_mMd1eIh11pI_"
         "tBb100e2lCle1E-05oAol0.001_s0/model.pth"
     )
     if os.path.isfile(output_path):
@@ -98,7 +98,7 @@ def test_load():
         "--loss Mse "
         "--model Mlp "
         "--model.Mlp.hidden_dim 11 "
-        "--model.Mlp.num_hidden_layers 1 "
+        "--model.Mlp.depth 1 "
         "--dataset SinMix "
         "--trainer.BpSp.epochs 2 "
     )

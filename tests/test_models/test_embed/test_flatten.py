@@ -40,7 +40,7 @@ def test_flatten_model():
         input_shape=list(x.shape),
         output_shape=list(t.shape),
         hidden_dim=13,
-        num_hidden_layers=2,
+        depth=2,
         embedder=embedder,
         pooler=juml.models.pool.Identity(),
     )

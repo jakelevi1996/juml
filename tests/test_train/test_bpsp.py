@@ -16,7 +16,7 @@ def test_bpsp():
         "--trainer.BpSp.batch_size 57 "
         "--model Mlp "
         "--model.Mlp.hidden_dim 11 "
-        "--model.Mlp.num_hidden_layers 1 "
+        "--model.Mlp.depth 1 "
         "--dataset SinMix "
         "--dataset.SinMix.input_dim 3 "
         "--dataset.SinMix.output_dim 5 "

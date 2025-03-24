@@ -21,7 +21,7 @@ def test_profile():
             "--trainer.BpSp.epochs 2 "
             "--model Mlp "
             "--model.Mlp.hidden_dim 11 "
-            "--model.Mlp.num_hidden_layers 1 "
+            "--model.Mlp.depth 1 "
             "--dataset SinMix "
             "--model_name test_commands_test_profile_model"
         )

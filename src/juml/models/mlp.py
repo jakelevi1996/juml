@@ -9,19 +9,19 @@ from juml.models.linear import Linear
 class Mlp(Sequential):
     def __init__(
         self,
-        input_shape:        list[int],
-        output_shape:       list[int],
-        hidden_dim:         int,
-        num_hidden_layers:  int,
-        embedder:           Embedder,
-        pooler:             Pooler,
+        input_shape:    list[int],
+        output_shape:   list[int],
+        hidden_dim:     int,
+        depth:          int,
+        embedder:       Embedder,
+        pooler:         Pooler,
     ):
         self._init_sequential(embedder, pooler)
         self.embed.set_input_shape(input_shape)
         self.pool.set_shapes([], output_shape)
 
         layer_input_dim = self.embed.get_output_dim(-1)
-        for _ in range(num_hidden_layers):
+        for _ in range(depth):
             layer = ReluMlpLayer(layer_input_dim, hidden_dim)
             self.layers.append(layer)
             layer_input_dim = hidden_dim
@@ -33,8 +33,8 @@ class Mlp(Sequential):
     @classmethod
     def get_cli_options(cls) -> list[cli.Arg]:
         return [
-            cli.Arg("hidden_dim",           type=int, default=100),
-            cli.Arg("num_hidden_layers",    type=int, default=3),
+            cli.Arg("hidden_dim",   type=int, default=100),
+            cli.Arg("depth",        type=int, default=3),
         ]
 
 class ReluMlpLayer(Model):

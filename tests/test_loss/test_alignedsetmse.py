@@ -50,7 +50,7 @@ def test_alignedsetmse_cli():
         "--dataset.RandomImage.output_float "
         "--model RzMlp "
         "--model.RzMlp.model_dim 7 "
-        "--model.RzMlp.num_hidden_layers 2 "
+        "--model.RzMlp.depth 2 "
         "--model.RzMlp.embedder Flatten "
         "--model.RzMlp.embedder.Flatten.n 2 "
         "--model.RzMlp.pooler Unflatten "

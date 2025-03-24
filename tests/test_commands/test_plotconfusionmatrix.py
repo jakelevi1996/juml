@@ -28,7 +28,7 @@ def test_plotconfusionmatrix():
         "--trainer.BpSp.epochs 2 "
         "--model Mlp "
         "--model.Mlp.hidden_dim 20 "
-        "--model.Mlp.num_hidden_layers 1 "
+        "--model.Mlp.depth 1 "
         "--model.Mlp.embedder Flatten "
         "--model.Mlp.embedder.Flatten.n 3 "
         "--dataset RandomImage "

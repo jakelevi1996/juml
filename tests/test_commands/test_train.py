@@ -9,7 +9,7 @@ def test_train():
     juml.test_utils.set_torch_seed("test_train")
 
     output_path = (
-        "results/train/dSh1i3o5te200tr200ts0.1x0.0_lM_mMeIh11n1pI_"
+        "results/train/dSh1i3o5te200tr200ts0.1x0.0_lM_mMd1eIh11pI_"
         "tBb57e2lCle1E-05oAol0.001_s0/model.pth"
     )
     if os.path.isfile(output_path):
@@ -25,7 +25,7 @@ def test_train():
         "--trainer.BpSp.batch_size 57 "
         "--model Mlp "
         "--model.Mlp.hidden_dim 11 "
-        "--model.Mlp.num_hidden_layers 1 "
+        "--model.Mlp.depth 1 "
         "--dataset SinMix "
         "--dataset.SinMix.input_dim 3 "
         "--dataset.SinMix.output_dim 5 "
@@ -38,4 +38,5 @@ def test_train():
     trainer = command.run(args)
     assert isinstance(trainer, juml.train.BpSp)
 
+    printer(trainer.output_dir)
     assert os.path.isfile(output_path)
