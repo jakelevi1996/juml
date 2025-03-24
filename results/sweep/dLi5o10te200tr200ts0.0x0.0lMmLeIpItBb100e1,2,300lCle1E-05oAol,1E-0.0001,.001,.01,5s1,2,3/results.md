@@ -12,7 +12,7 @@ Model                                  | `LinearModel(num_params=60)`
 Model name                             | `dLi5o10te200tr200ts0.0x0.0_lM_mLeIpI_tBb100e300lCle1E-05oAol0.01_s2`
 Train metrics                          | `start = 68.86100, end =  0.19069, max = 68.86100, min =  0.19069`
 Test metrics                           | `start = 72.84058, end =  0.23807, max = 72.84058, min =  0.23807`
-Training duration                      | `1.4916 seconds`                      
+Training duration                      | `1.4635 seconds`                      
 Number of parameters                   | `60`                                  
 `--seed`                               | `2`                                   
 `--trainer.BpSp.epochs`                | `300`                                 
@@ -84,6 +84,7 @@ Rank       | `test.min` | `seed`     | `trainer.BpSp.epochs` | `trainer.BpSp.opt
 ## `git add`
 
 ```
+
 cd results/sweep/dLi5o10te200tr200ts0.0x0.0lMmLeIpItBb100e1,2,300lCle1E-05oAol,1E-0.0001,.001,.01,5s1,2,3
 git add -f results.md
 git add -f ../../train/dLi5o10te200tr200ts0.0x0.0_lM_mLeIpI_tBb100e300lCle1E-05oAol0.01_s2/metrics.json
@@ -91,11 +92,22 @@ git add -f ../../train/dLi5o10te200tr200ts0.0x0.0_lM_mLeIpI_tBb100e300lCle1E-05o
 git add -f trainer.BpSp.epochs.png
 git add -f trainer.BpSp.optimiser.Adam.lr.png
 cd ../../..
+
 ```
 
 ## [`README.md`](../../../README.md) include
 
+```md
+
 [`[ full_sweep_results ]`](results/sweep/dLi5o10te200tr200ts0.0x0.0lMmLeIpItBb100e1,2,300lCle1E-05oAol,1E-0.0001,.001,.01,5s1,2,3/results.md)
+
+![](results/train/dLi5o10te200tr200ts0.0x0.0_lM_mLeIpI_tBb100e300lCle1E-05oAol0.01_s2/metrics.png)
+
+![](results/sweep/dLi5o10te200tr200ts0.0x0.0lMmLeIpItBb100e1,2,300lCle1E-05oAol,1E-0.0001,.001,.01,5s1,2,3/trainer.BpSp.epochs.png)
+
+![](results/sweep/dLi5o10te200tr200ts0.0x0.0lMmLeIpItBb100e1,2,300lCle1E-05oAol,1E-0.0001,.001,.01,5s1,2,3/trainer.BpSp.optimiser.Adam.lr.png)
+
+```
 
 ## `sweep` command
 

@@ -3,8 +3,8 @@
     "model_name": "dLi5o10te200tr200ts0.0x0.0_lM_mLeIpI_tBb100e300lCle1E-05oAol0.01_s2",
     "model_dir": "results/train/dLi5o10te200tr200ts0.0x0.0_lM_mLeIpI_tBb100e300lCle1E-05oAol0.01_s2",
     "num_params": 60,
-    "time_str": "1.4916 seconds",
-    "time": 1.491578004002804,
+    "time_str": "1.4635 seconds",
+    "time": 1.4635340539971367,
     "train": {
         "start": 68.86100341796875,
         "end": 0.1906886386871338,
