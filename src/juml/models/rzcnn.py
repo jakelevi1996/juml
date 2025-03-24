@@ -2,7 +2,8 @@ import torch
 from jutility import cli
 from juml.models.base import Model
 from juml.models.sequential import Sequential
-from juml.models import embed, pool
+from juml.models.embed import Embedder
+from juml.models.pool import Pooler
 
 class RzCnn(Sequential):
     def __init__(
@@ -15,8 +16,8 @@ class RzCnn(Sequential):
         num_stages:         int,
         blocks_per_stage:   int,
         stride:             int,
-        embedder:           embed.Embedder,
-        pooler:             pool.Pooler,
+        embedder:           Embedder,
+        pooler:             Pooler,
     ):
         self._init_sequential(embedder, pooler)
         self.embed.set_input_shape(input_shape)

@@ -2,20 +2,21 @@ import torch
 from jutility import cli
 from juml.models.base import Model
 from juml.models.sequential import Sequential
-from juml.models import embed, pool
+from juml.models.embed import Embedder
+from juml.models.pool import Pooler
 
 class Cnn(Sequential):
     def __init__(
         self,
-        input_shape: list[int],
-        output_shape: list[int],
-        kernel_size: int,
-        channel_dim: int,
-        num_stages: int,
-        blocks_per_stage: int,
-        stride: int,
-        embedder: embed.Embedder,
-        pooler: pool.Pooler,
+        input_shape:        list[int],
+        output_shape:       list[int],
+        kernel_size:        int,
+        channel_dim:        int,
+        num_stages:         int,
+        blocks_per_stage:   int,
+        stride:             int,
+        embedder:           Embedder,
+        pooler:             Pooler,
     ):
         self._init_sequential(embedder, pooler)
         self.embed.set_input_shape(input_shape)
@@ -85,9 +86,9 @@ class InputReluCnnLayer(ReluCnnLayer):
 class StridedReluCnnLayer(ReluCnnLayer):
     def __init__(
         self,
-        channel_dim: int,
-        kernel_size: int,
-        stride: int,
+        channel_dim:    int,
+        kernel_size:    int,
+        stride:         int,
     ):
         self._torch_module_init()
         self.conv = torch.nn.Conv2d(

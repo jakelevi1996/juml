@@ -1,19 +1,20 @@
 import torch
 from jutility import cli
-from juml.models import embed, pool
 from juml.models.base import Model
 from juml.models.sequential import Sequential
+from juml.models.embed import Embedder
+from juml.models.pool import Pooler
 from juml.models.linear import Linear
 
 class Mlp(Sequential):
     def __init__(
         self,
-        input_shape: list[int],
-        output_shape: list[int],
-        hidden_dim: int,
-        num_hidden_layers: int,
-        embedder: embed.Embedder,
-        pooler: pool.Pooler,
+        input_shape:        list[int],
+        output_shape:       list[int],
+        hidden_dim:         int,
+        num_hidden_layers:  int,
+        embedder:           Embedder,
+        pooler:             Pooler,
     ):
         self._init_sequential(embedder, pooler)
         self.embed.set_input_shape(input_shape)

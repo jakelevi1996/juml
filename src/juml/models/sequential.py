@@ -1,14 +1,16 @@
 import torch
 from jutility import util, cli, units
-from juml.models.base  import Model
 from juml.models import embed, pool
+from juml.models.base  import Model
+from juml.models.embed import Embedder
+from juml.models.pool import Pooler
 
 class Sequential(Model):
     def __init__(
         self,
-        embedder: embed.Embedder,
+        embedder:   Embedder,
         layer_list: list[Model],
-        pooler: pool.Pooler,
+        pooler:     Pooler,
     ):
         self._init_sequential(embedder, pooler)
         for layer in layer_list:
@@ -16,8 +18,8 @@ class Sequential(Model):
 
     def _init_sequential(
         self,
-        embedder: embed.Embedder,
-        pooler: pool.Pooler,
+        embedder:   Embedder,
+        pooler:     Pooler,
     ):
         self._torch_module_init()
         self.embed  = embedder

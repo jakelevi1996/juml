@@ -1,8 +1,9 @@
 import torch
 from jutility import cli
-from juml.models import embed, pool
 from juml.models.base import Model
 from juml.models.sequential import Sequential
+from juml.models.embed import Embedder
+from juml.models.pool import Pooler
 from juml.models.linear import Linear
 
 class RzMlp(Sequential):
@@ -13,8 +14,8 @@ class RzMlp(Sequential):
         model_dim:          int,
         expand_ratio:       float,
         num_hidden_layers:  int,
-        embedder:           embed.Embedder,
-        pooler:             pool.Pooler,
+        embedder:           Embedder,
+        pooler:             Pooler,
     ):
         self._init_sequential(embedder, pooler)
         self.embed.set_input_shape(input_shape)
