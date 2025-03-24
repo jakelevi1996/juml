@@ -13,3 +13,9 @@ class DatasetFromDict(Dataset):
 
     def get_data_split(self, split: str) -> torch.utils.data.Dataset:
         return self._split_dict[split]
+
+    def get_split_names(self):
+        s = sorted(self._split_dict.keys())
+        s.insert(0, s.pop(s.index("train")))
+        s.insert(1, s.pop(s.index("test")))
+        return s

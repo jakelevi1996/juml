@@ -57,15 +57,23 @@ class Dataset:
     def get_loss_weights(self) -> torch.Tensor:
         raise NotImplementedError()
 
+    def get_split_names(self) -> list[str]:
+        raise NotImplementedError()
+
     @classmethod
     def get_cli_arg(cls):
         return cli.ObjectArg(cls)
 
     def __repr__(self):
+        split_names = self.get_split_names()
         return util.format_type(
             type(self),
-            n_train=units.metric.format(len(self.get_data_split("train"))),
-            n_test =units.metric.format(len(self.get_data_split("test" ))),
+            **{
+                ("n_" + split): units.metric.format(
+                    len(self.get_data_split(split)),
+                )
+                for split in split_names
+            },
             item_fmt="%s=%s",
-            key_order=["n_train", "n_test"],
+            key_order=[("n_" + split) for split in split_names],
         )
