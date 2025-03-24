@@ -391,11 +391,11 @@ class Sweeper:
 
         md.heading("`git add`", end="\n")
         md.code_block(
-            "cd %s"         % self.output_dir,
+            "\ncd %s"       % self.output_dir,
             "git add -f %s" % "results.md",
             "git add -f %s" % best_metrics_json,
             *git_add_images,
-            "cd %s" % os.path.relpath(os.getcwd(), self.output_dir),
+            "cd %s\n" % os.path.relpath(os.getcwd(), self.output_dir),
         )
         rm_path = os.path.relpath("README.md", self.output_dir)
 
