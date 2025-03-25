@@ -4,7 +4,7 @@ from juml.models.base import Model
 from juml.models.sequential import Sequential
 from juml.models.embed import Embedder
 from juml.models.pool import Pooler
-from juml.models.linear import Linear, MultiHeadLinear
+from juml.models.linear import Linear
 from juml.models.linearmodel import LinearModel
 from juml.models.mlp import Mlp
 from juml.models.rzmlp import RzMlp, ReZeroMlpLayer
