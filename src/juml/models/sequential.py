@@ -55,6 +55,7 @@ class Sequential(Model):
             *cls.get_cli_options(),
             embed.get_cli_choice(),
             pool.get_cli_choice(),
+            tag=cls.get_tag(),
         )
 
     def __len__(self) -> int:
