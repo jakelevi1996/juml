@@ -3,19 +3,27 @@ from juml.commands.base import Command
 from juml.train.profiler import Profiler
 
 class Profile(Command):
-    def run(self, args: cli.ParsedArgs) -> Profiler:
-        with cli.verbose:
-            profiler = args.init_object(
-                "Profiler",
-                args=args,
-            )
-            assert isinstance(profiler, Profiler)
-
-        return profiler
+    def run(
+        self,
+        args:           cli.ParsedArgs,
+        batch_size:     int,
+        num_warmup:     int,
+        num_profile:    int,
+        devices:        list[int],
+    ):
+        return Profiler(
+            args=args,
+            batch_size=batch_size,
+            num_warmup=num_warmup,
+            num_profile=num_profile,
+            devices=devices,
+        )
 
     @classmethod
-    def get_args(cls, train_args: list[cli.Arg]) -> list[cli.Arg]:
+    def get_cli_options(cls) -> list[cli.Arg]:
         return [
-            *train_args,
-            Profiler.get_cli_arg(),
+            cli.Arg("batch_size",   type=int, default=100),
+            cli.Arg("num_warmup",   type=int, default=10),
+            cli.Arg("num_profile",  type=int, default=10),
+            cli.Arg("devices",      type=int, default=[], nargs="*"),
         ]

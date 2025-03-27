@@ -32,9 +32,9 @@ def test_sweep(num_processes: int):
         "--dataset LinearDataset "
         "--dataset.LinearDataset.input_dim 5 "
         "--dataset.LinearDataset.output_dim 7 "
-        "--Sweeper.seeds 2 11 "
-        "--Sweeper.params {\"trainer.BpSp.epochs\":[2,3]} "
-        "--Sweeper.devices [%s] "
+        "--sweep.seeds 2 11 "
+        "--sweep.params {\"trainer.BpSp.epochs\":[2,3]} "
+        "--sweep.devices [%s] "
         % devices_str
     )
     printer(args_str)
@@ -44,7 +44,8 @@ def test_sweep(num_processes: int):
     command = args.get_command()
     assert isinstance(command, juml.commands.Sweep)
 
-    sweeper = command.run(args)
+    kwargs  = args.get_arg(command.name).get_kwargs()
+    sweeper = command.run(args, **kwargs)
     assert isinstance(sweeper, juml.train.Sweeper)
 
     printer(sweeper.name)

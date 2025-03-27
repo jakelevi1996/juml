@@ -4,7 +4,10 @@ from juml.commands.base import Command
 from juml.train.base import Trainer
 
 class PlotConfusionMatrix(Command):
-    def run(self, args: cli.ParsedArgs):
+    def run(
+        self,
+        args: cli.ParsedArgs,
+    ):
         model_dir, model, dataset = Trainer.load(args)
 
         test_split  = dataset.get_data_split("test")
@@ -36,7 +39,3 @@ class PlotConfusionMatrix(Command):
             title_font_size=15,
         )
         mp.save("Confusion matrix", model_dir)
-
-    @classmethod
-    def get_args(cls, train_args: list[cli.Arg]) -> list[cli.Arg]:
-        return train_args

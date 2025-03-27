@@ -54,5 +54,6 @@ def test_plot1dregression():
     command = args.get_command()
     assert isinstance(command, juml.commands.Plot1dRegression)
 
-    command.run(args)
+    kwargs  = args.get_arg(command.name).get_kwargs()
+    command.run(args, **kwargs)
     assert os.path.isfile(output_img_path)

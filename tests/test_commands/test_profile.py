@@ -39,15 +39,16 @@ def test_profile():
     args_str = (
         "profile "
         "--model_name test_commands_test_profile_model "
-        "--Profiler.num_warmup 3 "
-        "--Profiler.num_profile 7 "
-        "--Profiler.batch_size 11 "
+        "--profile.num_warmup 3 "
+        "--profile.num_profile 7 "
+        "--profile.batch_size 11 "
     )
     args = parser.parse_args(args_str.split())
     command = args.get_command()
     assert isinstance(command, juml.commands.Profile)
 
-    profiler = command.run(args)
+    kwargs = args.get_arg(command.name).get_kwargs()
+    profiler = command.run(args, **kwargs)
     assert isinstance(profiler, juml.train.Profiler)
     assert isinstance(profiler.flops, float)
     assert profiler.flops > 0

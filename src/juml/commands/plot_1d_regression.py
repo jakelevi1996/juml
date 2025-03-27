@@ -4,7 +4,11 @@ from juml.commands.base import Command
 from juml.train.base import Trainer
 
 class Plot1dRegression(Command):
-    def run(self, args: cli.ParsedArgs):
+    def run(
+        self,
+        args:   cli.ParsedArgs,
+        n_plot: int,
+    ):
         model_dir, model, dataset = Trainer.load(args)
 
         data = dict()
@@ -18,9 +22,8 @@ class Plot1dRegression(Command):
             data[split] = [x.flatten(), t.flatten()]
             xlim.extend([x.min().item(), x.max().item()])
 
-        n = args.get_value("n_plot")
-        x = torch.linspace(min(xlim), max(xlim), n).reshape(n, 1)
-        y = model.forward(x).detach().reshape(n)
+        x = torch.linspace(min(xlim), max(xlim), n_plot).reshape(n_plot, 1)
+        y = model.forward(x).detach().reshape(n_plot)
 
         mp = plotting.MultiPlot(
             plotting.Subplot(
@@ -36,8 +39,7 @@ class Plot1dRegression(Command):
         mp.save("Predictions", model_dir)
 
     @classmethod
-    def get_args(cls, train_args: list[cli.Arg]) -> list[cli.Arg]:
+    def get_cli_options(cls) -> list[cli.Arg]:
         return [
-            *train_args,
             cli.Arg("n_plot", type=int, default=200),
         ]

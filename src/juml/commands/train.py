@@ -7,9 +7,5 @@ class Train(Command):
         return Trainer.from_args(
             args=args,
             printer=util.Printer(),
-            **self.get_kwargs(),
+            **args.get_kwargs(),
         )
-
-    @classmethod
-    def get_args(cls, train_args: list[cli.Arg]) -> list[cli.Arg]:
-        return train_args
