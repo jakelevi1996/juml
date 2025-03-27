@@ -1,23 +1,22 @@
 import os
-from jutility import util
+from jutility import util, plotting
 import juml
 
 OUTPUT_DIR = juml.test_utils.get_output_dir(
-    "test_commands",
-    "test_plot1dregression",
+    "test_commands/test_plotsequential",
 )
 
-def test_plot1dregression():
-    printer = util.Printer("test_plot1dregression", dir_name=OUTPUT_DIR)
-    juml.test_utils.set_torch_seed("test_plot1dregression")
+def test_plotsequential():
+    printer = util.Printer("test_plotsequential", dir_name=OUTPUT_DIR)
+    juml.test_utils.set_torch_seed("test_plotsequential")
 
     output_img_path = (
-        "results/train/test_commands_test_plot1dregression_model/"
-        "Predictions.png"
+        "results/train/test_commands_test_plotsequential/"
+        "plot_sequential.png"
     )
 
     model_path = (
-        "results/train/test_commands_test_plot1dregression_model/model.pth"
+        "results/train/test_commands_test_plotsequential/model.pth"
     )
     if os.path.isfile(model_path):
         os.remove(model_path)
@@ -29,11 +28,11 @@ def test_plot1dregression():
         "train "
         "--trainer BpSp "
         "--trainer.BpSp.epochs 2 "
-        "--model Mlp "
-        "--model.Mlp.hidden_dim 11 "
-        "--model.Mlp.depth 1 "
+        "--model RzMlp "
+        "--model.RzMlp.model_dim 11 "
+        "--model.RzMlp.depth 3 "
         "--dataset SinMix "
-        "--model_name test_commands_test_plot1dregression_model"
+        "--model_name test_commands_test_plotsequential"
     )
     args = parser.parse_args(args_str.split())
     args.get_command().run(args)
@@ -47,13 +46,15 @@ def test_plot1dregression():
 
     parser = juml.base.Framework.get_parser()
     args_str = (
-        "plot1dregression "
-        "--model_name test_commands_test_plot1dregression_model "
+        "plotsequential "
+        "--model_name test_commands_test_plotsequential "
     )
     args = parser.parse_args(args_str.split())
     command = args.get_command()
-    assert isinstance(command, juml.commands.Plot1dRegression)
+    assert isinstance(command, juml.commands.PlotSequential)
 
     kwargs = args.get_arg(command.name).get_kwargs()
-    command.run(args, **kwargs)
+    mp = command.run(args, **kwargs)
+    assert isinstance(mp, plotting.MultiPlot)
+
     assert os.path.isfile(output_img_path)
