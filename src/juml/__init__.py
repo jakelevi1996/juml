@@ -6,5 +6,6 @@ from juml import (
     train,
     commands,
     device,
+    tools,
     test_utils,
 )
