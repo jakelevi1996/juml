@@ -12,41 +12,38 @@ def display_sequential(
 
     printer.hline()
     table = util.Table(
-        util.Column("layer",    "r",    -40),
-        util.Column("shape",    "s",    -22),
-        util.Column("time",     ".5fs", 11),
+        util.Column("layer",    "r",    -40,    "Layer"),
+        util.Column("shape",    "s",    -22,    "Output shape"),
+        util.Column("t",        ".5fs", 10,     "Time"),
+        printer=printer,
     )
-    time_list   = []
     total_timer = util.Timer(verbose=False)
     layer_timer = util.Timer(verbose=False)
-    display_layer("Input", x, printer, layer_timer, [])
+    display_layer(table, "Input", x, layer_timer)
 
     with layer_timer:
         x = model.embed.forward(x)
-        display_layer(model.embed, x, printer, layer_timer, time_list)
+        display_layer(table, model.embed, x, layer_timer)
     for layer in model.layers:
         with layer_timer:
             x = layer.forward(x)
-            display_layer(layer, x, printer, layer_timer, time_list)
+            display_layer(table, layer, x, layer_timer)
     with layer_timer:
         x = model.pool.forward(x)
-        display_layer(model.pool, x, printer, layer_timer, time_list)
+        display_layer(table, model.pool, x, layer_timer)
 
     printer.hline()
-    display_layer(model, x, printer, total_timer, time_list)
+    display_layer(table, model, x, total_timer)
     printer.hline()
-    return x, time_list
+    return x, table
 
 def display_layer(
-    layer:      (torch.nn.Module | str),
-    x:          torch.Tensor,
-    printer:    util.Printer,
-    timer:      util.Timer,
-    time_list:  list[float],
+    table:  util.Table,
+    layer:  (torch.nn.Module | str),
+    x:      torch.Tensor,
+    timer:  util.Timer,
 ):
-    time_list.append(timer.get_time_taken())
-    t_str = units.time_concise.format(time_list[-1])
-    printer( "%-40r -> %-20s in %11s" % (layer, list(x.shape), t_str))
+    table.update(layer=layer, shape=list(x.shape), t=timer.get_time_taken())
 
 def num_params(layer: torch.nn.Module) -> int:
     return sum(int(p.numel()) for p in layer.parameters())
@@ -55,7 +52,9 @@ def plot_sequential(
     model:  Sequential,
     x:      torch.Tensor,
 ) -> plotting.MultiPlot:
-    _, t_list   = display_sequential(model, x)
+    _, table    = display_sequential(model, x)
+    t_data      = table.get_data("t")
+    t_list      = t_data[1:]
     t_tot       = t_list[-1]
     t_max       = max(t_list[:-1])
     t_tot_label = "Total = %s"  % units.time_concise.format(t_tot)

@@ -24,11 +24,11 @@ def test_display_sequential():
         pooler=juml.models.pool.Identity(),
     )
 
-    y, time_list = juml.tools.display_sequential(model, x, printer)
+    y, table = juml.tools.display_sequential(model, x, printer)
 
     output_line = (
         "ReZeroCnnLayer(num_params=442)           "
-        "-> [3, 9, 8, 9]         in     0.0"
+        "| [3, 9, 8, 9]           |    0.0"
     )
     assert output_line in printer.read()
 
@@ -40,4 +40,4 @@ def test_display_sequential():
     assert y.max().item() <= 2
     assert y.min().item() >= -2
 
-    assert isinstance(time_list, list)
+    assert isinstance(table, util.Table)
