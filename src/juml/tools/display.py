@@ -10,7 +10,7 @@ def display_sequential(
     if printer is None:
         printer = util.Printer()
 
-    printer.hline()
+    util.hline()
     table = util.Table(
         util.Column("layer",    "r",    -40,    "Layer"),
         util.Column("shape",    "s",    -22,    "Output shape"),
@@ -32,9 +32,9 @@ def display_sequential(
         x = model.pool.forward(x)
         display_layer(table, model.pool, x, layer_timer)
 
-    printer.hline()
+    table.update(layer="Full model:")
     display_layer(table, model, x, total_timer)
-    printer.hline()
+    util.hline()
     return x, table
 
 def display_layer(
@@ -49,10 +49,11 @@ def num_params(layer: torch.nn.Module) -> int:
     return sum(int(p.numel()) for p in layer.parameters())
 
 def plot_sequential(
-    model:  Sequential,
-    x:      torch.Tensor,
+    model:      Sequential,
+    x:          torch.Tensor,
+    printer:    (util.Printer | None)=None,
 ) -> plotting.MultiPlot:
-    _, table    = display_sequential(model, x)
+    _, table    = display_sequential(model, x, printer)
     t_data      = table.get_data("t")
     t_list      = t_data[1:]
     t_tot       = t_list[-1]

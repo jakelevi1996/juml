@@ -1,4 +1,5 @@
-from jutility import cli
+import os
+from jutility import cli, util
 from juml.commands.base import Command
 from juml.device import DeviceConfig
 from juml.train.base import Trainer
@@ -23,8 +24,25 @@ class PlotSequential(Command):
         for _ in range(num_warmup):
             y = model.forward(x)
 
-        mp = plot_sequential(model, x)
-        mp.save("plot_sequential", model_dir)
+        md = util.MarkdownPrinter(self.name, model_dir)
+        md.title(md.code(repr(model)))
+        md.set_print_to_console(True)
+
+        mp = plot_sequential(model, x, md)
+        mp.save(self.name, model_dir)
+
+        md.set_print_to_console(False)
+        md.image(self.name + ".png")
+        md.heading("`git add`", end="\n")
+        md.code_block(
+            "\ncd %s" % model_dir,
+            "git add -f %s.png" % self.name,
+            "git add -f %s.md"  % self.name,
+            "cd %s\n" % os.path.relpath(".", model_dir),
+        )
+        md.heading("`README.md` include", end="\n")
+        md.file_link(md.get_filename(), "`[ %s ]`" % repr(model))
+
         return mp
 
     @classmethod
