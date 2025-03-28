@@ -12,7 +12,7 @@ def test_plotsequential():
 
     output_img_path = (
         "results/train/test_commands_test_plotsequential/"
-        "plot_sequential.png"
+        "plotsequential.png"
     )
 
     model_path = (
