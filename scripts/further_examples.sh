@@ -33,3 +33,9 @@ juml sweep --model LinearModel --dataset LinearDataset --dataset.LinearDataset.i
 # `--Sweeper.params`, or equivalently specify `--Sweeper.params "{}"` (the
 # default value):
 juml sweep --model LinearModel --dataset LinearDataset --dataset.LinearDataset.input_dim 5 --dataset.LinearDataset.output_dim 10 --print_level 1 --Sweeper.seeds 1 2 3 --trainer.BpSp.epochs 300
+
+# To run data efficiency experiments, use `--trainer BpSpDe`, where
+# `--trainer.BpSpDe.steps 600` specifies the total number of gradient steps,
+# and `--trainer.BpSpDe.n_train 200` specifies the size of the subset of
+# training data to use (these options can be combined with `juml sweep`)
+juml train --model Mlp --model.Mlp.embedder Flatten --model.Mlp.embedder.Flatten.n 3 --dataset Mnist --trainer BpSpDe --trainer.BpSpDe.steps 600 --trainer.BpSpDe.n_train 200
