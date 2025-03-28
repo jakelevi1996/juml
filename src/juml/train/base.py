@@ -206,11 +206,8 @@ class Trainer:
         util.save_json(arg_dict,    "args",     self.output_dir)
         util.save_json(metrics,     "metrics",  self.output_dir)
         self.plot_metrics(batch_loss, train_metric, test_metric)
-        torch.save(
-            self.model.state_dict(),
-            util.get_full_path("model.pth", self.output_dir),
-        )
-        self.table.save_pickle("table", self.output_dir)
+        self.save_model()
+        self.save_table()
         print("Model name = `%s`" % self.model_name)
         print(
             "Final metrics = %.5f (train), %.5f (test)"
@@ -266,6 +263,13 @@ class Trainer:
             figsize=[10, 4],
         )
         mp.save("metrics", self.output_dir)
+
+    def save_model(self):
+        full_path = util.get_full_path("model.pth", self.output_dir)
+        torch.save(self.model.state_dict(), full_path)
+
+    def save_table(self):
+        self.table.save_pickle("table", self.output_dir)
 
     @classmethod
     def load(cls, args: cli.ParsedArgs) -> tuple[str, Model, Dataset]:
