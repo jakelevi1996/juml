@@ -18,7 +18,7 @@ class Sweeper:
         no_cache:       bool,
         log_x:          list[str],
         configs:        list[str],
-        **train_args,
+        **train_kwargs,
     ):
         printer = util.Printer()
         printer.heading("Sweeper: Initialise experiments")
@@ -47,7 +47,7 @@ class Sweeper:
                 args=args,
                 devices=d,
                 no_cache=no_cache,
-                train_args=train_args,
+                train_kwargs=train_kwargs,
                 printer=printer,
             )
         else:
@@ -55,7 +55,7 @@ class Sweeper:
                 args=args,
                 devices=devices,
                 no_cache=no_cache,
-                train_args=train_args,
+                train_kwargs=train_kwargs,
             )
 
         printer.heading("Sweeper: display results")
@@ -115,28 +115,28 @@ class Sweeper:
 
     def run_single_process(
         self,
-        args:       cli.ParsedArgs,
-        devices:    list[int],
-        no_cache:   bool,
-        train_args: dict,
-        printer:    util.Printer,
+        args:           cli.ParsedArgs,
+        devices:        list[int],
+        no_cache:       bool,
+        train_kwargs:   dict,
+        printer:        util.Printer,
     ):
         for e in self.experiment_list:
             run_experiment(
                 args=args,
                 devices=devices,
                 no_cache=no_cache,
-                train_args=train_args,
+                train_kwargs=train_kwargs,
                 args_update_dict=e.arg_dict,
                 printer=printer,
             )
 
     def run_multi_process(
         self,
-        args:       cli.ParsedArgs,
-        devices:    list[list[int]],
-        no_cache:   bool,
-        train_args: dict,
+        args:           cli.ParsedArgs,
+        devices:        list[list[int]],
+        no_cache:       bool,
+        train_kwargs:   dict,
     ):
         mp_context = multiprocessing.get_context("spawn")
 
@@ -153,7 +153,7 @@ class Sweeper:
                     "pid":          i,
                     "devices":      d,
                     "no_cache":     no_cache,
-                    "train_args":   train_args,
+                    "train_kwargs": train_kwargs,
                     "output_dir":   self.output_dir,
                 },
             )
@@ -403,13 +403,13 @@ class Sweeper:
         return len(self.experiment_list)
 
 def sweeper_subprocess(
-    args:       cli.ParsedArgs,
-    q:          multiprocessing.Queue,
-    pid:        int,
-    devices:    list[int],
-    no_cache:   bool,
-    train_args: dict,
-    output_dir: str,
+    args:           cli.ParsedArgs,
+    q:              multiprocessing.Queue,
+    pid:            int,
+    devices:        list[int],
+    no_cache:       bool,
+    train_kwargs:   dict,
+    output_dir:     str,
 ):
     printer = util.Printer(
         "p%i_log" % pid,
@@ -427,7 +427,7 @@ def sweeper_subprocess(
             args=args,
             devices=devices,
             no_cache=no_cache,
-            train_args=train_args,
+            train_kwargs=train_kwargs,
             args_update_dict=args_update_dict,
             printer=printer,
         )
@@ -436,14 +436,14 @@ def run_experiment(
     args:               cli.ParsedArgs,
     devices:            list[int],
     no_cache:           bool,
-    train_args:         dict,
+    train_kwargs:       dict,
     args_update_dict:   dict,
     printer:            util.Printer,
 ):
     args.update(args_update_dict)
     for key in args_update_dict:
-        if key in train_args:
-            train_args[key] = args_update_dict[key]
+        if key in train_kwargs:
+            train_kwargs[key] = args_update_dict[key]
 
     metrics_path = Trainer.get_metrics_path(args)
     if (not os.path.isfile(metrics_path)) or no_cache:
@@ -457,7 +457,7 @@ def run_experiment(
                 devices=devices,
                 configs=[],
                 printer=printer,
-                **train_args,
+                **train_kwargs,
             )
     else:
         print("Found cached results `%s` -> skip" % metrics_path)
