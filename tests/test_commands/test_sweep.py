@@ -46,7 +46,7 @@ def test_sweep(num_processes: int):
 
     kwargs  = args.get_arg(command.name).get_kwargs()
     sweeper = command.run(args, **kwargs)
-    assert isinstance(sweeper, juml.train.Sweeper)
+    assert isinstance(sweeper, juml.tools.Sweeper)
 
     printer(sweeper.name)
     assert sweeper.name == (
