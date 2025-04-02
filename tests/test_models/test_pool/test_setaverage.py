@@ -18,10 +18,8 @@ def test_setaverage():
     assert repr(pooler) == "SetAverage(num_params=77)"
     assert pooler.num_params() == (6*11 + 11)
     assert pooler.num_params() == 77
-    with pytest.raises(NotImplementedError):
-        pooler.get_input_shape()
-    with pytest.raises(NotImplementedError):
-        pooler.get_input_dim(-1)
+    assert pooler.get_input_shape() == [3, 11, 6]
+    assert pooler.get_input_dim(-1) == 6
 
     y = pooler.forward(x)
     assert isinstance(y, torch.Tensor)

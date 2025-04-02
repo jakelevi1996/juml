@@ -144,7 +144,11 @@ class SetAverage(Pooler):
         input_shape:  list[int],
         output_shape: list[int],
     ):
+        self.input_shape = input_shape
         self.linear = torch.nn.Linear(input_shape[-1], output_shape[-1])
+
+    def get_input_shape(self) -> list[int]:
+        return self.input_shape
 
     def forward(self, x_npd: torch.Tensor) -> torch.Tensor:
         x_nd = x_npd.mean(dim=-2)
