@@ -19,7 +19,7 @@ class RzMlp(Sequential):
     ):
         self._init_sequential(embedder, pooler)
         self.embed.set_input_shape(input_shape)
-        self.pool.set_shapes([], output_shape)
+        self.pool.set_shapes([model_dim], output_shape)
 
         layer = Linear(self.embed.get_output_dim(-1), model_dim)
         self.layers.append(layer)
