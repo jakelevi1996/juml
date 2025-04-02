@@ -160,6 +160,7 @@ def get_types() -> list[type[Pooler]]:
         SoftmaxAverage2d,
         LinearSet2d,
         GatedLinearSet2d,
+        SetAverage,
     ]
 
 def get_cli_choice() -> cli.ObjectChoice:
