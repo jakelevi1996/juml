@@ -367,9 +367,8 @@ class Sweeper:
         md.flush()
 
     @classmethod
-    def get_cli_arg(cls) -> cli.ObjectArg:
-        return cli.ObjectArg(
-            cls,
+    def get_cli_options(cls) -> list[cli.Arg]:
+        return [
             cli.JsonArg(
                 "params",
                 default=dict(),
@@ -396,8 +395,7 @@ class Sweeper:
             cli.Arg("maximise",         action="store_true"),
             cli.Arg("no_cache",         action="store_true"),
             cli.Arg("log_x",            type=str, default=[], nargs="+"),
-            is_group=True,
-        )
+        ]
 
     def __len__(self):
         return len(self.experiment_list)

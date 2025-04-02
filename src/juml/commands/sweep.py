@@ -20,31 +20,4 @@ class Sweep(Command):
 
     @classmethod
     def get_cli_options(cls) -> list[cli.Arg]:
-        return [
-            cli.JsonArg(
-                "params",
-                default=dict(),
-                metavar=": dict[str, list] = \"{}\"",
-                help=(
-                    "EG '{\"trainer.BpSp.epochs\":[100,200,300],"
-                    "\"trainer.BpSp.optimiser.Adam.lr\":"
-                    "[1e-5,1e-4,1e-3,1e-2]}'"
-                )
-            ),
-            cli.JsonArg(
-                "devices",
-                default=[[]],
-                metavar=": list[list[int]] = \"[[]]\"",
-                help="EG \"[[1,2,3],[3,4],[5]]\" or \"[[],[],[],[],[],[]]\""
-            ),
-            cli.Arg(
-                "seeds",
-                type=int,
-                nargs="+",
-                default=list(range(5)),
-            ),
-            cli.Arg("target_metric",    type=str, default="test.min"),
-            cli.Arg("maximise",         action="store_true"),
-            cli.Arg("no_cache",         action="store_true"),
-            cli.Arg("log_x",            type=str, default=[], nargs="+"),
-        ]
+        return Sweeper.get_cli_options()
