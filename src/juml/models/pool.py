@@ -138,6 +138,19 @@ class GatedLinearSet2d(Pooler):
         x_npo = torch.sigmoid(p_np1) * x_npo
         return x_npo
 
+class SetAverage(Pooler):
+    def set_shapes(
+        self,
+        input_shape:  list[int],
+        output_shape: list[int],
+    ):
+        self.linear = torch.nn.Linear(input_shape[-1], output_shape[-1])
+
+    def forward(self, x_npd: torch.Tensor) -> torch.Tensor:
+        x_nd = x_npd.mean(dim=-2)
+        x_no = self.linear.forward(x_nd)
+        return x_no
+
 def get_types() -> list[type[Pooler]]:
     return [
         Identity,
