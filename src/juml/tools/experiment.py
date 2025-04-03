@@ -1,3 +1,4 @@
+import statistics
 from jutility import util, cli
 from juml.train.base import Trainer
 
@@ -44,3 +45,102 @@ class Experiment:
 
     def __lt__(self, other: "Experiment") -> bool:
         return (self.result < other.result)
+
+class ExperimentGroup:
+    def __init__(
+        self,
+        params:         dict[str, list],
+        seeds:          list[int],
+        experiments:    list[Experiment],
+    ):
+        self.params             = params
+        self.seeds              = seeds
+        self.experiment_list    = experiments
+        self.experiment_dict    = {e.arg_str: e for e in experiments}
+        self.results            = [e.result     for e in experiments]
+
+    @classmethod
+    def from_params(
+        cls,
+        params: dict[str, list],
+        seeds:  list[int],
+    ):
+        components_list = [[["seed", s]] for s in seeds]
+        for param_name, param_vals in params.items():
+            components_list = [
+                c + p
+                for c in components_list
+                for p in [[[param_name, v]] for v in param_vals]
+            ]
+
+        return cls(
+            params=params,
+            seeds=seeds,
+            experiments=[
+                Experiment({k: v for k, v in c})
+                for c in components_list
+            ],
+        )
+
+    def load_results(self, args: cli.ParsedArgs, targets: list[str]):
+        for e in self.experiment_list:
+            e.load_result(args, targets)
+
+        self.results = [e.result for e in self.experiment_list]
+
+    def sweep_seeds(
+        self,
+        root_experiment: Experiment,
+    ) -> "ExperimentGroup":
+        experiment_list = []
+        root_dict       = root_experiment.arg_dict
+        root_seed       = root_dict["seed"]
+
+        for seed in self.seeds:
+            root_dict["seed"] = seed
+            arg_str = util.format_dict(root_dict)
+            experiment_list.append(self.experiment_dict[arg_str])
+
+        root_dict["seed"] = root_seed
+        return ExperimentGroup(
+            params=dict(),
+            seeds=self.seeds,
+            experiments=experiment_list,
+        )
+
+    def sweep_param(
+        self,
+        root_experiment:    Experiment,
+        param_name:         str,
+    ) -> "ExperimentGroup":
+        experiment_list = []
+        root_dict       = root_experiment.arg_dict
+        root_val        = root_dict[param_name]
+        root_seed       = root_dict["seed"]
+
+        for val in self.params[param_name]:
+            for seed in self.seeds:
+                root_dict[param_name]   = val
+                root_dict["seed"]       = seed
+                arg_str = util.format_dict(root_dict)
+                experiment_list.append(self.experiment_dict[arg_str])
+
+        root_dict[param_name]   = root_val
+        root_dict["seed"]       = root_seed
+        return ExperimentGroup(
+            params=dict(),
+            seeds=self.seeds,
+            experiments=experiment_list,
+        )
+
+    def results_mean(self) -> float:
+        return statistics.mean(self.results)
+
+    def results_std(self) -> float:
+        return statistics.stdev(self.results)
+
+    def __iter__(self):
+        return iter(self.experiment_list)
+
+    def __len__(self):
+        return len(self.experiment_list)
