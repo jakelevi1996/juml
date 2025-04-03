@@ -1,10 +1,9 @@
 import os
 import multiprocessing
 import queue
-import statistics
 from jutility import plotting, util, cli
 from juml.train.base import Trainer
-from juml.tools.experiment import Experiment
+from juml.tools.experiment import ExperimentGroup
 
 class Sweeper:
     def __init__(
@@ -34,7 +33,7 @@ class Sweeper:
         self.target_list    = target_metric.split(".")
         self.maximise       = maximise
         self.log_x          = log_x
-        self.init_experiments()
+        self.experiments    = ExperimentGroup.from_params(params, seeds)
         self.init_name(args)
         self.init_output_dir()
 
@@ -60,13 +59,11 @@ class Sweeper:
 
         printer.heading("Sweeper: display results")
 
-        for e in self.experiment_list:
-            e.load_result(args, self.target_list)
-
+        self.experiments.load_results(args, self.target_list)
         self.best = (
-            max(self.experiment_list)
+            max(self.experiments)
             if self.maximise else
-            min(self.experiment_list)
+            min(self.experiments)
         )
 
         best_model_dir      = self.best.metrics["model_dir"]
@@ -78,36 +75,18 @@ class Sweeper:
 
         self.save_results_markdown()
 
-    def init_experiments(self):
-        components_list = [[["seed", s]] for s in self.seeds]
-        for param_name, param_vals in self.params.items():
-            components_list = [
-                c + p
-                for c in components_list
-                for p in [[[param_name, v]] for v in param_vals]
-            ]
-
-        self.experiment_list = [
-            Experiment({k: v for k, v in c})
-            for c in components_list
-        ]
-        self.experiment_dict = {
-            e.arg_str: e
-            for e in self.experiment_list
-        }
-
     def init_name(self, args: cli.ParsedArgs):
         original_args = {k: args.get_value(k) for k in self.params.keys()}
         original_args["seed"] = args.get_value("seed")
 
-        for i, e in enumerate(self.experiment_list, start=1):
+        for i, e in enumerate(self.experiments, start=1):
             print("(%2i) %s" % (i, e.arg_str))
             args.update(e.arg_dict)
             e.set_model_name(Trainer.get_summary(args))
             e.set_ind(i)
 
         args.update(original_args)
-        sorted_names = sorted(e.model_name for e in self.experiment_list)
+        sorted_names = sorted(e.model_name for e in self.experiments)
         self.name = util.merge_strings(sorted_names)
 
     def init_output_dir(self):
@@ -121,7 +100,7 @@ class Sweeper:
         train_kwargs:   dict,
         printer:        util.Printer,
     ):
-        for e in self.experiment_list:
+        for e in self.experiments:
             run_experiment(
                 args=args,
                 devices=devices,
@@ -141,7 +120,7 @@ class Sweeper:
         mp_context = multiprocessing.get_context("spawn")
 
         q = mp_context.Queue()
-        for e in self.experiment_list:
+        for e in self.experiments:
             q.put(e.arg_dict)
 
         p_list = [
@@ -167,17 +146,9 @@ class Sweeper:
             p.join()
 
     def plot_param(self, param_name: str):
-        param_vals      = self.params[param_name]
-        best_arg_dict   = self.best.arg_dict
-        best_val        = best_arg_dict[param_name]
-        best_seed       = best_arg_dict["seed"]
-
-        log_y       = self.metric_info.get("log_y", False)
-        log_x       = (True if (param_name in self.log_x) else False)
-
         x_index = any(
             (not isinstance(v, int)) and (not isinstance(v, float))
-            for v in param_vals
+            for v in self.params[param_name]
         )
         results_dict = {
             "train":    plotting.NoisyData(log_y=log_y, x_index=x_index),
@@ -186,20 +157,15 @@ class Sweeper:
             "size":     plotting.NoisyData(log_y=True,  x_index=x_index),
         }
 
-        for v in param_vals:
-            for s in self.seeds:
-                best_arg_dict[param_name]  = v
-                best_arg_dict["seed"]      = s
-                arg_str = util.format_dict(best_arg_dict)
-                metrics = self.experiment_dict[arg_str].metrics
+        for e in self.experiments.sweep_param(self.best, param_name):
+            val = e.arg_dict[param_name]
+            results_dict["train"].update(val, e.metrics["train"]["end"])
+            results_dict["test" ].update(val, e.metrics["test" ]["end"])
+            results_dict["time" ].update(val, e.metrics["time" ])
+            results_dict["size" ].update(val, e.metrics["num_params"])
 
-                results_dict["train"].update(v, metrics["train"]["end"])
-                results_dict["test" ].update(v, metrics["test" ]["end"])
-                results_dict["time" ].update(v, metrics["time" ])
-                results_dict["size" ].update(v, metrics["num_params"])
-
-        best_arg_dict[param_name]  = best_val
-        best_arg_dict["seed"]      = best_seed
+        log_x = (True if (param_name in self.log_x) else False)
+        log_y = self.metric_info.get("log_y", False)
 
         mp = plotting.MultiPlot(
             plotting.Subplot(
@@ -246,7 +212,7 @@ class Sweeper:
                 ylabel="Number of parameters",
                 title="Number of parameters",
             ),
-            title="%s\n%r" % (param_name, param_vals),
+            title="%s\n%r" % (param_name, self.params[param_name]),
             title_font_size=15,
             figsize=[10, 8],
         )
@@ -259,7 +225,7 @@ class Sweeper:
 
         md.heading("Summary")
         table = util.Table.key_value(printer=md)
-        table.update(k="`# experiments`",   v=md.code(len(self)))
+        table.update(k="`# experiments`",   v=md.code(len(self.experiments)))
         table.update(k="Target metric",     v=md.code(self.target_str))
         table.update(k="Best result",       v=md.code(self.best.result))
         table.update(k="Best params/seed",  v=md.code(self.best.arg_str))
@@ -274,30 +240,19 @@ class Sweeper:
         ]:
             table.update(k=name, v=md.code(self.best.metrics[metric]))
 
-        best_arg_dict = self.best.arg_dict
-        for name, val in best_arg_dict.items():
+        for name, val in self.best.arg_dict.items():
             table.update(k="`--%s`" % name, v=md.code(val))
 
-        all_results_list = [e.result for e in self.experiment_list]
-        seeds_results_list = []
-        best_seed = best_arg_dict["seed"]
-        for s in self.seeds:
-            best_arg_dict["seed"] = s
-            seed_arg_str = util.format_dict(best_arg_dict)
-            seed_result  = self.experiment_dict[seed_arg_str].result
-            seeds_results_list.append(seed_result)
-
-        best_arg_dict["seed"] = best_seed
-
-        mean_config = statistics.mean(seeds_results_list)
-        mean_all    = statistics.mean(all_results_list)
-        table.update(k="Mean (best params)",    v=md.code(mean_config))
+        best_config_sweep = self.experiments.sweep_seeds(self.best)
+        mean_best   = best_config_sweep.results_mean()
+        mean_all    =  self.experiments.results_mean()
+        table.update(k="Mean (best params)",    v=md.code(mean_best))
         table.update(k="Mean (all)",            v=md.code(mean_all))
 
         if len(self.seeds) >= 2:
-            std_config  = statistics.stdev(seeds_results_list)
-            std_all     = statistics.stdev(all_results_list)
-            table.update(k="STD (best params)", v=md.code(std_config))
+            std_best    = best_config_sweep.results_std()
+            std_all     =  self.experiments.results_std()
+            table.update(k="STD (best params)", v=md.code(std_best))
             table.update(k="STD (all)",         v=md.code(std_all))
 
         md.heading("Sweep configuration")
@@ -331,10 +286,7 @@ class Sweeper:
             util.Column("model_name"),
             printer=md,
         )
-        sorted_experiments = sorted(
-            self.experiment_list,
-            reverse=(True if self.maximise else False),
-        )
+        sorted_experiments = sorted(self.experiments, reverse=self.maximise)
         for i, e in enumerate(sorted_experiments, start=1):
             table.update(
                 rank=i,
@@ -396,9 +348,6 @@ class Sweeper:
             cli.Arg("no_cache",         action="store_true"),
             cli.Arg("log_x",            type=str, default=[], nargs="+"),
         ]
-
-    def __len__(self):
-        return len(self.experiment_list)
 
 def sweeper_subprocess(
     args:           cli.ParsedArgs,
