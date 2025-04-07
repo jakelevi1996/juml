@@ -23,10 +23,6 @@ class Sweeper:
         printer.heading("Sweeper: Initialise experiments")
 
         Trainer.apply_configs(args, configs, list(params.keys()))
-        dataset             = Trainer.init_dataset(args)
-        loss                = Trainer.init_loss(args, dataset)
-        self.metric_info    = loss.metric_info()
-
         self.params         = params
         self.seeds          = seeds
         self.target_str     = target_metric
@@ -34,6 +30,7 @@ class Sweeper:
         self.maximise       = maximise
         self.log_x          = log_x
         self.experiments    = ExperimentGroup.from_params(params, seeds)
+        self.init_metric_info(args)
         self.init_name(args)
         self.init_output_dir()
 
@@ -74,6 +71,11 @@ class Sweeper:
             self.plot_param(param_name)
 
         self.save_results_markdown()
+
+    def init_metric_info(self, args: cli.ParsedArgs):
+        dataset = Trainer.init_dataset(args)
+        loss    = Trainer.init_loss(args, dataset)
+        self.metric_info = loss.metric_info()
 
     def init_name(self, args: cli.ParsedArgs):
         original_args = {k: args.get_value(k) for k in self.params.keys()}
