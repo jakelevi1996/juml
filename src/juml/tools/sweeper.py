@@ -245,14 +245,14 @@ class Sweeper:
             table.update(k="`--%s`" % name, v=md.code(val))
 
         best_config_sweep = self.experiments.sweep_seeds(self.best)
-        mean_best   = best_config_sweep.results_mean()
-        mean_all    =  self.experiments.results_mean()
+        mean_best = best_config_sweep.results_mean()
+        mean_all = self.experiments.results_mean()
         table.update(k="Mean (best params)",    v=md.code(mean_best))
         table.update(k="Mean (all)",            v=md.code(mean_all))
 
         if len(self.seeds) >= 2:
-            std_best    = best_config_sweep.results_std()
-            std_all     =  self.experiments.results_std()
+            std_best = best_config_sweep.results_std()
+            std_all = self.experiments.results_std()
             table.update(k="STD (best params)", v=md.code(std_best))
             table.update(k="STD (all)",         v=md.code(std_all))
 
