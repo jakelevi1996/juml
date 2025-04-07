@@ -52,7 +52,7 @@ def test_sweep(num_processes: int):
     assert sweeper.name == (
         "dLi5o7te200tr200ts0.0x0.0lMmLeIpItBb100e2,3lCle1E-05oAol0.001s11,2"
     )
-    assert len(sweeper.experiment_dict) == 4
+    assert len(sweeper.experiments) == 4
 
     assert os.path.isfile(output_path)
 

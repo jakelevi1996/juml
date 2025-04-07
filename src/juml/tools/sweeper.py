@@ -150,6 +150,8 @@ class Sweeper:
             (not isinstance(v, int)) and (not isinstance(v, float))
             for v in self.params[param_name]
         )
+        log_x = (True if (param_name in self.log_x) else False)
+        log_y = self.metric_info.get("log_y", False)
         results_dict = {
             "train":    plotting.NoisyData(log_y=log_y, x_index=x_index),
             "test":     plotting.NoisyData(log_y=log_y, x_index=x_index),
@@ -163,9 +165,6 @@ class Sweeper:
             results_dict["test" ].update(val, e.metrics["test" ]["end"])
             results_dict["time" ].update(val, e.metrics["time" ])
             results_dict["size" ].update(val, e.metrics["num_params"])
-
-        log_x = (True if (param_name in self.log_x) else False)
-        log_y = self.metric_info.get("log_y", False)
 
         mp = plotting.MultiPlot(
             plotting.Subplot(
