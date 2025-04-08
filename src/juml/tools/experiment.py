@@ -1,15 +1,42 @@
+import os
 import statistics
 from jutility import util, cli
 from juml.train.base import Trainer
 
 class Experiment:
-    def __init__(self, arg_dict: dict):
+    def __init__(
+        self,
+        arg_dict:   dict,
+        model_name: (str    | None),
+        ind:        (int    | None),
+        metrics:    (dict   | None),
+        result:     (float  | None),
+    ):
         self.arg_dict   = arg_dict
         self.arg_str    = util.format_dict(arg_dict)
-        self.model_name = None
-        self.ind        = None
-        self.metrics    = None
-        self.result     = None
+        self.model_name = model_name
+        self.ind        = ind
+        self.metrics    = metrics
+        self.result     = result
+
+    @classmethod
+    def from_arg_dict(cls, arg_dict: dict):
+        return cls(
+            arg_dict=arg_dict,
+            model_name=None,
+            ind=None,
+            metrics=None,
+            result=None,
+        )
+
+    def to_dict(self) -> dict:
+        return {
+            "arg_dict":     self.arg_dict,
+            "model_name":   self.model_name,
+            "ind":          self.ind,
+            "metrics":      self.metrics,
+            "result":       self.result,
+        }
 
     def set_model_name(self, model_name: str):
         self.model_name = model_name
@@ -77,9 +104,38 @@ class ExperimentGroup:
             params=params,
             seeds=seeds,
             experiments=[
-                Experiment({k: v for k, v in c})
+                Experiment.from_arg_dict({k: v for k, v in c})
                 for c in components_list
             ],
+        )
+
+    @classmethod
+    def load(cls, sweep_name: str):
+        dir_name    = os.path.join("results", "sweep", sweep_name)
+        full_path   = util.get_full_path(
+            "experiments.json",
+            dir_name=dir_name,
+            loading=True,
+        )
+        eg_dict = util.load_json(full_path)
+        return cls(
+            params=eg_dict["params"],
+            seeds=eg_dict["seeds"],
+            experiments=[
+                Experiment(**ed)
+                for ed in eg_dict["experiments"]
+            ],
+        )
+
+    def save(self, output_dir: str):
+        util.save_json(
+            {
+                "params":       self.params,
+                "seeds":        self.seeds,
+                "experiments":  [e.to_dict() for e in self.experiment_list],
+            },
+            "experiments",
+            dir_name=output_dir,
         )
 
     def load_results(self, args: cli.ParsedArgs, targets: list[str]):

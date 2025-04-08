@@ -71,6 +71,7 @@ class Sweeper:
             self.plot_param(param_name)
 
         self.save_results_markdown()
+        self.experiments.save(self.output_dir)
 
     def init_metric_info(self, args: cli.ParsedArgs):
         dataset = Trainer.init_dataset(args)
