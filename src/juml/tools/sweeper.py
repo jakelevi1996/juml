@@ -152,64 +152,62 @@ class Sweeper:
         )
         log_x = (True if (param_name in self.log_x) else False)
         log_y = self.metric_info.get("log_y", False)
-        results_dict = {
-            "train":    plotting.NoisyData(log_y=log_y, x_index=x_index),
-            "test":     plotting.NoisyData(log_y=log_y, x_index=x_index),
-            "time":     plotting.NoisyData(log_y=True,  x_index=x_index),
-            "size":     plotting.NoisyData(log_y=True,  x_index=x_index),
-        }
+        results_train   = plotting.NoisyData(log_y=log_y, x_index=x_index)
+        results_test    = plotting.NoisyData(log_y=log_y, x_index=x_index)
+        results_time    = plotting.NoisyData(log_y=True,  x_index=x_index)
+        results_size    = plotting.NoisyData(log_y=True,  x_index=x_index)
 
         for e in self.experiments.sweep_param(self.best, param_name):
             val = e.arg_dict[param_name]
-            results_dict["train"].update(val, e.metrics["train"]["end"])
-            results_dict["test" ].update(val, e.metrics["test" ]["end"])
-            results_dict["time" ].update(val, e.metrics["time" ])
-            results_dict["size" ].update(val, e.metrics["num_params"])
+            results_train.update(val,   e.metrics["train"][self.opt_str])
+            results_test.update(val,    e.metrics["test" ][self.opt_str])
+            results_time.update(val,    e.metrics["time" ])
+            results_size.update(val,    e.metrics["num_params"])
 
         mp = plotting.MultiPlot(
             plotting.Subplot(
-                results_dict["train"].plot(),
-                results_dict["train"].plot_best(
+                results_train.plot(),
+                results_train.plot_best(
                     maximise=self.maximise,
                     label_fmt="(%s, %.5f)",
                 ),
                 plotting.Legend(),
-                **results_dict["train"].get_xtick_kwargs(),
+                **results_train.get_xtick_kwargs(),
                 **self.metric_info,
                 xlabel=param_name,
                 log_x=log_x,
-                title="Final train metric",
+                title="Best train metric",
             ),
             plotting.Subplot(
-                results_dict["test"].plot(),
-                results_dict["test"].plot_best(
+                results_test.plot(),
+                results_test.plot_best(
                     maximise=self.maximise,
                     label_fmt="(%s, %.5f)",
                 ),
                 plotting.Legend(),
-                **results_dict["test"].get_xtick_kwargs(),
+                **results_test.get_xtick_kwargs(),
                 **self.metric_info,
                 xlabel=param_name,
                 log_x=log_x,
-                title="Final test metric",
+                title="Best test metric",
             ),
             plotting.Subplot(
-                results_dict["time"].plot(),
-                **results_dict["time"].get_xtick_kwargs(),
+                results_time.plot(),
+                **results_time.get_xtick_kwargs(),
                 xlabel=param_name,
                 log_x=log_x,
                 log_y=True,
                 ylabel="Time (s)",
-                title="Time",
+                title="Training duration",
             ),
             plotting.Subplot(
-                results_dict["size"].plot(),
-                **results_dict["size"].get_xtick_kwargs(),
+                results_size.plot(),
+                **results_size.get_xtick_kwargs(),
                 xlabel=param_name,
                 log_x=log_x,
                 log_y=True,
                 ylabel="Number of parameters",
-                title="Number of parameters",
+                title="Model size",
             ),
             title="%s\n%r" % (param_name, self.params[param_name]),
             title_font_size=15,
