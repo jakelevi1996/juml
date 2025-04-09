@@ -19,6 +19,9 @@ class Loss:
     def metric_info(self) -> dict:
         return self.info()
 
+    def metric_higher_is_better(self) -> bool:
+        return False
+
     def metric(
         self,
         model:          torch.nn.Module,

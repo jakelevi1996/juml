@@ -13,3 +13,6 @@ class CrossEntropy(Loss):
 
     def metric_info(self):
         return {"ylabel": "Accuracy", "ylim": [0, 1]}
+
+    def metric_higher_is_better(self) -> bool:
+        return True

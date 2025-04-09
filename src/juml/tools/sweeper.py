@@ -13,7 +13,6 @@ class Sweeper:
         devices:        list[list[int]],
         seeds:          list[int],
         target_metric:  str,
-        maximise:       bool,
         no_cache:       bool,
         log_x:          list[str],
         configs:        list[str],
@@ -27,7 +26,6 @@ class Sweeper:
         self.seeds          = seeds
         self.target_str     = target_metric
         self.target_list    = target_metric.split(".")
-        self.maximise       = maximise
         self.log_x          = log_x
         self.experiments    = ExperimentGroup.from_params(params, seeds)
         self.init_metric_info(args)
@@ -76,7 +74,8 @@ class Sweeper:
     def init_metric_info(self, args: cli.ParsedArgs):
         dataset = Trainer.init_dataset(args)
         loss    = Trainer.init_loss(args, dataset)
-        self.metric_info = loss.metric_info()
+        self.metric_info    = loss.metric_info()
+        self.maximise       = loss.metric_higher_is_better()
 
     def init_name(self, args: cli.ParsedArgs):
         original_args = {k: args.get_value(k) for k in self.params.keys()}
@@ -348,7 +347,6 @@ class Sweeper:
                 default=list(range(5)),
             ),
             cli.Arg("target_metric",    type=str, default="test.min"),
-            cli.Arg("maximise",         action="store_true"),
             cli.Arg("no_cache",         action="store_true"),
             cli.Arg("log_x",            type=str, default=[], nargs="+"),
         ]
