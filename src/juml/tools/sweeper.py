@@ -245,6 +245,8 @@ class Sweeper:
         for name, val in self.best.arg_dict.items():
             table.update(k="`--%s`" % name, v=md.code(val))
 
+        md.heading("Statistics")
+        table = util.Table.key_value(md)
         best_config_sweep = self.experiments.sweep_seeds(self.best)
         mean_best = best_config_sweep.results_mean()
         mean_all = self.experiments.results_mean()
