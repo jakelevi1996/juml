@@ -247,14 +247,14 @@ class Sweeper:
         best_config_sweep = self.experiments.sweep_seeds(self.best)
         mean_best = best_config_sweep.results_mean()
         mean_all = self.experiments.results_mean()
-        table.update(k="Mean (best params)",    v=md.code(mean_best))
-        table.update(k="Mean (all)",            v=md.code(mean_all))
+        table.update(k="Mean (best params)",    v="%.5f" % mean_best)
+        table.update(k="Mean (all)",            v="%.5f" % mean_all)
 
         if len(self.seeds) >= 2:
             std_best = best_config_sweep.results_std()
             std_all = self.experiments.results_std()
-            table.update(k="STD (best params)", v=md.code(std_best))
-            table.update(k="STD (all)",         v=md.code(std_all))
+            table.update(k="STD (best params)", v="%.5f" % std_best)
+            table.update(k="STD (all)",         v="%.5f" % std_all)
 
         md.heading("Sweep configuration")
         table = util.Table.key_value(md)
