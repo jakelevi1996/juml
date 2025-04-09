@@ -84,7 +84,6 @@ class ExperimentGroup:
         self.seeds              = seeds
         self.experiment_list    = experiments
         self.experiment_dict    = {e.arg_str: e for e in experiments}
-        self.results            = [e.result     for e in experiments]
 
     @classmethod
     def from_params(
@@ -142,8 +141,6 @@ class ExperimentGroup:
         for e in self.experiment_list:
             e.load_result(args, targets)
 
-        self.results = [e.result for e in self.experiment_list]
-
     def sweep_seeds(
         self,
         root_experiment: Experiment,
@@ -189,11 +186,14 @@ class ExperimentGroup:
             experiments=experiment_list,
         )
 
+    def get_results(self) -> list[float | None]:
+        return [e.result for e in self.experiment_list]
+
     def results_mean(self) -> float:
-        return statistics.mean(self.results)
+        return statistics.mean(self.get_results())
 
     def results_std(self) -> float:
-        return statistics.stdev(self.results)
+        return statistics.stdev(self.get_results())
 
     def __iter__(self):
         return iter(self.experiment_list)
