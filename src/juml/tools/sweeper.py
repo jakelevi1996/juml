@@ -295,15 +295,10 @@ class Sweeper:
             os.path.join(self.best_model_dir, "metrics.json"),
             *self.plot_paths,
         )
-        rm_path = os.path.relpath("README.md", self.output_dir)
-
-        md.heading("%s include" % md.make_link(rm_path, "`README.md`"))
-        md("```md")
-        md.file_link(md.get_filename(), "`[ full_sweep_results ]`")
-        for full_path in self.plot_paths:
-            md.image(full_path)
-
-        md("\n```")
+        md.readme_include(
+            "`[ full_sweep_results ]`",
+            *self.plot_paths,
+        )
 
         md.heading("`sweep` command", end="\n")
         md.code_block(util.get_argv_str())
