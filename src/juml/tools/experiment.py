@@ -44,7 +44,7 @@ class Experiment:
     def set_ind(self, ind: int):
         self.ind = ind
 
-    def load_result(self, args: cli.ParsedArgs, targets: list[str]):
+    def load_result(self, args: cli.ParsedArgs, key: str):
         if self.result is not None:
             raise ValueError(
                 "%r already has result=%s"
@@ -52,20 +52,14 @@ class Experiment:
             )
 
         args.update(self.arg_dict)
-        self.metrics = util.load_json(Trainer.get_metrics_path(args))
+        self.metrics    = util.load_json(Trainer.get_metrics_path(args))
+        self.result     = self.metrics["test"][key]
 
-        metric = self.metrics
-        for key in targets:
-            metric = metric[key]
-
-        result = metric
-        if not isinstance(result, float):
+        if not isinstance(self.result, float):
             raise ValueError(
-                "Target %s in metrics %s has type %s, expected `float`"
-                % (targets, self.metrics, type(result))
+                "metrics['test'][%r] = %s has type `%s`, expected `float`"
+                % (key, self.result, type(self.result).__name__)
             )
-
-        self.result = result
 
     def __repr__(self) -> str:
         return util.format_type(type(self), **self.arg_dict)
@@ -137,9 +131,9 @@ class ExperimentGroup:
             dir_name=output_dir,
         )
 
-    def load_results(self, args: cli.ParsedArgs, targets: list[str]):
+    def load_results(self, args: cli.ParsedArgs, key: str):
         for e in self.experiment_list:
-            e.load_result(args, targets)
+            e.load_result(args, key)
 
     def sweep_seeds(
         self,

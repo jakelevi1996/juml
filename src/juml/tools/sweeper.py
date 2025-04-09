@@ -8,14 +8,13 @@ from juml.tools.experiment import ExperimentGroup
 class Sweeper:
     def __init__(
         self,
-        args:           cli.ParsedArgs,
-        params:         dict[str, list],
-        devices:        list[list[int]],
-        seeds:          list[int],
-        target_metric:  str,
-        no_cache:       bool,
-        log_x:          list[str],
-        configs:        list[str],
+        args:       cli.ParsedArgs,
+        params:     dict[str, list],
+        devices:    list[list[int]],
+        seeds:      list[int],
+        no_cache:   bool,
+        log_x:      list[str],
+        configs:    list[str],
         **train_kwargs,
     ):
         printer = util.Printer()
@@ -24,8 +23,6 @@ class Sweeper:
         Trainer.apply_configs(args, configs, list(params.keys()))
         self.params         = params
         self.seeds          = seeds
-        self.target_str     = target_metric
-        self.target_list    = target_metric.split(".")
         self.log_x          = log_x
         self.experiments    = ExperimentGroup.from_params(params, seeds)
         self.init_metric_info(args)
@@ -54,7 +51,7 @@ class Sweeper:
 
         printer.heading("Sweeper: display results")
 
-        self.experiments.load_results(args, self.target_list)
+        self.experiments.load_results(args, self.opt_str)
         self.best = (
             max(self.experiments)
             if self.maximise else
@@ -76,6 +73,7 @@ class Sweeper:
         loss    = Trainer.init_loss(args, dataset)
         self.metric_info    = loss.metric_info()
         self.maximise       = loss.metric_higher_is_better()
+        self.opt_str        = "max" if self.maximise else "min"
 
     def init_name(self, args: cli.ParsedArgs):
         original_args = {k: args.get_value(k) for k in self.params.keys()}
@@ -226,18 +224,18 @@ class Sweeper:
 
         md.heading("Summary")
         table = util.Table.key_value(printer=md)
-        table.update(k="`# experiments`",   v=md.code(len(self.experiments)))
-        table.update(k="Target metric",     v=md.code(self.target_str))
-        table.update(k="Best result",       v=md.code(self.best.result))
+        table.update(k="`#` experiments",   v=len(self.experiments))
+        table.update(k="Best result",       v="%.5f" % self.best.result)
+        table.update(k="Target metric",     v="`test.%s`" % self.opt_str)
         table.update(k="Best params/seed",  v=md.code(self.best.arg_str))
 
         for name, metric in [
-            ("Model",                   "repr_model"),
-            ("Model name",              "model_name"),
-            ("Train metrics",           "train_summary"),
-            ("Test metrics",            "test_summary"),
-            ("Training duration",       "time_str"),
-            ("Number of parameters",    "num_params"),
+            ("Model",               "repr_model"),
+            ("Model name",          "model_name"),
+            ("Train metrics",       "train_summary"),
+            ("Test metrics",        "test_summary"),
+            ("Training duration",   "time_str"),
+            ("`#` parameters",      "num_params"),
         ]:
             table.update(k=name, v=md.code(self.best.metrics[metric]))
 
@@ -280,12 +278,12 @@ class Sweeper:
         md.heading("All results")
         table = util.Table(
             util.Column("rank",     "i",    width=-10),
-            util.Column("metric",   ".5f",  title=md.code(self.target_str)),
-            util.Column("seed",     "i",    title="`seed`"),
+            util.Column("result",   ".5f",  title="`test.%s`" % self.opt_str),
             *[
                 util.Column(param_name, title=md.code(param_name))
                 for param_name in self.params.keys()
             ],
+            util.Column("seed", "i", title="`seed`"),
             util.Column("model_name"),
             printer=md,
         )
@@ -293,7 +291,7 @@ class Sweeper:
         for i, e in enumerate(sorted_experiments, start=1):
             table.update(
                 rank=i,
-                metric=e.result,
+                result=e.result,
                 model_name=md.code(e.model_name),
                 **e.arg_dict,
             )
@@ -346,9 +344,8 @@ class Sweeper:
                 nargs="+",
                 default=list(range(5)),
             ),
-            cli.Arg("target_metric",    type=str, default="test.min"),
-            cli.Arg("no_cache",         action="store_true"),
-            cli.Arg("log_x",            type=str, default=[], nargs="+"),
+            cli.Arg("no_cache", action="store_true"),
+            cli.Arg("log_x",    type=str, default=[], nargs="+"),
         ]
 
 def sweeper_subprocess(
