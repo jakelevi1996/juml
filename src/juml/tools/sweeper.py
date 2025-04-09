@@ -283,10 +283,12 @@ class Sweeper:
         )
         sorted_experiments = sorted(self.experiments, reverse=self.maximise)
         for i, e in enumerate(sorted_experiments, start=1):
+            metrics_png = os.path.join(e.metrics["model_dir"], "metrics.png")
+            metrics_rel = os.path.relpath(metrics_png, self.output_dir)
             table.update(
                 rank=i,
                 result=e.result,
-                model_name=md.code(e.model_name),
+                model_name="[`%s`](%s)" % (e.model_name, metrics_rel),
                 **e.arg_dict,
             )
 
