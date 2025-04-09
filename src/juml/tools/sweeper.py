@@ -58,9 +58,8 @@ class Sweeper:
             min(self.experiments)
         )
 
-        best_model_dir      = self.best.metrics["model_dir"]
-        best_metrics_png    = os.path.join(best_model_dir, "metrics.png")
-        self.plot_paths     = [best_metrics_png]
+        self.best_model_dir = self.best.metrics["model_dir"]
+        self.plot_paths = [os.path.join(self.best_model_dir, "metrics.png")]
 
         for param_name in self.params.keys():
             self.plot_param(param_name)
@@ -263,15 +262,12 @@ class Sweeper:
 
         md.heading("Metrics", end="\n")
         best_metrics_json = os.path.join(
-            os.path.relpath(self.best.metrics["model_dir"], self.output_dir),
+            os.path.relpath(self.best_model_dir, self.output_dir),
             "metrics.json",
         )
         md.file_link(best_metrics_json, "Best metrics (JSON)")
-        git_add_images = []
         for full_path in self.plot_paths:
-            rel_path = os.path.relpath(full_path, self.output_dir)
-            md.image(rel_path)
-            git_add_images.append("git add -f %s" % rel_path)
+            md.image(os.path.relpath(full_path, self.output_dir))
 
         md.heading("All results")
         table = util.Table(
@@ -294,13 +290,10 @@ class Sweeper:
                 **e.arg_dict,
             )
 
-        md.heading("`git add`", end="\n")
-        md.code_block(
-            "\ncd %s"       % self.output_dir,
-            "git add -f %s" % "results.md",
-            "git add -f %s" % best_metrics_json,
-            *git_add_images,
-            "cd %s\n" % os.path.relpath(os.getcwd(), self.output_dir),
+        md.git_add(
+            md.get_filename(),
+            os.path.join(self.best_model_dir, "metrics.json"),
+            *self.plot_paths,
         )
         rm_path = os.path.relpath("README.md", self.output_dir)
 
