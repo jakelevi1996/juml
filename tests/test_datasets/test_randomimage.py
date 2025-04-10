@@ -3,24 +3,23 @@ import torch.utils.data
 from jutility import util
 import juml
 
-OUTPUT_DIR = juml.test_utils.get_output_dir("test_datasets/test_randomimage")
+OUTPUT_DIR = juml.test_utils.get_output_dir("test_datasets/test_randimg")
 
-def test_randomimage():
-    printer = util.Printer("test_randomimage", dir_name=OUTPUT_DIR)
-    juml.test_utils.set_torch_seed("test_randomimage")
+def test_randomclassification():
+    printer = util.Printer("test_randomclassification", dir_name=OUTPUT_DIR)
+    juml.test_utils.set_torch_seed("test_randomclassification")
 
     input_shape = [7, 26, 32]
     num_classes = 13
     num_train   = 123
     num_test    = 456
-    dataset = juml.datasets.RandomImage(
+    dataset = juml.datasets.RandomClassification(
         input_shape=input_shape,
         output_shape=[num_classes],
         train=num_train,
         test=num_test,
-        output_float=False,
     )
-    assert repr(dataset) == "RandomImage(n_train=123, n_test=456)"
+    assert repr(dataset) == "RandomClassification(n_train=123, n_test=456)"
     assert dataset.get_input_shape()    == input_shape
     assert dataset.get_output_shape()   == [num_classes]
     assert dataset.get_default_loss()   is juml.loss.CrossEntropy
@@ -53,22 +52,21 @@ def test_randomimage():
     assert t.max().item() == num_classes - 1
     assert t.min().item() == 0
 
-def test_randomimage_output_float():
-    printer = util.Printer("test_randomimage", dir_name=OUTPUT_DIR)
-    juml.test_utils.set_torch_seed("test_randomimage")
+def test_randomregression():
+    printer = util.Printer("test_randomregression", dir_name=OUTPUT_DIR)
+    juml.test_utils.set_torch_seed("test_randomregression")
 
     input_shape     = [7, 26, 32]
     output_shape    = [13, 19]
     num_train       = 123
     num_test        = 456
-    dataset = juml.datasets.RandomImage(
+    dataset = juml.datasets.RandomRegression(
         input_shape=input_shape,
         output_shape=output_shape,
         train=num_train,
         test=num_test,
-        output_float=True,
     )
-    assert repr(dataset) == "RandomImage(n_train=123, n_test=456)"
+    assert repr(dataset) == "RandomRegression(n_train=123, n_test=456)"
     assert dataset.get_input_shape()    == input_shape
     assert dataset.get_output_shape()   == output_shape
     assert dataset.get_default_loss()   is juml.loss.Mse

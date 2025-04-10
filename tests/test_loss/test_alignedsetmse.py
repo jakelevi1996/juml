@@ -44,10 +44,9 @@ def test_alignedsetmse_cli():
     args_str = (
         "train "
         "--loss AlignedSetMse "
-        "--dataset RandomImage "
-        "--dataset.RandomImage.input_shape 19 11 "
-        "--dataset.RandomImage.output_shape 19 13 "
-        "--dataset.RandomImage.output_float "
+        "--dataset RandomRegression "
+        "--dataset.RandomRegression.input_shape 19 11 "
+        "--dataset.RandomRegression.output_shape 19 13 "
         "--model RzMlp "
         "--model.RzMlp.model_dim 7 "
         "--model.RzMlp.depth 2 "

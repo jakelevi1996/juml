@@ -45,9 +45,8 @@ def test_chamfermse_cli():
     args_str = (
         "train "
         "--loss ChamferMse "
-        "--dataset RandomImage "
-        "--dataset.RandomImage.output_shape 19 13 "
-        "--dataset.RandomImage.output_float "
+        "--dataset RandomRegression "
+        "--dataset.RandomRegression.output_shape 19 13 "
         "--model RzCnn "
         "--model.RzCnn.model_dim 7 "
         "--model.RzCnn.num_stages 2 "

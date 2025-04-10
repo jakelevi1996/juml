@@ -37,7 +37,7 @@ def test_crossentropy_cli():
     parser  = juml.base.Framework.get_parser()
     args_str = (
         "train "
-        "--dataset RandomImage "
+        "--dataset RandomClassification "
         "--model RzCnn "
         "--model.RzCnn.model_dim 7 "
         "--model.RzCnn.num_stages 2 "

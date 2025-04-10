@@ -31,7 +31,7 @@ def test_plotconfusionmatrix():
         "--model.Mlp.depth 1 "
         "--model.Mlp.embedder Flatten "
         "--model.Mlp.embedder.Flatten.n 3 "
-        "--dataset RandomImage "
+        "--dataset RandomClassification "
         "--model_name test_commands_test_plotconfusionmatrix_model"
     )
     args = parser.parse_args(args_str.split())

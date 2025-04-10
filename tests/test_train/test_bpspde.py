@@ -20,8 +20,8 @@ def test_bpspde():
         "--model.Mlp.depth 1 "
         "--model.Mlp.embedder Flatten "
         "--model.Mlp.embedder.Flatten.n 3 "
-        "--dataset RandomImage "
-        "--dataset.RandomImage.train 200 "
+        "--dataset RandomClassification "
+        "--dataset.RandomClassification.train 200 "
     )
     args = parser.parse_args(args_str.split())
     command = args.get_command()
@@ -32,7 +32,7 @@ def test_bpspde():
     printer(trainer.table)
     assert isinstance(trainer,          juml.train.BpSpDe)
     assert isinstance(trainer.model,    juml.models.Mlp)
-    assert isinstance(trainer.dataset,  juml.datasets.RandomImage)
+    assert isinstance(trainer.dataset,  juml.datasets.RandomClassification)
     assert isinstance(trainer.loss,     juml.loss.CrossEntropy)
     assert isinstance(trainer.table,    util.Table)
 
