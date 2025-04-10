@@ -35,7 +35,8 @@ class SinMix(Synthetic):
         t_no = z_nh @ self.w2_ho + self.b2_o
         return t_no
 
-    def get_default_loss(self) -> type[Loss] | None:
+    @classmethod
+    def get_default_loss(cls) -> type[Loss] | None:
         return Mse
 
     @classmethod

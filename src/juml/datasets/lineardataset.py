@@ -30,7 +30,8 @@ class LinearDataset(Synthetic):
         t_no = x_ni @ self.w_io + self.b_o
         return t_no
 
-    def get_default_loss(self) -> type[Loss] | None:
+    @classmethod
+    def get_default_loss(cls) -> type[Loss] | None:
         return Mse
 
     @classmethod

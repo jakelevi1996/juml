@@ -51,7 +51,8 @@ class Dataset:
     def get_output_shape(self) -> list[int]:
         raise NotImplementedError()
 
-    def get_default_loss(self) -> type[Loss] | None:
+    @classmethod
+    def get_default_loss(cls) -> type[Loss] | None:
         return None
 
     def get_loss_weights(self) -> torch.Tensor:

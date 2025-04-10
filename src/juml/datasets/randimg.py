@@ -40,7 +40,8 @@ class RandomImage(Synthetic):
             n=n,
         )
 
-    def get_default_loss(self) -> type[Loss] | None:
+    @classmethod
+    def get_default_loss(cls) -> type[Loss] | None:
         return Mse if self._output_float else CrossEntropy
 
     @classmethod

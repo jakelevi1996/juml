@@ -28,5 +28,6 @@ class Cifar10(DatasetFromDict):
     def get_output_shape(self) -> list[int]:
         return [10]
 
-    def get_default_loss(self) -> type[Loss] | None:
+    @classmethod
+    def get_default_loss(cls) -> type[Loss] | None:
         return CrossEntropy
