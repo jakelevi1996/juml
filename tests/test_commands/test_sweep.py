@@ -53,6 +53,8 @@ def test_sweep(num_processes: int):
         "dLi5o7te200tr200ts0.0x0.0lMmLeIpItBb100e2,3lCle1E-05oAol0.001s11,2"
     )
     assert len(sweeper.experiments) == 4
+    assert sweeper.best.arg_str == min(sweeper.experiments).arg_str
+    assert sweeper.best.arg_str == util.format_dict(sweeper.best.arg_dict)
 
     assert os.path.isfile(output_path)
 
