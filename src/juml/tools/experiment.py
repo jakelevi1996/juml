@@ -175,7 +175,7 @@ class ExperimentGroup:
         root_dict[param_name]   = root_val
         root_dict["seed"]       = root_seed
         return ExperimentGroup(
-            params=dict(),
+            params={param_name: self.params[param_name]},
             seeds=self.seeds,
             experiments=experiment_list,
         )
