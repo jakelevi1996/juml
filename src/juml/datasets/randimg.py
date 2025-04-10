@@ -6,16 +6,14 @@ from juml.loss.base import Loss
 from juml.loss.mse import Mse
 from juml.loss.crossentropy import CrossEntropy
 
-class RandomImage(Synthetic):
+class RandomClassification(Synthetic):
     def __init__(
         self,
         input_shape:    list[int],
         output_shape:   list[int],
         train:          int,
         test:           int,
-        output_float:   bool
     ):
-        self._output_float = output_float
         self._init_synthetic(
             input_shape=input_shape,
             output_shape=output_shape,
@@ -28,21 +26,17 @@ class RandomImage(Synthetic):
     def _make_split(self, n: int) -> DataSplit:
         return DataSplit(
             x=torch.rand([n, *self._input_shape]),
-            t=(
-                torch.rand([n, *self._output_shape])
-                if self._output_float else
-                torch.randint(
-                    low=0,
-                    high=self._output_shape[-1],
-                    size=[n, *self._output_shape[:-1]],
-                )
+            t=torch.randint(
+                low=0,
+                high=self._output_shape[-1],
+                size=[n, *self._output_shape[:-1]],
             ),
             n=n,
         )
 
     @classmethod
     def get_default_loss(cls) -> type[Loss] | None:
-        return Mse if self._output_float else CrossEntropy
+        return CrossEntropy
 
     @classmethod
     def get_cli_arg(cls):
@@ -52,5 +46,16 @@ class RandomImage(Synthetic):
             cli.Arg("output_shape", type=int, nargs="+", default=[10]),
             cli.Arg("train",        type=int, default=200),
             cli.Arg("test",         type=int, default=200),
-            cli.Arg("output_float", action="store_true", tag="f"),
         )
+
+class RandomRegression(RandomClassification):
+    def _make_split(self, n: int) -> DataSplit:
+        return DataSplit(
+            x=torch.rand([n, *self._input_shape]),
+            t=torch.rand([n, *self._output_shape]),
+            n=n,
+        )
+
+    @classmethod
+    def get_default_loss(cls) -> type[Loss] | None:
+        return Mse
