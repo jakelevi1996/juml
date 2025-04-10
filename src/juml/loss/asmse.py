@@ -10,5 +10,6 @@ class AlignedSetMse(Mse):
         e_npo = self.weights * (y_npo - t_npo)
         return e_npo.square().mean(dim=-2).sum().item()
 
-    def needs_weights(self) -> bool:
+    @classmethod
+    def needs_weights(cls) -> bool:
         return True

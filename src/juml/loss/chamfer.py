@@ -16,9 +16,6 @@ class ChamferMse(Loss):
         mse_np, mse_nq = self.chamfer_components(y, t)
         return mse_np.mean() + mse_nq.mean()
 
-    def info(self):
-        return {"ylabel": "Chamfer MSE", "log_y": True}
-
     def metric_batch(self, y, t):
         mse_np, mse_nq = self.chamfer_components(y, t)
         return (
@@ -26,7 +23,12 @@ class ChamferMse(Loss):
             mse_nq.mean(dim=-1).sum().item()
         )
 
-    def needs_weights(self) -> bool:
+    @classmethod
+    def info(cls):
+        return {"ylabel": "Chamfer MSE", "log_y": True}
+
+    @classmethod
+    def needs_weights(cls) -> bool:
         return True
 
     @classmethod

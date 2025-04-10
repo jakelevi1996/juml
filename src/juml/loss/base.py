@@ -10,16 +10,19 @@ class Loss:
     def forward(self, y: torch.Tensor, t: torch.Tensor) -> torch.Tensor:
         raise NotImplementedError()
 
-    def info(self) -> dict:
-        raise NotImplementedError()
-
     def metric_batch(self, y: torch.Tensor, t: torch.Tensor) -> float:
         raise NotImplementedError()
 
-    def metric_info(self) -> dict:
-        return self.info()
+    @classmethod
+    def info(cls) -> dict:
+        raise NotImplementedError()
 
-    def metric_higher_is_better(self) -> bool:
+    @classmethod
+    def metric_info(cls) -> dict:
+        return cls.info()
+
+    @classmethod
+    def metric_higher_is_better(cls) -> bool:
         return False
 
     def metric(
