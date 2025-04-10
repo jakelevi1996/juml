@@ -12,7 +12,11 @@ class Command(cli.SubCommand):
     def init_juml(cls, train_args: list[cli.Arg]):
         return cls(
             cls.get_name(),
-            *cls.select_train_args(train_args),
+            *[
+                arg
+                for arg in train_args
+                if  cls.include_arg(arg)
+            ],
             cli.ArgGroup(
                 cls.get_name(),
                 *cls.get_cli_options(),
@@ -24,8 +28,8 @@ class Command(cli.SubCommand):
         return cls.__name__.lower()
 
     @classmethod
-    def select_train_args(cls, train_args: list[cli.Arg]) -> list[cli.Arg]:
-        return train_args
+    def include_arg(cls, arg: cli.Arg) -> bool:
+        return True
 
     @classmethod
     def get_cli_options(cls) -> list[cli.Arg]:

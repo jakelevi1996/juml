@@ -15,12 +15,8 @@ class Sweep(Command):
         )
 
     @classmethod
-    def select_train_args(cls, train_args: list[cli.Arg]) -> list[cli.Arg]:
-        return [
-            arg
-            for arg in train_args
-            if  arg.name != "devices"
-        ]
+    def include_arg(cls, arg: cli.Arg) -> bool:
+        return True if (arg.name != "devices") else False
 
     @classmethod
     def get_cli_options(cls) -> list[cli.Arg]:
