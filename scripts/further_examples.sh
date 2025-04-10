@@ -34,6 +34,11 @@ juml sweep --model LinearModel --dataset LinearDataset --dataset.LinearDataset.i
 # default value):
 juml sweep --model LinearModel --dataset LinearDataset --dataset.LinearDataset.input_dim 5 --dataset.LinearDataset.output_dim 10 --print_level 1 --Sweeper.seeds 1 2 3 --trainer.BpSp.epochs 300
 
+# It is possible to sweep over a combination of discrete (EG model type) and
+# continuous (EG learning rate and number of epochs) parameters in a single
+# command:
+juml sweep --model LinearModel --dataset LinearDataset --dataset.LinearDataset.input_dim 5 --dataset.LinearDataset.output_dim 10 --print_level 1 --sweep.seeds 1 2 3 --sweep.params '{"trainer.BpSp.epochs":[100,200,300],"trainer.BpSp.optimiser.Adam.lr":[1e-5,1e-4,1e-3,1e-2],"model":["Mlp", "RzMlp"]}' --sweep.log_x trainer.BpSp.optimiser.Adam.lr
+
 # To run data efficiency experiments, use `--trainer BpSpDe`, where
 # `--trainer.BpSpDe.steps 600` specifies the total number of gradient steps,
 # and `--trainer.BpSpDe.n_train 200` specifies the size of the subset of
