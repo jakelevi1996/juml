@@ -180,6 +180,13 @@ class ExperimentGroup:
             experiments=experiment_list,
         )
 
+    def is_numeric(self) -> bool:
+        return all(
+            (isinstance(v, int) or isinstance(v, float))
+            for param_vals in self.params.values()
+            for v in param_vals
+        )
+
     def get_results(self) -> list[float | None]:
         return [e.result for e in self.experiment_list]
 

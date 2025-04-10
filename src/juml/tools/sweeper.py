@@ -145,10 +145,9 @@ class Sweeper:
             p.join()
 
     def plot_param(self, param_name: str):
-        x_index = any(
-            (not isinstance(v, int)) and (not isinstance(v, float))
-            for v in self.params[param_name]
-        )
+        sweep = self.experiments.sweep_param(self.best, param_name)
+
+        x_index = not sweep.is_numeric()
         log_x = (True if (param_name in self.log_x) else False)
         log_y = self.metric_info.get("log_y", False)
         results_train   = plotting.NoisyData(log_y=log_y, x_index=x_index)
@@ -156,7 +155,7 @@ class Sweeper:
         results_time    = plotting.NoisyData(log_y=True,  x_index=x_index)
         results_size    = plotting.NoisyData(log_y=True,  x_index=x_index)
 
-        for e in self.experiments.sweep_param(self.best, param_name):
+        for e in sweep:
             val = e.arg_dict[param_name]
             results_train.update(val,   e.metrics["train"][self.opt_str])
             results_test.update(val,    e.metrics["test" ][self.opt_str])
