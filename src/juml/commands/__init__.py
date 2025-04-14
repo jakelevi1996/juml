@@ -5,6 +5,7 @@ from juml.commands.profile import Profile
 from juml.commands.plot_confusion_matrix import PlotConfusionMatrix
 from juml.commands.plot_1d_regression import Plot1dRegression
 from juml.commands.plot_sequential import PlotSequential
+from juml.commands.compare_sweeps import CompareSweeps
 
 def get_all() -> list[type[Command]]:
     return [
@@ -14,4 +15,5 @@ def get_all() -> list[type[Command]]:
         PlotConfusionMatrix,
         Plot1dRegression,
         PlotSequential,
+        CompareSweeps,
     ]
