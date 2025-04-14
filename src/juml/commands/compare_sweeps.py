@@ -31,9 +31,9 @@ class CompareSweeps(Command):
             SweepSeries(
                 **c,
                 maximise=maximise,
+                log_y=log_y,
                 opt_str=opt_str,
                 colour=cp.next(),
-                log_y=log_y,
             )
             for c in config
         ]
@@ -121,16 +121,16 @@ class SweepSeries:
         sweep_name:     str,
         param_name:     str,
         maximise:       bool,
+        log_y:          bool,
         opt_str:        str,
         colour:         list[float],
-        log_y:          bool,
     ):
         self.series_name    = series_name
         self.sweep_name     = sweep_name
         self.param_name     = param_name
+        self.log_y          = log_y
         self.opt_str        = opt_str
         self.colour         = colour
-        self.log_y          = log_y
 
         eg_all              = ExperimentGroup.load(sweep_name)
         best                = max(eg_all) if maximise else min(eg_all)
