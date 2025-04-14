@@ -70,11 +70,32 @@ class CompareSweeps(Command):
                 **metric_info,
                 title="Best test metric",
             ),
+            plotting.Subplot(
+                *[
+                    s.plot(x_index, TimeGetter())
+                    for s in series
+                ],
+                **axis_kwargs,
+                log_y=True,
+                ylabel="Time (s)",
+                title="Training duration",
+            ),
+            plotting.Subplot(
+                *[
+                    s.plot(x_index, SizeGetter())
+                    for s in series
+                ],
+                **axis_kwargs,
+                log_y=True,
+                ylabel="Number of parameters",
+                title="Model size",
+            ),
             legend=plotting.FigureLegend(
                 *[s.get_legend_plottable() for s in series],
                 num_rows=None,
-                loc="outside center right",
-            )
+                loc="outside right upper",
+            ),
+            figsize=[10, 8],
         )
         mp.save("metrics", self.output_dir)
 
@@ -86,6 +107,7 @@ class CompareSweeps(Command):
         md.readme_include("`[ compare_sweeps ]`", mp.full_path)
         md.heading("`comparesweeps` command", end="\n")
         md.code_block(util.get_argv_str())
+        md.flush()
 
         return mp
 
