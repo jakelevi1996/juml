@@ -51,8 +51,6 @@ class CompareSweeps(Command):
         axis_kwargs = {"xlabel": xlabel, "log_x": log_x}
         axis_kwargs.update(xtick_config.get_xtick_kwargs())
 
-        ...
-
         mp = plotting.MultiPlot(
             plotting.Subplot(
                 *[
@@ -168,40 +166,3 @@ class TimeGetter(MetricGetter):
 class SizeGetter(MetricGetter):
     def get(self, e: Experiment, s: SweepSeries) -> float:
         return e.metrics["num_params"]
-
-
-# ...
-
-# class ResultsPlotter:
-#     def __init__(self, log_y: bool, x_index: bool):
-#         self.log_y      = log_y
-#         self.x_index    = x_index
-
-#     def plot(self, s: SweepSeries) -> plotting.Plottable:
-#         nd = plotting.NoisyData(log_y=self.log_y, x_index=self.x_index)
-#         for e in s.experiments:
-#             nd.update(self.get_x(s, e), self.get_y(s, e))
-
-#         return nd.plot()
-
-#     def get_x(self, s: SweepSeries, e: Experiment) -> float:
-#         return e.arg_dict[s.param_name]
-
-#     def get_y(self, s: SweepSeries, e: Experiment) -> float:
-#         raise NotImplementedError()
-
-# class TrainPlotter(ResultsPlotter):
-#     def get_y(self, s: SweepSeries, e: Experiment) -> float:
-#         return e.metrics["train"][s.opt_str]
-
-# class TestPlotter(ResultsPlotter):
-#     def get_y(self, s: SweepSeries, e: Experiment) -> float:
-#         return e.metrics["test"][s.opt_str]
-
-# class TimePlotter(ResultsPlotter):
-#     def get_y(self, s: SweepSeries, e: Experiment) -> float:
-#         return e.metrics["time"]
-
-# class SizePlotter(ResultsPlotter):
-#     def get_y(self, s: SweepSeries, e: Experiment) -> float:
-#         return e.metrics["num_params"]
