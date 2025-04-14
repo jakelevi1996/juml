@@ -140,7 +140,7 @@ class SweepSeries:
         nd = plotting.NoisyData(log_y=self.log_y, x_index=x_index)
         for e in self.experiments:
             x = e.arg_dict[self.param_name]
-            y = mg.get(e, self)
+            y = mg.get(e.metrics, self.opt_str)
             nd.update(x, y)
 
         return nd.plot(c=self.colour)
@@ -150,21 +150,21 @@ class SweepSeries:
         return nd.plot(c=self.colour, label=self.series_name)
 
 class MetricGetter:
-    def get(self, e: Experiment, s: SweepSeries) -> float:
+    def get(self, metrics: dict, opt_str: str) -> float:
         raise NotImplementedError()
 
 class TrainGetter(MetricGetter):
-    def get(self, e: Experiment, s: SweepSeries) -> float:
-        return e.metrics["train"][s.opt_str]
+    def get(self, metrics: dict, opt_str: str) -> float:
+        return metrics["train"][opt_str]
 
 class TestGetter(MetricGetter):
-    def get(self, e: Experiment, s: SweepSeries) -> float:
-        return e.metrics["test"][s.opt_str]
+    def get(self, metrics: dict, opt_str: str) -> float:
+        return metrics["test"][opt_str]
 
 class TimeGetter(MetricGetter):
-    def get(self, e: Experiment, s: SweepSeries) -> float:
-        return e.metrics["time"]
+    def get(self, metrics: dict, opt_str: str) -> float:
+        return metrics["time"]
 
 class SizeGetter(MetricGetter):
-    def get(self, e: Experiment, s: SweepSeries) -> float:
-        return e.metrics["num_params"]
+    def get(self, metrics: dict, opt_str: str) -> float:
+        return metrics["num_params"]
