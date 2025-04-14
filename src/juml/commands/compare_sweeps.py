@@ -80,12 +80,12 @@ class CompareSweeps(Command):
         )
         mp.save("metrics", self.output_dir)
 
-        # md = util.MarkdownPrinter(...)
-        # md.title(...)
-        # md.heading(...)
-        # md.image(...)
-        # md.git_add(...)
-        # md.readme_include(...)
+        md = util.MarkdownPrinter("summary", self.output_dir)
+        md.title("Sweep comparison")
+        md.heading("Metrics")
+        md.image("metrics.png")
+        md.git_add(md.get_filename(), mp.full_path)
+        md.readme_include("`[ compare_sweeps ]`", mp.full_path)
 
         return mp
 
