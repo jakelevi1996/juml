@@ -84,6 +84,8 @@ class CompareSweeps(Command):
         md.image("metrics.png")
         md.git_add(md.get_filename(), mp.full_path)
         md.readme_include("`[ compare_sweeps ]`", mp.full_path)
+        md.heading("`comparesweeps` command", end="\n")
+        md.code_block(util.get_argv_str())
 
         return mp
 
