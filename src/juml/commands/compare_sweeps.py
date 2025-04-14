@@ -103,7 +103,22 @@ class CompareSweeps(Command):
         md.title("Sweep comparison", end="\n")
         md.heading("Metrics", end="\n")
         md.image("metrics.png")
-        md.git_add(md.get_filename(), mp.full_path)
+        md.heading("Sweeps")
+        table = util.Table.key_value(printer=md)
+        for s in series:
+                table.update(
+                    k=s.series_name,
+                    v="[`[ %s ]`](../../sweep/%s/results.md)" % (
+                        s.sweep_name,
+                        s.sweep_name,
+                    ),
+                )
+
+        md.git_add(
+            md.get_filename(),
+            mp.full_path,
+            *["results/sweep/%s/results.md" % s.sweep_name for s in series],
+        )
         md.readme_include("`[ compare_sweeps ]`", mp.full_path)
         md.heading("`comparesweeps` command", end="\n")
         md.code_block(util.get_argv_str())
