@@ -2,8 +2,6 @@ import math
 import torch
 from juml.models.base import Model
 
-TOL = 1e-5
-
 class Linear(Model):
     def __init__(
         self,
@@ -23,14 +21,19 @@ class Linear(Model):
         x_no = x_ni @ self.w_io + self.b_o
         return x_no
 
-    def init_batch(self, x: torch.Tensor, t: (torch.Tensor | None)):
+    def init_batch(
+        self,
+        x:      torch.Tensor,
+        t:      (torch.Tensor | None),
+        eps:    float=1e-5,
+    ):
         with torch.no_grad():
             self.b_o.zero_()
             if t is None:
                 x = x.flatten(0, -2)
-                self.w_io *= 1 / (TOL + x.std(-2).unsqueeze(-1))
+                self.w_io *= 1 / (eps + x.std(-2).unsqueeze(-1))
                 y = self.forward(x)
-                self.w_io *= 1 / (TOL + y.std(-2).unsqueeze(-2))
+                self.w_io *= 1 / (eps + y.std(-2).unsqueeze(-2))
                 y = self.forward(x)
                 self.b_o.copy_(-y.mean(-2))
             else:
@@ -42,6 +45,6 @@ class Linear(Model):
                 tc = t - tm
                 cov_xt_io = xc.T @ tc
                 cov_xx_ii = xc.T @ xc
-                cov_xx_ii.diagonal().add_(TOL)
+                cov_xx_ii.diagonal().add_(eps)
                 self.w_io.copy_(torch.linalg.solve(cov_xx_ii, cov_xt_io))
                 self.b_o.copy_((tm - self.forward(xm)).squeeze(-2))
