@@ -32,6 +32,9 @@ def test_average2d():
     assert y.max().item() <= 2
     assert y.min().item() >= -2
 
+    with pytest.raises(NotImplementedError):
+        pooler.unpool(y)
+
 def test_average2d_model():
     printer = util.Printer("test_average2d_model", dir_name=OUTPUT_DIR)
     juml.test_utils.set_torch_seed("test_average2d_model")

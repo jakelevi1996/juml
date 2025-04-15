@@ -100,6 +100,14 @@ def test_unflatten_different_n():
     assert torch.all(p2.forward(x.flatten(-2, -1)) == x)
     assert torch.all(p3.forward(x.flatten(-3, -1)) == x)
 
+    assert list(p1.unpool(x).shape) == [3, 4, 5, 6]
+    assert list(p2.unpool(x).shape) == [3, 4, 30]
+    assert list(p3.unpool(x).shape) == [3, 120]
+
+    assert torch.all(p1.forward(p1.unpool(x)) == x)
+    assert torch.all(p2.forward(p2.unpool(x)) == x)
+    assert torch.all(p3.forward(p3.unpool(x)) == x)
+
     assert p1.get_input_shape() == [3, 4, 5, 6]
     assert p2.get_input_shape() == [3, 4, 30]
     assert p3.get_input_shape() == [3, 120]

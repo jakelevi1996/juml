@@ -30,6 +30,10 @@ def test_identity():
 
     assert torch.all(y == x)
 
+    assert isinstance(pooler.unpool(x), torch.Tensor)
+    assert list(pooler.unpool(x).shape) == list(x.shape)
+    assert torch.all(pooler.unpool(x) == x)
+
 def test_identity_model():
     printer = util.Printer("test_identity_model", dir_name=OUTPUT_DIR)
     juml.test_utils.set_torch_seed("test_identity_model")

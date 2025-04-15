@@ -19,6 +19,9 @@ class Pooler(Model):
         input_shape = self.get_input_shape()
         return input_shape[dim]
 
+    def unpool(self, x: torch.Tensor) -> torch.Tensor:
+        raise NotImplementedError()
+
     @classmethod
     def get_cli_options(cls) -> list[cli.Arg]:
         return []
@@ -35,6 +38,9 @@ class Identity(Pooler):
         return self._output_shape
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return x
+
+    def unpool(self, x: torch.Tensor) -> torch.Tensor:
         return x
 
 class Unflatten(Pooler):
@@ -58,6 +64,9 @@ class Unflatten(Pooler):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return x.unflatten(-1, self._unflatten_shape)
+
+    def unpool(self, x: torch.Tensor) -> torch.Tensor:
+        return x.flatten(-self._n, -1)
 
     @classmethod
     def get_cli_options(cls) -> list[cli.Arg]:
