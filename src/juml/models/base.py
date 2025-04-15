@@ -8,7 +8,12 @@ class Model(torch.nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         raise NotImplementedError()
 
-    def init_batch(self, x: torch.Tensor, t: (torch.Tensor | None)):
+    def init_batch(
+        self,
+        x: torch.Tensor,
+        t: (torch.Tensor | None),
+        **kwargs,
+    ):
         return
 
     def num_params(self) -> int:
