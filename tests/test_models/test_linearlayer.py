@@ -73,6 +73,27 @@ def test_init_batch_no_target():
     assert y.mean(dim=-2).abs().max()       < 0.4
     assert (y.std(dim=-2) - 1).abs().max()  < 0.4
 
+    m.init_batch(x, None, b_std=1)
+
+    y = m.forward(x)
+    printer(y.mean(dim=-2))
+    printer(y.mean(dim=-2).std())
+    printer(y.std(dim=-2))
+    printer.hline()
+    assert y.mean(dim=-2).abs().max()       > 1
+    assert (y.mean(dim=-2).std() - 1).abs() < 0.4
+    assert (y.std(dim=-2) - 1).abs().max()  < 1e-3
+
+    x = get_x()
+    y = m.forward(x)
+    printer(y.mean(dim=-2))
+    printer(y.mean(dim=-2).std())
+    printer(y.std(dim=-2))
+    printer.hline()
+    assert y.mean(dim=-2).abs().max()       > 1
+    assert (y.mean(dim=-2).std() - 1).abs() < 0.4
+    assert (y.std(dim=-2) - 1).abs().max()  < 0.4
+
 def test_init_batch_with_target():
     printer = util.Printer("test_init_batch_with_target", dir_name=OUTPUT_DIR)
     juml.test_utils.set_torch_seed("test_init_batch_with_target")

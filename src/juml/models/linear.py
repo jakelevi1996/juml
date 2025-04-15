@@ -26,6 +26,7 @@ class Linear(Model):
         x:      torch.Tensor,
         t:      (torch.Tensor | None),
         eps:    float=1e-5,
+        b_std:  float=0.0,
     ):
         with torch.no_grad():
             self.b_o.zero_()
@@ -35,7 +36,8 @@ class Linear(Model):
                 y = self.forward(x)
                 self.w_io *= 1 / (eps + y.std(-2).unsqueeze(-2))
                 y = self.forward(x)
-                self.b_o.copy_(-y.mean(-2))
+                t = torch.normal(0, b_std, self.b_o.shape)
+                self.b_o.copy_(t - y.mean(-2))
             else:
                 x = x.flatten(0, -2)
                 t = t.flatten(0, -2)
