@@ -4,8 +4,9 @@ from juml.commands.base import Command
 from juml.train.base import Trainer
 
 class Plot1dRegression(Command):
+    @classmethod
     def run(
-        self,
+        cls,
         args:   cli.ParsedArgs,
         n_plot: int,
     ):

@@ -1,8 +1,9 @@
 from jutility import cli
 
 class Command(cli.SubCommand):
+    @classmethod
     def run(
-        self,
+        cls,
         args: cli.ParsedArgs,
         **kwargs,
     ):

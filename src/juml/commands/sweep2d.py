@@ -4,8 +4,9 @@ from juml.commands.compare_sweeps import CompareSweeps
 from juml.tools.sweeper import Sweeper
 
 class Sweep2d(Command):
+    @classmethod
     def run(
-        self,
+        cls,
         args:   cli.ParsedArgs,
         name_1: str,
         name_2: str,
@@ -28,7 +29,7 @@ class Sweep2d(Command):
         )
         kwargs["no_cache"] = False
         printer.heading("Sweep2d: Sweep %s" % name_1)
-        sweep_configs_1 = self.sweep_1d_loop(
+        sweep_configs_1 = cls.sweep_1d_loop(
             args=args,
             name_sweep=name_1,
             vals_sweep=vals_1,
@@ -37,7 +38,7 @@ class Sweep2d(Command):
             kwargs=kwargs,
         )
         printer.heading("Sweep2d: Sweep %s" % name_2)
-        sweep_configs_2 = self.sweep_1d_loop(
+        sweep_configs_2 = cls.sweep_1d_loop(
             args=args,
             name_sweep=name_2,
             vals_sweep=vals_2,

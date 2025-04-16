@@ -6,8 +6,9 @@ from juml.loss.base import Loss
 from juml.tools.experiment import Experiment, ExperimentGroup
 
 class CompareSweeps(Command):
+    @classmethod
     def run(
-        self,
+        cls,
         args:   cli.ParsedArgs,
         config: list[dict[str, str]],
         xlabel: str,
@@ -38,8 +39,8 @@ class CompareSweeps(Command):
             for c in config
         ]
 
-        self.name = util.merge_strings([s.sweep_name for s in series])
-        self.output_dir = os.path.join("results", "compare", self.name)
+        name = util.merge_strings([s.sweep_name for s in series])
+        output_dir = os.path.join("results", "compare", name)
 
         x_index = any((not s.experiments.is_numeric()) for s in series)
         xtick_config = plotting.NoisyData(x_index=x_index)
@@ -97,9 +98,9 @@ class CompareSweeps(Command):
             ),
             figsize=[10, 8],
         )
-        mp.save("metrics", self.output_dir)
+        mp.save("metrics", output_dir)
 
-        md = util.MarkdownPrinter("summary", self.output_dir)
+        md = util.MarkdownPrinter("summary", output_dir)
         md.title("Sweep comparison", end="\n")
         md.heading("Metrics", end="\n")
         md.image("metrics.png")

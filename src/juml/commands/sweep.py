@@ -3,8 +3,9 @@ from juml.commands.base import Command
 from juml.tools.sweeper import Sweeper
 
 class Sweep(Command):
+    @classmethod
     def run(
-        self,
+        cls,
         args: cli.ParsedArgs,
         **kwargs,
     ):

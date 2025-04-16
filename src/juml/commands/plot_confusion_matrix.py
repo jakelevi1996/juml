@@ -4,8 +4,9 @@ from juml.commands.base import Command
 from juml.train.base import Trainer
 
 class PlotConfusionMatrix(Command):
+    @classmethod
     def run(
-        self,
+        cls,
         args: cli.ParsedArgs,
     ):
         model_dir, model, dataset = Trainer.load(args)

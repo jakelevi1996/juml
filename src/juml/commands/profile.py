@@ -3,8 +3,9 @@ from juml.commands.base import Command
 from juml.train.profiler import Profiler
 
 class Profile(Command):
+    @classmethod
     def run(
-        self,
+        cls,
         args:           cli.ParsedArgs,
         batch_size:     int,
         num_warmup:     int,
