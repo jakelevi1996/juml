@@ -12,6 +12,7 @@ class CompareSweeps(Command):
         args:   cli.ParsedArgs,
         config: list[dict[str, str]],
         xlabel: str,
+        clabel: str,
         log_x:  bool,
     ):
         dataset_type = args.get_type("dataset")
@@ -95,6 +96,7 @@ class CompareSweeps(Command):
                 *[s.get_legend_plottable() for s in series],
                 num_rows=None,
                 loc="outside right upper",
+                title=clabel,
             ),
             figsize=[10, 8],
         )
@@ -149,6 +151,7 @@ class CompareSweeps(Command):
                 )
             ),
             cli.Arg("xlabel",   type=str, required=True),
+            cli.Arg("clabel",   type=str, required=True),
             cli.Arg("log_x",    action="store_true"),
         ]
 

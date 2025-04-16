@@ -51,6 +51,7 @@ class Sweep2d(Command):
             args=args,
             config=sweep_configs_1,
             xlabel=name_1,
+            clabel=name_2,
             log_x=(name_1 in log_x),
         )
         printer.heading("Sweep2d: Display %s" % name_2)
@@ -58,6 +59,7 @@ class Sweep2d(Command):
             args=args,
             config=sweep_configs_2,
             xlabel=name_2,
+            clabel=name_1,
             log_x=(name_2 in log_x),
         )
 
