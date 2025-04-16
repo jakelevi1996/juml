@@ -98,22 +98,22 @@ class CompareSweeps(Command):
             ),
             figsize=[10, 8],
         )
-        mp.save("metrics", output_dir)
+        mp.save(xlabel, output_dir)
 
-        md = util.MarkdownPrinter("summary", output_dir)
+        md = util.MarkdownPrinter(xlabel, output_dir)
         md.title("Sweep comparison", end="\n")
         md.heading("Metrics", end="\n")
-        md.image("metrics.png")
+        md.image("%s.png" % xlabel)
         md.heading("Sweeps")
         table = util.Table.key_value(printer=md)
         for s in series:
-                table.update(
-                    k=s.series_name,
-                    v="[`[ %s ]`](../../sweep/%s/results.md)" % (
-                        s.sweep_name,
-                        s.sweep_name,
-                    ),
-                )
+            table.update(
+                k=s.series_name,
+                v="[`[ %s ]`](../../sweep/%s/results.md)" % (
+                    s.sweep_name,
+                    s.sweep_name,
+                ),
+            )
 
         md.git_add(
             md.get_filename(),

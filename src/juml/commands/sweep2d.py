@@ -47,14 +47,14 @@ class Sweep2d(Command):
             kwargs=kwargs,
         )
         printer.heading("Sweep2d: Display %s" % name_1)
-        CompareSweeps.init_juml([]).run(
+        CompareSweeps.run(
             args=args,
             config=sweep_configs_1,
             xlabel=name_1,
             log_x=(name_1 in log_x),
         )
         printer.heading("Sweep2d: Display %s" % name_2)
-        CompareSweeps.init_juml([]).run(
+        CompareSweeps.run(
             args=args,
             config=sweep_configs_2,
             xlabel=name_2,
