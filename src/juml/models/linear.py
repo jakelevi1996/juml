@@ -43,8 +43,6 @@ class Linear(Model):
                 t = t.flatten(0, -2)
                 xm = x.mean(-2, keepdim=True)
                 tm = t.mean(-2, keepdim=True)
-                xc = x - xm
-                tc = t - tm
-                w, _, _, _ = torch.linalg.lstsq(xc, tc)
+                w, _, _, _ = torch.linalg.lstsq(x - xm, t - tm)
                 self.w_io.copy_(w)
                 self.b_o.copy_((tm - self.forward(xm)).squeeze(-2))
