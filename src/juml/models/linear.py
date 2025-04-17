@@ -45,8 +45,6 @@ class Linear(Model):
                 tm = t.mean(-2, keepdim=True)
                 xc = x - xm
                 tc = t - tm
-                cov_xt_io = xc.T @ tc
-                cov_xx_ii = xc.T @ xc
-                cov_xx_ii.diagonal().add_(eps)
-                self.w_io.copy_(torch.linalg.solve(cov_xx_ii, cov_xt_io))
+                w, _, _, _ = torch.linalg.lstsq(xc, tc)
+                self.w_io.copy_(w)
                 self.b_o.copy_((tm - self.forward(xm)).squeeze(-2))
