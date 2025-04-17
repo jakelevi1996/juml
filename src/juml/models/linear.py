@@ -45,6 +45,6 @@ class Linear(Model):
                 t = t.flatten(0, -2)
                 xm = x.mean(-2)
                 tm = t.mean(-2)
-                w, _, _, _ = torch.linalg.lstsq(x - xm, t - tm)
+                w, _, _, _ = torch.linalg.lstsq(x - xm, t - tm, rcond=0)
                 self.w_io.copy_(w)
                 self.b_o.copy_(tm - self.forward(xm))
