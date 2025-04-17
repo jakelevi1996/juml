@@ -35,8 +35,8 @@ class Linear(Model):
                 y = self.forward(x)
                 self.w_io *= 1 / (eps + y.std(-2).unsqueeze(-2))
                 y = self.forward(x)
-                y_lo = y.min(dim=-2).values
-                y_hi = y.max(dim=-2).values
+                y_lo = y.quantile(0.01, dim=-2)
+                y_hi = y.quantile(0.99, dim=-2)
                 r = torch.rand(self.b_o.shape)
                 t = y_lo + r * (y_hi - y_lo)
                 self.b_o.copy_(-t)
@@ -45,6 +45,6 @@ class Linear(Model):
                 t = t.flatten(0, -2)
                 xm = x.mean(-2)
                 tm = t.mean(-2)
-                w, _, _, _ = torch.linalg.lstsq(x - xm, t - tm, rcond=0)
+                w, _, _, _ = torch.linalg.lstsq(x - xm, t - tm)
                 self.w_io.copy_(w)
                 self.b_o.copy_(tm - self.forward(xm))
