@@ -223,7 +223,20 @@ class Sweeper:
         table.update(k="`#` experiments",   v=len(self.experiments))
         table.update(k="Best result",       v="%.5f" % self.best.result)
         table.update(k="Target metric",     v="`test.%s`" % self.opt_str)
-        table.update(k="Best params/seed",  v=md.code(self.best.arg_str))
+        for param_name, param_vals in self.params.items():
+            table.update(k=md.code(param_name), v=md.code(str(param_vals)))
+
+        table.update(k="`seeds`", v=md.code(str(self.seeds)))
+
+        md.heading("Best model", end="\n")
+        best_rel_dir = os.path.relpath(self.best_model_dir, self.output_dir)
+        best_args_json      = os.path.join(best_rel_dir, "args.json")
+        best_metrics_json   = os.path.join(best_rel_dir, "metrics.json")
+        md.file_link(best_args_json,    "Best args (JSON)")
+        md.file_link(best_metrics_json, "Best metrics (JSON)")
+        md()
+        table = util.Table.key_value(printer=md)
+        table.update(k="Params/seed",  v=md.code(self.best.arg_str))
 
         for name, metric in [
             ("Model",               "repr_model"),
@@ -252,19 +265,7 @@ class Sweeper:
             table.update(k="STD (best params)", v="%.5f" % std_best)
             table.update(k="STD (all)",         v="%.5f" % std_all)
 
-        md.heading("Sweep configuration")
-        table = util.Table.key_value(md)
-        for param_name, param_vals in self.params.items():
-            table.update(k=md.code(param_name), v=md.code(str(param_vals)))
-
-        table.update(k="`seeds`", v=md.code(str(self.seeds)))
-
         md.heading("Metrics", end="\n")
-        best_metrics_json = os.path.join(
-            os.path.relpath(self.best_model_dir, self.output_dir),
-            "metrics.json",
-        )
-        md.file_link(best_metrics_json, "Best metrics (JSON)")
         for full_path in self.plot_paths:
             md.image(os.path.relpath(full_path, self.output_dir))
 
@@ -293,6 +294,7 @@ class Sweeper:
 
         md.git_add(
             md.get_filename(),
+            os.path.join(self.best_model_dir, "args.json"),
             os.path.join(self.best_model_dir, "metrics.json"),
             *self.plot_paths,
         )
