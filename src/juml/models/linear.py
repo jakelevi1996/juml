@@ -26,7 +26,6 @@ class Linear(Model):
         x:      torch.Tensor,
         t:      (torch.Tensor | None),
         eps:    float=1e-5,
-        b_std:  float=0.0,
     ):
         with torch.no_grad():
             self.b_o.zero_()
@@ -35,9 +34,12 @@ class Linear(Model):
                 self.w_io *= 1 / (eps + x.std(-2).unsqueeze(-1))
                 y = self.forward(x)
                 self.w_io *= 1 / (eps + y.std(-2).unsqueeze(-2))
-                xm = x.mean(-2)
-                tm = torch.normal(0, b_std, self.b_o.shape)
-                self.b_o.copy_(tm - self.forward(xm))
+                y = self.forward(x)
+                y_lo = y.min(dim=-2).values
+                y_hi = y.max(dim=-2).values
+                r = torch.rand(self.b_o.shape)
+                t = y_lo + r * (y_hi - y_lo)
+                self.b_o.copy_(-t)
             else:
                 x = x.flatten(0, -2)
                 t = t.flatten(0, -2)
