@@ -35,10 +35,8 @@ class Linear(Model):
                 y = self.forward(x)
                 self.w_io *= 1 / (eps + y.std(-2).unsqueeze(-2))
                 y = self.forward(x)
-                y_lo = y.quantile(0.01, dim=-2)
-                y_hi = y.quantile(0.99, dim=-2)
-                r = torch.rand(self.b_o.shape)
-                t = y_lo + r * (y_hi - y_lo)
+                n, o = y.shape
+                t = y[torch.randint(0, n, [o]), torch.arange(o)]
                 self.b_o.copy_(-t)
             else:
                 x = x.flatten(0, -2)
