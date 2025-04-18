@@ -35,15 +35,8 @@ class PlotSequential(Command):
 
         md.set_print_to_console(False)
         md.image(name + ".png")
-        md.heading("`git add`", end="\n")
-        md.code_block(
-            "\ncd %s" % model_dir,
-            "git add -f %s.png" % name,
-            "git add -f %s.md"  % name,
-            "cd %s\n" % os.path.relpath(".", model_dir),
-        )
-        md.heading("`README.md` include", end="\n")
-        md.file_link(md.get_filename(), "`[ %s ]`" % repr(model))
+        md.git_add(md.get_filename(), mp.full_path)
+        md.readme_include("`[ %s ]`" % repr(model))
         md.show_command("plotsequential")
 
         return mp
