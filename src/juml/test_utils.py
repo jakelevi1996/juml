@@ -23,3 +23,11 @@ def get_output_dir(*subdir_names: str):
 def set_torch_seed(*args):
     seed = util.Seeder().get_seed(*args)
     torch.manual_seed(seed)
+
+class TensorPrinter:
+    def __init__(self, printer: util.Printer):
+        self.printer = printer
+
+    def __call__(self, x: torch.Tensor):
+        self.printer(x.numel(), x.shape, x, sep="\n")
+        self.printer.hline()
