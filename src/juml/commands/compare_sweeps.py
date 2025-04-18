@@ -124,7 +124,6 @@ class CompareSweeps(Command):
         )
         md.readme_include("`[ compare_sweeps ]`", mp.full_path)
         md.show_command("comparesweeps")
-
         md.flush()
 
         return mp

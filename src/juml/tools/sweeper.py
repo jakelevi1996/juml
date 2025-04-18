@@ -300,7 +300,6 @@ class Sweeper:
         )
         md.readme_include("`[ full_sweep_results ]`", *self.plot_paths)
         md.show_command("sweep")
-
         md.flush()
 
     @classmethod

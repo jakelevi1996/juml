@@ -35,9 +35,11 @@ class PlotSequential(Command):
 
         md.set_print_to_console(False)
         md.image(name + ".png")
+
         md.git_add(md.get_filename(), mp.full_path)
         md.readme_include("`[ %s ]`" % repr(model))
         md.show_command("plotsequential")
+        md.flush()
 
         return mp
 
