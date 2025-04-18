@@ -298,13 +298,8 @@ class Sweeper:
             os.path.join(self.best_model_dir, "metrics.json"),
             *self.plot_paths,
         )
-        md.readme_include(
-            "`[ full_sweep_results ]`",
-            *self.plot_paths,
-        )
-
-        md.heading("`sweep` command", end="\n")
-        md.code_block(util.get_argv_str())
+        md.readme_include("`[ full_sweep_results ]`", *self.plot_paths)
+        md.show_command("sweep")
 
         md.flush()
 

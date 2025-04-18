@@ -44,6 +44,7 @@ class PlotSequential(Command):
         )
         md.heading("`README.md` include", end="\n")
         md.file_link(md.get_filename(), "`[ %s ]`" % repr(model))
+        md.show_command("plotsequential")
 
         return mp
 

@@ -123,8 +123,8 @@ class CompareSweeps(Command):
             *["results/sweep/%s/results.md" % s.sweep_name for s in series],
         )
         md.readme_include("`[ compare_sweeps ]`", mp.full_path)
-        md.heading("`comparesweeps` command", end="\n")
-        md.code_block(util.get_argv_str())
+        md.show_command("comparesweeps")
+
         md.flush()
 
         return mp
