@@ -208,7 +208,7 @@ class Trainer:
         self.plot_metrics(batch_loss, train_metric, test_metric)
         self.save_model()
         self.save_table()
-        print("Model name = `%s`" % self.model_name)
+        print("--model_name %s" % self.model_name)
         print(
             "Final metrics = %.5f (train), %.5f (test)"
             % (train_metric[-1], test_metric[-1])
