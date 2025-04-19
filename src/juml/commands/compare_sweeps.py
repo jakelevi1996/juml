@@ -103,10 +103,10 @@ class CompareSweeps(Command):
         mp.save(xlabel, output_dir)
 
         md = util.MarkdownPrinter(xlabel, output_dir)
-        md.title("Sweep comparison", end="\n")
-        md.heading("Metrics", end="\n")
+        md.title("Sweep comparison")
+        md.heading("Metrics")
         md.image("%s.png" % xlabel)
-        md.heading("Sweeps")
+        md.heading("Sweeps", end="\n\n")
         table = util.Table.key_value(printer=md)
         for s in series:
             table.update(

@@ -218,7 +218,7 @@ class Sweeper:
         md = util.MarkdownPrinter("results", self.output_dir)
         md.title("Sweep results", end="\n")
 
-        md.heading("Summary")
+        md.heading("Summary", end="\n\n")
         table = util.Table.key_value(printer=md)
         table.update(k="`#` experiments",   v=len(self.experiments))
         table.update(k="Best result",       v="%.5f" % self.best.result)
@@ -233,8 +233,7 @@ class Sweeper:
         best_args_json      = os.path.join(best_rel_dir, "args.json")
         best_metrics_json   = os.path.join(best_rel_dir, "metrics.json")
         md.file_link(best_args_json,    "Best args (JSON)")
-        md.file_link(best_metrics_json, "Best metrics (JSON)")
-        md()
+        md.file_link(best_metrics_json, "Best metrics (JSON)", end="\n\n")
         table = util.Table.key_value(printer=md)
         table.update(k="Params/seed",  v=md.code(self.best.arg_str))
 
@@ -251,7 +250,7 @@ class Sweeper:
         for name, val in self.best.arg_dict.items():
             table.update(k="`--%s`" % name, v=md.code(val))
 
-        md.heading("Statistics")
+        md.heading("Statistics", end="\n\n")
         table = util.Table.key_value(md)
         best_config_sweep = self.experiments.sweep_seeds(self.best)
         mean_best = best_config_sweep.results_mean()
@@ -269,7 +268,7 @@ class Sweeper:
         for full_path in self.plot_paths:
             md.image(os.path.relpath(full_path, self.output_dir))
 
-        md.heading("All results")
+        md.heading("All results", end="\n\n")
         table = util.Table(
             util.Column("rank",     "i",    width=-10),
             util.Column("result",   ".5f",  title="`test.%s`" % self.opt_str),

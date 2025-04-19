@@ -27,7 +27,7 @@ class PlotSequential(Command):
 
         name = cls.get_name()
         md = util.MarkdownPrinter(name, model_dir)
-        md.title(md.code(repr(model)))
+        md.title(md.code(repr(model)), end="\n\n")
         md.set_print_to_console(True)
 
         mp = plot_sequential(model, x, md)
