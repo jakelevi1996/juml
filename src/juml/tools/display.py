@@ -7,9 +7,6 @@ def display_sequential(
     x:          torch.Tensor,
     printer:    (util.Printer | None)=None,
 ) -> tuple[torch.Tensor, util.Table]:
-    if printer is None:
-        printer = util.Printer()
-
     util.hline()
     table = util.Table(
         util.Column("layer",    "r",    -40,    "Layer"),
