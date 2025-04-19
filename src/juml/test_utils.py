@@ -31,3 +31,10 @@ class TensorPrinter:
     def __call__(self, x: torch.Tensor):
         self.printer(x.numel(), x.shape, x, sep="\n")
         self.printer.hline()
+
+class TensorPrinterMarkdown(TensorPrinter):
+    def __call__(self, heading: str, x: torch.Tensor):
+        self.printer(
+            "\n## %s\n\n```txt\nnumel=%s\nshape=%s\n%s\n```"
+            % (heading, x.numel(), x.shape, x)
+        )
