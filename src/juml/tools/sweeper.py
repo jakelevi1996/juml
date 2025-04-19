@@ -216,7 +216,7 @@ class Sweeper:
 
     def save_results_markdown(self):
         md = util.MarkdownPrinter("results", self.output_dir)
-        md.title("Sweep results", end="\n")
+        md.title("Sweep results")
 
         md.heading("Summary", end="\n\n")
         table = util.Table.key_value(printer=md)
@@ -228,7 +228,7 @@ class Sweeper:
 
         table.update(k="`seeds`", v=md.code(str(self.seeds)))
 
-        md.heading("Best model", end="\n")
+        md.heading("Best model")
         best_rel_dir = os.path.relpath(self.best_model_dir, self.output_dir)
         best_args_json      = os.path.join(best_rel_dir, "args.json")
         best_metrics_json   = os.path.join(best_rel_dir, "metrics.json")
@@ -264,7 +264,7 @@ class Sweeper:
             table.update(k="STD (best params)", v="%.5f" % std_best)
             table.update(k="STD (all)",         v="%.5f" % std_all)
 
-        md.heading("Metrics", end="\n")
+        md.heading("Metrics")
         for full_path in self.plot_paths:
             md.image(os.path.relpath(full_path, self.output_dir))
 
