@@ -59,27 +59,31 @@ class ReZeroCnnLayer(Model):
     ):
         self._torch_module_init()
         expand_dim = int(model_dim * expand_ratio)
+        padding = kernel_size // 2
 
         self.conv_1 = torch.nn.Conv2d(
             in_channels=model_dim,
             out_channels=model_dim,
             kernel_size=kernel_size,
+            stride=1,
+            padding=padding,
             groups=model_dim,
-            padding="same",
         )
         self.conv_2 = torch.nn.Conv2d(
             in_channels=model_dim,
             out_channels=expand_dim,
             kernel_size=1,
+            stride=1,
+            padding=0,
             groups=1,
-            padding="same",
         )
         self.conv_3 = torch.nn.Conv2d(
             in_channels=expand_dim,
             out_channels=model_dim,
             kernel_size=1,
+            stride=1,
+            padding=0,
             groups=1,
-            padding="same",
         )
         self.scale = torch.nn.Parameter(torch.tensor(0.0))
 
@@ -105,6 +109,7 @@ class InputCnnLayer(Model):
             out_channels=model_dim,
             kernel_size=kernel_size,
             stride=stride,
+            padding=0,
         )
 
     def forward(self, x_nihw: torch.Tensor) -> torch.Tensor:
@@ -124,6 +129,7 @@ class StridedCnnLayer(Model):
             out_channels=model_dim,
             kernel_size=kernel_size,
             stride=stride,
+            padding=0,
         )
 
     def forward(self, x_nmhw: torch.Tensor) -> torch.Tensor:
