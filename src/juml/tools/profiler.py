@@ -17,6 +17,7 @@ class Profiler:
         num_profile:    int,
         devices:        list[int],
         name:           str,
+        sort_by:        str,
     ):
         device_cfg = DeviceConfig(devices)
         device_cfg.set_module_device(model)
@@ -44,7 +45,7 @@ class Profiler:
 
         self.ka = prof.key_averages()
         printer = util.Printer(name, dir_name=model_dir)
-        printer(self.ka.table(sort_by="cpu_time_total"))
+        printer(self.ka.table(sort_by=sort_by))
 
         self.cpu_total  = self.get_cpu_total(self.ka)
         self.cuda_total = self.get_cuda_total(self.ka)
