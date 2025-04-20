@@ -25,11 +25,11 @@ def set_torch_seed(*args):
     torch.manual_seed(seed)
 
 class TensorPrinter:
-    def __init__(self, md: util.MarkdownPrinter):
-        self.md = md
+    def __init__(self, printer: util.Printer):
+        self.printer = printer
 
     def __call__(self, x: torch.Tensor, heading: (str | None)=None):
         if heading is not None:
-            self.md.heading(heading)
+            self.printer.heading(heading)
 
-        self.md("\n```\n%s\n%s\n%s\n```" % (x.numel(), x.shape, x))
+        self.printer("\n```\n%s\n%s\n%s\n```" % (x.numel(), x.shape, x))
