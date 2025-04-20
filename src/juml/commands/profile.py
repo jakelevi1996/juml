@@ -1,7 +1,7 @@
 from jutility import cli
 from juml.commands.base import Command
 from juml.train.base import Trainer
-from juml.train.profiler import Profiler
+from juml.tools.profiler import Profiler
 
 class Profile(Command):
     @classmethod

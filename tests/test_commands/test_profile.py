@@ -49,7 +49,7 @@ def test_profile():
 
     kwargs = args.get_arg(command.name).get_kwargs()
     profiler = command.run(args, **kwargs)
-    assert isinstance(profiler, juml.train.Profiler)
+    assert isinstance(profiler, juml.tools.Profiler)
     assert isinstance(profiler.flops, float)
     assert profiler.flops > 0
 
