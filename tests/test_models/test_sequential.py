@@ -23,9 +23,9 @@ def test_sequential():
         embedder=juml.models.embed.CoordConv(),
         pooler=juml.models.pool.GatedLinearSet2d(),
     )
-    assert repr(model) == "Cnn(num_params=5.7k)"
+    assert repr(model) == "Cnn(num_params=5.0k)"
     assert len(model) == 7
-    assert model.num_params() == 5689
+    assert model.num_params() == 5043
 
     p, s = model.split(5)
 
@@ -34,10 +34,10 @@ def test_sequential():
     assert len(p) == 5
     assert len(s) == 2
     assert len(p) + len(s) == len(model)
-    assert p.num_params() == 4093
+    assert p.num_params() == 3447
     assert s.num_params() == 1596
     assert p.num_params() + s.num_params() == model.num_params()
-    assert repr(p) == "Sequential(num_params=4.1k)"
+    assert repr(p) == "Sequential(num_params=3.4k)"
     assert repr(s) == "Sequential(num_params=1.6k)"
 
     y  = model.forward(x)

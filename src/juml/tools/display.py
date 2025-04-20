@@ -44,7 +44,11 @@ def display_layer(
     table.update(layer=layer, shape=list(x.shape), t=timer.get_time_taken())
 
 def num_params(layer: torch.nn.Module) -> int:
-    return sum(int(p.numel()) for p in layer.parameters())
+    return sum(
+        int(p.numel())
+        for p in layer.parameters()
+        if  p.requires_grad
+    )
 
 def plot_sequential(
     model:      Sequential,

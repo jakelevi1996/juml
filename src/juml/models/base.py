@@ -17,7 +17,11 @@ class Model(torch.nn.Module):
         return
 
     def num_params(self) -> int:
-        return sum(int(p.numel()) for p in self.parameters())
+        return sum(
+            int(p.numel())
+            for p in self.parameters()
+            if  p.requires_grad
+        )
 
     @classmethod
     def get_cli_arg(cls):

@@ -13,8 +13,9 @@ def test_coordconv():
     x = torch.rand([2, 4, 3, 5])
 
     embedder.set_input_shape(list(x.shape))
-    assert repr(embedder) == "CoordConv(num_params=30)"
-    assert embedder.num_params() == (3 * 5 * 2)
+    assert repr(embedder) == "CoordConv(num_params=0)"
+    assert sum(int(p.numel()) for p in embedder.parameters()) == (3 * 5 * 2)
+    assert embedder.num_params() == 0
     assert embedder.get_output_shape() == [2, 6, 3, 5]
     assert embedder.get_output_dim(-3) == 6
 
