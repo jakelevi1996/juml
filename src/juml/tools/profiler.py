@@ -60,6 +60,7 @@ class Profiler:
             "n_samples":        self.n_samples,
             "n_samples_str":    units.metric.format(self.n_samples),
             "batch_size":       batch_size,
+            "n_repeats":        num_profile,
             "t_total_str": (
                 "%.5f s"
                 % self.t_total
@@ -73,7 +74,7 @@ class Profiler:
                 % units.metric.format(self.throughput)
             ),
             "flops_str": (
-                "%sFLOPS/sample"
+                "%s FLOPS/sample"
                 % units.metric.format(self.flops).upper()
             ),
         }
@@ -83,12 +84,13 @@ class Profiler:
         table = util.Table.key_value(printer=md)
         table.update(k="Model", v="`%s`" % repr(model))
         for name, dict_key in [
-            ("Time (total)",            "t_total_str"),
-            ("Time (average)",          "t_sample_str"),
-            ("Throughput",              "throughput_str"),
-            ("FLOPS",                   "flops_str"),
-            ("Total number of samples", "n_samples_str"),
-            ("Batch size",              "batch_size"),
+            ("Time (total)",    "t_total_str"),
+            ("Time (average)",  "t_sample_str"),
+            ("Throughput",      "throughput_str"),
+            ("FLOPS",           "flops_str"),
+            ("Total #samples",  "n_samples_str"),
+            ("Batch size",      "batch_size"),
+            ("`#`repeats",      "n_repeats"),
         ]:
             table.update(k=name, v=profile_dict[dict_key])
 
