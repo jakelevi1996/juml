@@ -23,8 +23,13 @@ class RzCnn(Sequential):
         self.embed.set_input_shape(input_shape)
         self.pool.set_shapes([model_dim, None, None], output_shape)
 
-        input_dim = self.embed.get_output_dim(-3)
-        layer = InputCnnLayer(input_dim, model_dim, kernel_size, stride)
+        layer = torch.nn.Conv2d(
+            in_channels=self.embed.get_output_dim(-3),
+            out_channels=model_dim,
+            kernel_size=kernel_size,
+            stride=stride,
+            padding=0,
+        )
         self.layers.append(layer)
 
         for _ in range(num_stages - 1):
@@ -32,7 +37,13 @@ class RzCnn(Sequential):
                 layer = ReZeroCnnLayer(model_dim, expand_ratio, kernel_size)
                 self.layers.append(layer)
 
-            layer = StridedCnnLayer(model_dim, kernel_size, stride)
+            layer = torch.nn.Conv2d(
+                in_channels=model_dim,
+                out_channels=model_dim,
+                kernel_size=kernel_size,
+                stride=stride,
+                padding=0,
+            )
             self.layers.append(layer)
 
         for _ in range(blocks_per_stage):
@@ -93,45 +104,4 @@ class ReZeroCnnLayer(Model):
         res_nehw = torch.relu(res_nehw)
         res_nmhw = self.conv_3.forward(res_nehw)
         x_nmhw = x_nmhw + (self.scale * res_nmhw)
-        return x_nmhw
-
-class InputCnnLayer(Model):
-    def __init__(
-        self,
-        input_channel_dim:  int,
-        model_dim:          int,
-        kernel_size:        int,
-        stride:             int,
-    ):
-        self._torch_module_init()
-        self.conv = torch.nn.Conv2d(
-            in_channels=input_channel_dim,
-            out_channels=model_dim,
-            kernel_size=kernel_size,
-            stride=stride,
-            padding=0,
-        )
-
-    def forward(self, x_nihw: torch.Tensor) -> torch.Tensor:
-        x_nmhw = self.conv.forward(x_nihw)
-        return x_nmhw
-
-class StridedCnnLayer(Model):
-    def __init__(
-        self,
-        model_dim:      int,
-        kernel_size:    int,
-        stride:         int,
-    ):
-        self._torch_module_init()
-        self.conv = torch.nn.Conv2d(
-            in_channels=model_dim,
-            out_channels=model_dim,
-            kernel_size=kernel_size,
-            stride=stride,
-            padding=0,
-        )
-
-    def forward(self, x_nmhw: torch.Tensor) -> torch.Tensor:
-        x_nmhw = self.conv.forward(x_nmhw)
         return x_nmhw

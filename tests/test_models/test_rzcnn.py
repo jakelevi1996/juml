@@ -48,13 +48,23 @@ def test_rzcnn():
     printer(loss_0, loss_1)
     assert loss_1.item() < loss_0.item()
 
-    printer(repr(list(model.layers)))
-    assert repr(list(model.layers)) == (
-        "[InputCnnLayer(num_params=333), "
-        "ReZeroCnnLayer(num_params=442), "
-        "ReZeroCnnLayer(num_params=442), "
-        "StridedCnnLayer(num_params=738), "
-        "ReZeroCnnLayer(num_params=442), "
-        "ReZeroCnnLayer(num_params=442), "
-        "ReZeroCnnLayer(num_params=442)]"
-    )
+    layer_names = [repr(layer) for layer in model.layers]
+    printer.hline()
+    printer(*layer_names, sep="\n")
+    assert layer_names == [
+        "Conv2d(4, 9, kernel_size=(3, 3), stride=(2, 2))",
+        "ReZeroCnnLayer(num_params=442)",
+        "ReZeroCnnLayer(num_params=442)",
+        "Conv2d(9, 9, kernel_size=(3, 3), stride=(2, 2))",
+        "ReZeroCnnLayer(num_params=442)",
+        "ReZeroCnnLayer(num_params=442)",
+        "ReZeroCnnLayer(num_params=442)",
+    ]
+
+    layer_sizes = [
+        sum(int(p.numel()) for p in layer.parameters())
+        for layer in model.layers
+    ]
+    printer.hline()
+    printer(layer_sizes)
+    assert layer_sizes == [333, 442, 442, 738, 442, 442, 442]

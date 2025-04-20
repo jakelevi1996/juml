@@ -27,7 +27,7 @@ def test_display_sequential():
     y, table = juml.tools.display_sequential(model, x, printer)
 
     output_line = (
-        "ReZeroCnnLayer(num_params=442)  "
+        "ReZeroCnnLayer(num_params=442)                  "
         "| [3, 9, 8, 9]           |    0.0"
     )
     assert output_line in printer.read()
