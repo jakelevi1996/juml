@@ -8,8 +8,9 @@ def display_sequential(
     printer:    (util.Printer | None)=None,
 ) -> tuple[torch.Tensor, util.Table]:
     util.hline()
+    w = max(len(repr(m)) for m in model.layers)
     table = util.Table(
-        util.Column("layer",    "r",    -40,    "Layer"),
+        util.Column("layer",    "r",    -w,     "Layer"),
         util.Column("shape",    "s",    -22,    "Output shape"),
         util.Column("t",        ".5fs", 10,     "Time"),
         printer=printer,
