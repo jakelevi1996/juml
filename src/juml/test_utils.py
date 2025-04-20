@@ -25,7 +25,10 @@ def set_torch_seed(*args):
     torch.manual_seed(seed)
 
 class TensorPrinter:
-    def __init__(self, printer: util.Printer):
+    def __init__(self, printer: (util.Printer | None)=None):
+        if printer is None:
+            printer = util.Printer()
+
         self.printer = printer
 
     def __call__(self, x: torch.Tensor, heading: (str | None)=None):
