@@ -1,20 +1,23 @@
 import torch
 from torch.autograd.profiler_util import FunctionEventAvg
-from jutility import cli, util, units
+from jutility import util, units
+from juml.models.base import Model
+from juml.datasets.base import Dataset
 from juml.device import DeviceConfig
 from juml.train.base import Trainer
 
 class Profiler:
     def __init__(
         self,
-        args:           cli.ParsedArgs,
+        model:          Model,
+        dataset:        Dataset,
+        model_dir:      (str | None),
         batch_size:     int,
         num_warmup:     int,
         num_profile:    int,
         devices:        list[int],
     ):
         device_cfg = DeviceConfig(devices)
-        model_dir, model, dataset = Trainer.load(args)
         device_cfg.set_module_device(model)
 
         train_loader = dataset.get_data_loader("train", batch_size)
@@ -100,14 +103,3 @@ class Profiler:
     @classmethod
     def get_flops_total(cls, event_list: list[FunctionEventAvg]) -> float:
         return sum(e.flops for e in event_list)
-
-    @classmethod
-    def get_cli_arg(cls) -> list[cli.Arg]:
-        return cli.ObjectArg(
-            Profiler,
-            cli.Arg("batch_size",   type=int, default=100),
-            cli.Arg("num_warmup",   type=int, default=10),
-            cli.Arg("num_profile",  type=int, default=10),
-            cli.Arg("devices",      type=int, default=[], nargs="*"),
-            is_group=True,
-        )

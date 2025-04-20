@@ -1,5 +1,6 @@
 from jutility import cli
 from juml.commands.base import Command
+from juml.train.base import Trainer
 from juml.train.profiler import Profiler
 
 class Profile(Command):
@@ -12,8 +13,11 @@ class Profile(Command):
         num_profile:    int,
         devices:        list[int],
     ):
+        model_dir, model, dataset = Trainer.load(args)
         return Profiler(
-            args=args,
+            model=model,
+            dataset=dataset,
+            model_dir=model_dir,
             batch_size=batch_size,
             num_warmup=num_warmup,
             num_profile=num_profile,
