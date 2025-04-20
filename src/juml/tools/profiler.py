@@ -16,6 +16,7 @@ class Profiler:
         num_warmup:     int,
         num_profile:    int,
         devices:        list[int],
+        name:           str,
     ):
         device_cfg = DeviceConfig(devices)
         device_cfg.set_module_device(model)
@@ -42,7 +43,7 @@ class Profiler:
                     y = model.forward(x)
 
         self.ka = prof.key_averages()
-        printer = util.Printer("profile", dir_name=model_dir)
+        printer = util.Printer(name, dir_name=model_dir)
         printer(self.ka.table(sort_by="cpu_time_total"))
 
         self.cpu_total  = self.get_cpu_total(self.ka)
@@ -78,9 +79,9 @@ class Profiler:
                 % units.metric.format(self.flops).upper()
             ),
         }
-        util.save_json(profile_dict, "profile", model_dir)
+        util.save_json(profile_dict, name, model_dir)
 
-        md = util.MarkdownPrinter("profile", model_dir)
+        md = util.MarkdownPrinter(name, model_dir)
         table = util.Table.key_value(printer=md)
         table.update(k="Model", v="`%s`" % repr(model))
         for name, dict_key in [

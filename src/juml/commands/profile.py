@@ -22,6 +22,7 @@ class Profile(Command):
             num_warmup=num_warmup,
             num_profile=num_profile,
             devices=devices,
+            name="profile",
         )
 
     @classmethod
