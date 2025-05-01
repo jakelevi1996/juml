@@ -105,7 +105,7 @@ class CompareSweeps(Command):
         md = util.MarkdownPrinter(xlabel, output_dir)
         md.title("Sweep comparison")
         md.heading("Metrics")
-        md.image(os.path.relpath(mp.full_path, md.get_dir_name()))
+        md.image(md.rel_path(mp.full_path))
         md.heading("Sweeps", end="\n\n")
         table = util.Table.key_value(printer=md)
         for s in series:
