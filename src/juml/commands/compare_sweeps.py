@@ -48,21 +48,23 @@ class CompareSweeps(Command):
         for s in series:
             for param_vals in s.experiments.params.values():
                 for v in param_vals:
-                    xtick_config.update(v, None)
+                    if v != 30000:
+                        xtick_config.update(v, None)
 
         axis_kwargs = {"xlabel": xlabel, "log_x": log_x}
         axis_kwargs.update(xtick_config.get_xtick_kwargs())
+        plotting.set_latex_params(use_times=True)
 
         mp = plotting.MultiPlot(
-            plotting.Subplot(
-                *[
-                    s.plot(x_index, TrainGetter())
-                    for s in series
-                ],
-                **axis_kwargs,
-                **metric_info,
-                title="Best train metric",
-            ),
+            # plotting.Subplot(
+            #     *[
+            #         s.plot(x_index, TrainGetter())
+            #         for s in series
+            #     ],
+            #     **axis_kwargs,
+            #     **metric_info,
+            #     title="Best train metric",
+            # ),
             plotting.Subplot(
                 *[
                     s.plot(x_index, TestGetter())
@@ -72,35 +74,36 @@ class CompareSweeps(Command):
                 **metric_info,
                 title="Best test metric",
             ),
-            plotting.Subplot(
-                *[
-                    s.plot(x_index, TimeGetter())
-                    for s in series
-                ],
-                **axis_kwargs,
-                log_y=True,
-                ylabel="Time (s)",
-                title="Training duration",
-            ),
-            plotting.Subplot(
-                *[
-                    s.plot(x_index, SizeGetter())
-                    for s in series
-                ],
-                **axis_kwargs,
-                log_y=True,
-                ylabel="Number of parameters",
-                title="Model size",
-            ),
+            # plotting.Subplot(
+            #     *[
+            #         s.plot(x_index, TimeGetter())
+            #         for s in series
+            #     ],
+            #     **axis_kwargs,
+            #     log_y=True,
+            #     ylabel="Time (s)",
+            #     title="Training duration",
+            # ),
+            # plotting.Subplot(
+            #     *[
+            #         s.plot(x_index, SizeGetter())
+            #         for s in series
+            #     ],
+            #     **axis_kwargs,
+            #     log_y=True,
+            #     ylabel="Number of parameters",
+            #     title="Model size",
+            # ),
             legend=plotting.FigureLegend(
                 *[s.get_legend_plottable() for s in series],
                 num_rows=None,
                 loc="outside right upper",
                 title=clabel,
             ),
-            figsize=[10, 8],
+            sharey=True,
+            figsize=[8, 3],
         )
-        mp.save(xlabel, output_dir)
+        mp.save(xlabel, output_dir, pdf=True)
 
         md = util.MarkdownPrinter(xlabel, output_dir)
         md.title("Sweep comparison")
