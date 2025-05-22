@@ -54,8 +54,8 @@ class CompareSweeps(Command):
                     if v != 30000:
                         xtick_config.update(v, None)
 
-        axis_kwargs = {"xlabel": xlabel, "log_x": log_x}
-        axis_kwargs.update(xtick_config.get_xtick_kwargs())
+        axis_kwargs = {"xlabel": "\\#Params", "log_x": True}
+        # axis_kwargs.update(xtick_config.get_xtick_kwargs())
         plotting.set_latex_params(use_times=True)
 
         mp = plotting.MultiPlot(
@@ -186,7 +186,7 @@ class SweepSeries:
     def plot(self, x_index: bool, mg: "MetricGetter") -> plotting.Plottable:
         nd = plotting.NoisyData(log_y=self.log_y, x_index=x_index)
         for e in self.experiments:
-            x = e.arg_dict[self.param_name]
+            x = e.metrics["num_params"]
             y = mg.get(e.metrics, self.opt_str)
             nd.update(x, y)
 
