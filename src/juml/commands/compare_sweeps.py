@@ -13,6 +13,7 @@ class CompareSweeps(Command):
         config: list[dict[str, str]],
         xlabel: str,
         clabel: str,
+        name:   (str | None),
         log_x:  bool,
     ):
         dataset_type = args.get_type("dataset")
@@ -40,7 +41,9 @@ class CompareSweeps(Command):
             for c in config
         ]
 
-        name = util.merge_strings([s.sweep_name for s in series])
+        if name is None:
+            name = util.merge_strings([s.sweep_name for s in series])
+
         output_dir = os.path.join("results", "compare", name)
 
         x_index = any((not s.experiments.is_numeric()) for s in series)
@@ -154,6 +157,7 @@ class CompareSweeps(Command):
             ),
             cli.Arg("xlabel",   type=str, required=True),
             cli.Arg("clabel",   type=str, required=True),
+            cli.Arg("name",     type=str, default=None),
             cli.Arg("log_x",    action="store_true"),
         ]
 
