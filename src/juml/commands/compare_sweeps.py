@@ -28,7 +28,7 @@ class CompareSweeps(Command):
         maximise    = loss_type.metric_higher_is_better()
         log_y       = metric_info.get("log_y", False)
         opt_str     = "max" if maximise else "min"
-        cp          = plotting.ColourPicker(len(config), cyclic=False)
+        cp          = plotting.ColourPicker(len(config), cyclic=True, cmap_name="gist_rainbow")
 
         series = [
             SweepSeries(
