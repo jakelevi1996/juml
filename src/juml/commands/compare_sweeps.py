@@ -104,7 +104,7 @@ class CompareSweeps(Command):
                 title=clabel,
             ),
             sharey=True,
-            figsize=[8, 3],
+            figsize=[6, 4],
         )
         mp.save(xlabel, output_dir, pdf=True)
 
