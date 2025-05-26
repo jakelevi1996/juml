@@ -4,17 +4,19 @@ from juml.commands.base import Command
 from juml.datasets.base import Dataset
 from juml.loss.base import Loss
 from juml.tools.experiment import Experiment, ExperimentGroup
+from juml.tools.plot_type import PlotType
 
 class CompareSweeps(Command):
     @classmethod
     def run(
         cls,
-        args:   cli.ParsedArgs,
-        config: list[dict[str, str]],
-        xlabel: str,
-        clabel: str,
-        name:   (str | None),
-        log_x:  bool,
+        args:       cli.ParsedArgs,
+        config:     list[dict[str, str]],
+        xlabel:     str,
+        clabel:     str,
+        name:       (str | None),
+        log_x:      bool,
+        plot_type:  PlotType,
     ):
         dataset_type = args.get_type("dataset")
         assert issubclass(dataset_type, Dataset)
@@ -103,7 +105,7 @@ class CompareSweeps(Command):
             ),
             figsize=[10, 8],
         )
-        mp.save(xlabel, output_dir)
+        plot_type.plot(mp, xlabel, output_dir)
 
         md = util.MarkdownPrinter(xlabel, output_dir)
         md.title("Sweep comparison")
@@ -156,6 +158,7 @@ class CompareSweeps(Command):
             cli.Arg("clabel",   type=str, required=True),
             cli.Arg("name",     type=str, default=None),
             cli.Arg("log_x",    action="store_true"),
+            PlotType.get_cli_arg(),
         ]
 
 class SweepSeries:
