@@ -56,6 +56,7 @@ class CompareSweeps(Command):
 
         axis_kwargs = {"xlabel": xlabel, "log_x": log_x}
         axis_kwargs.update(xtick_config.get_xtick_kwargs())
+        metric_info["ylabel"] = "Test %s" % metric_info["ylabel"]
         plotting.set_latex_params(use_times=True)
 
         mp = plotting.MultiPlot(
@@ -75,7 +76,6 @@ class CompareSweeps(Command):
                 ],
                 **axis_kwargs,
                 **metric_info,
-                title="Best test metric",
             ),
             # plotting.Subplot(
             #     *[
