@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "juml-toolkit"
-version = "0.0.2"
+version = "0.0.4"
 dependencies = [
   "jutility>=0.0.23",
 ]
