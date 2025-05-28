@@ -9,7 +9,7 @@ class DeviceConfig:
             visible_devices_str = ",".join(str(d) for d in devices)
             os.environ["CUDA_VISIBLE_DEVICES"] = visible_devices_str
 
-    def context(self):
+    def context(self) -> torch.device:
         return torch.device(self._device_str)
 
     def set_module_device(self, module: torch.nn.Module):
