@@ -4,9 +4,13 @@ import torch
 class DeviceConfig:
     def __init__(self, devices: list[int]):
         self._has_devices = (len(devices) > 0)
+        self._device_str = ("cuda" if self._has_devices else "cpu")
         if self._has_devices:
-            devices_str = ",".join(str(d) for d in devices)
-            os.environ["CUDA_VISIBLE_DEVICES"] = devices_str
+            visible_devices_str = ",".join(str(d) for d in devices)
+            os.environ["CUDA_VISIBLE_DEVICES"] = visible_devices_str
+
+    def context(self):
+        return torch.device(self._device_str)
 
     def set_module_device(self, module: torch.nn.Module):
         if self._has_devices:
