@@ -299,6 +299,18 @@ class Trainer:
         raise NotImplementedError()
 
     @classmethod
+    def get_loss_type(cls, args: cli.ParsedArgs) -> type[Loss]:
+        dataset_type = args.get_type("dataset")
+        assert issubclass(dataset_type, Dataset)
+
+        loss_arg = args.get_arg("loss")
+        loss_arg.set_default_choice(dataset_type.get_default_loss())
+        loss_type = args.get_type("loss")
+        assert issubclass(loss_type, Loss)
+
+        return loss_type
+
+    @classmethod
     def get_cli_arg(cls) -> cli.ObjectArg:
         return cli.ObjectArg(
             cls,
