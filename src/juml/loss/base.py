@@ -25,6 +25,14 @@ class Loss:
     def metric_higher_is_better(cls) -> bool:
         return False
 
+    @classmethod
+    def get_optimum_metric(cls, *args):
+        return max(*args) if cls.metric_higher_is_better() else min(*args)
+
+    @classmethod
+    def get_optimum_metric_str(cls) -> str:
+        return "max" if cls.metric_higher_is_better() else "min"
+
     def metric(
         self,
         model:          torch.nn.Module,
