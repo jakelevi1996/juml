@@ -1,5 +1,5 @@
 import torch.utils.data
-from jutility import cli, util, units
+from jutility import cli, util
 from juml.datasets.split import DataSplit
 from juml.loss.base import Loss
 
@@ -70,7 +70,7 @@ class Dataset:
         return util.format_type(
             type(self),
             **{
-                ("n_" + split): units.metric.format(
+                ("n_" + split): util.units.metric.format(
                     len(self.get_data_split(split)),
                 )
                 for split in split_names

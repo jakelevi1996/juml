@@ -1,5 +1,5 @@
 import torch
-from jutility import util, cli, units
+from jutility import cli
 from juml.models import embed, pool
 from juml.models.base  import Model
 from juml.models.embed import Embedder

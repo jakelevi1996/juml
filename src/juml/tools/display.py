@@ -1,5 +1,5 @@
 import torch
-from jutility import plotting, util, units
+from jutility import plotting, util
 from juml.models.sequential import Sequential
 
 def display_sequential(
@@ -60,13 +60,13 @@ def plot_sequential(
     t_list      = t_data[1:]
     t_tot       = t_list[-1]
     t_max       = max(t_list[:-1])
-    t_tot_label = "Total = %s"  % units.time_concise.format(t_tot)
-    t_max_label = "Max = %s"    % units.time_concise.format(t_max)
+    t_tot_label = "Total = %s"  % util.units.time_concise.format(t_tot)
+    t_max_label = "Max = %s"    % util.units.time_concise.format(t_max)
 
     layer_list  = [model.embed, *model.layers, model.pool]
     np_list     = [num_params(m) for m in layer_list]
-    n_tot_label = "Total = %s"  % units.metric.format(sum(np_list))
-    n_max_label = "Max = %s"    % units.metric.format(max(np_list))
+    n_tot_label = "Total = %s"  % util.units.metric.format(sum(np_list))
+    n_max_label = "Max = %s"    % util.units.metric.format(max(np_list))
 
     name_list   = [type(m).__name__ for m in layer_list]
     x_plot      = list(range(len(name_list)))

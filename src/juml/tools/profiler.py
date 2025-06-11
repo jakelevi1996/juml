@@ -1,6 +1,6 @@
 import torch
 from torch.autograd.profiler_util import FunctionEventAvg
-from jutility import util, units
+from jutility import util
 from juml.models.base import Model
 from juml.datasets.base import Dataset
 from juml.device import DeviceConfig
@@ -60,7 +60,7 @@ class Profiler:
             "throughput":       self.throughput,
             "flops":            self.flops,
             "n_samples":        self.n_samples,
-            "n_samples_str":    units.metric.format(self.n_samples),
+            "n_samples_str":    util.units.metric.format(self.n_samples),
             "batch_size":       batch_size,
             "n_repeats":        num_profile,
             "t_total_str": (
@@ -73,11 +73,11 @@ class Profiler:
             ),
             "throughput_str": (
                 "%s samples/second"
-                % units.metric.format(self.throughput)
+                % util.units.metric.format(self.throughput)
             ),
             "flops_str": (
                 "%s FLOPS/sample"
-                % units.metric.format(self.flops).upper()
+                % util.units.metric.format(self.flops).upper()
             ),
         }
         util.save_json(profile_dict, name, model_dir)

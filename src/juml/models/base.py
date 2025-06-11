@@ -1,5 +1,5 @@
 import torch
-from jutility import util, cli, units
+from jutility import util, cli
 
 class Model(torch.nn.Module):
     def _torch_module_init(self):
@@ -42,6 +42,6 @@ class Model(torch.nn.Module):
     def __repr__(self):
         return util.format_type(
             type(self),
-            num_params=units.metric.format(self.num_params()),
+            num_params=util.units.metric.format(self.num_params()),
             item_fmt="%s=%s",
         )
