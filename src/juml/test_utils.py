@@ -24,6 +24,12 @@ def set_torch_seed(*args):
     seed = util.Seeder().get_seed(*args)
     torch.manual_seed(seed)
 
+def all_close_to_zero(x: torch.Tensor, tol: float=1e-5) -> bool:
+    return x.abs().max().item() < tol
+
+def all_close(x: torch.Tensor, y: torch.Tensor, tol: float=1e-5) -> bool:
+    return all_close_to_zero(x - y, tol)
+
 class TensorPrinter:
     def __init__(self, printer: (util.Printer | None)=None):
         if printer is None:
