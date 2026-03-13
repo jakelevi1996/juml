@@ -24,8 +24,11 @@ def set_torch_seed(*args):
     seed = util.Seeder().get_seed(*args)
     torch.manual_seed(seed)
 
+def all_in_range(x: torch.Tensor, x_lo: float, x_hi: float) -> bool:
+    return (x >= x_lo).all().item() and (x <= x_hi).all().item()
+
 def all_close_to_zero(x: torch.Tensor, tol: float=1e-5) -> bool:
-    return x.abs().max().item() < tol
+    return all_in_range(x, -tol, tol)
 
 def all_close(x: torch.Tensor, y: torch.Tensor, tol: float=1e-5) -> bool:
     return all_close_to_zero(x - y, tol)
