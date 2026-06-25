@@ -27,6 +27,12 @@ class Command(cli.SubCommand):
     def get_name(cls) -> str:
         return cls.__name__
 
+    @classmethod
+    def load_metric_from_args(cls, arg_dict: dict, name: str):
+        cmd = cls.init_framework_command()
+        cmd.update(arg_dict)
+        return cmd.load_metric(name)
+
     def get_output_dir(self) -> str:
         return "results/%s/%s" % (self.get_name().lower(), self.get_summary())
 
