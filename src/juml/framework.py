@@ -26,7 +26,7 @@ class Framework:
         return command
 
     @classmethod
-    def run(cls):
-        command = cls.get_command()
+    def run(cls, *parser_args, **parser_kwargs):
+        command = cls.get_command(*parser_args, **parser_kwargs)
         with util.Timer(repr(command)):
             command.run(**command.get_kwargs())

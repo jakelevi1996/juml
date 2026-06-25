@@ -4,7 +4,7 @@ A Judicious, Unified and extendable framework for multi-paradigm Machine Learnin
 
 > *[Judicious [adjective]: having or showing reason and good judgment in making decisions](https://dictionary.cambridge.org/dictionary/english/judicious)*
 
-![](https://github.com/jakelevi1996/juml/raw/main/scripts/img/logo_black.png)
+![](https://github.com/jakelevi1996/juml/raw/main/img/logo_black.png)
 
 ## Contents
 
@@ -13,14 +13,8 @@ A Judicious, Unified and extendable framework for multi-paradigm Machine Learnin
   - [Installation](#installation)
   - [Overview](#overview)
   - [Usage examples](#usage-examples)
-    - [Out of the box](#out-of-the-box)
-      - [Help interface](#help-interface)
-      - [Train a model](#train-a-model)
-      - [Plot confusion matrix](#plot-confusion-matrix)
-      - [Sweep hyperparameters](#sweep-hyperparameters)
-      - [Profile](#profile)
-      - [Further examples](#further-examples)
-    - [Extending JUML](#extending-juml)
+  - [Extension guide](#extension-guide)
+  - [Extra tips](#extra-tips)
   - [Citation](#citation)
 
 ## Installation
@@ -44,238 +38,257 @@ JUML depends on [PyTorch](https://pytorch.org/). The installation instructions f
 
 ## Overview
 
-The JUML framework defines 6 fundamental classes (and several example subclasses), available in the [`juml.base`](https://github.com/jakelevi1996/juml/blob/main/src/juml/base.py) namespace module, which are expected to be subclassed in downstream projects:
+The purpose of JUML is to make the process of running ML experiments smoother.
 
-- [`juml.base.Model`](https://github.com/jakelevi1996/juml/blob/main/src/juml/models/base.py)
-- [`juml.base.Dataset`](https://github.com/jakelevi1996/juml/blob/main/src/juml/datasets/base.py)
-- [`juml.base.Loss`](https://github.com/jakelevi1996/juml/blob/main/src/juml/loss/base.py)
-- [`juml.base.Trainer`](https://github.com/jakelevi1996/juml/blob/main/src/juml/train/base.py)
-- [`juml.base.Command`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/base.py)
-- [`juml.base.Framework`](https://github.com/jakelevi1996/juml/blob/main/src/juml/framework.py)
+For example, as described in the [Extension guide](#extension-guide), when starting a new project, all you have to do is:
 
-*Coming soon: `juml.base.Environment` for RL*
+- Appropriately define one or more training loops, models, and datasets (or RL environments)
+- Define subclasses of [`Framework`](https://github.com/jakelevi1996/juml/blob/main/src/juml/framework.py) and [`Sweep`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/sweep.py)
+- Override one method in each of those subclasses
+- Configure your `pyproject.toml` file appropriately
+
+Then, JUML will automatically provide you with:
+
+- A CLI, including configurable selection and automatic nested initialisation of objects and subcommands (without having to write any config files)
+- Automatic results directory naming, so you don't have to worry about results overwriting each other, or manually naming each results file, or writing code to do this yourself, or paying a subscription for an external tool
+- Automatic sweeping over multiple parameters simultaneously and plotting sweep results *from the command line* (without having to write any extra sweeping code)
+- (and possibly more features to be added in future)
 
 ## Usage examples
 
-The JUML framework is designed to be extended in downstream research projects, but nontheless contains enough built-in functionality to run some simple ML experiments and visualise the results from the command line (without writing any Python code). The following subsections demonstrate:
+Once you install JUML, you can run a few commands and experiments from the command-line, without having to write any code.
 
-1. The built-in functionality of JUML
-2. A simple example demonstrating how to extend JUML with a new model and dataset
+First of all, view the top-level and command-specific help interfaces:
 
-JUML can be used with GPUs, however all of the below usage examples run purely on CPUs (using multiple processes for the hyperparameter sweeps) in under a minute (not including downloading datasets). These commands can be run on GPUs by specifying `--devices`.
-
-### Out of the box
-
-#### Help interface
-
-```sh
+```
 juml -h
-juml train -h
-juml sweep -h
-juml profile -h
+juml TrainClassification -h
+juml Sweep -h
 ```
 
-#### Train a model
-
-```sh
-juml train --model Mlp --model.Mlp.embedder Flatten --model.Mlp.embedder.Flatten.n 3 --dataset Mnist --trainer.BpSp.epochs 3
-```
-
-```txt
-cli: Mnist()
-cli: Flatten(n=3)
-cli: Identity()
-cli: Mlp(depth=3, embedder=Flatten(num_params=0), hidden_dim=100, input_shape=[1, 28, 28], output_shape=[10], pooler=Identity(num_params=0))
-cli: CrossEntropy()
-cli: Adam(lr=0.001, params=<generator object Module.parameters at 0x750d7f1f2ea0>)
-Time        | Epoch      | Batch      | Batch loss | Train metric | Test metric
------------ | ---------- | ---------- | ---------- | ------------ | ------------
-0.0002s     |          0 |            |            |      0.12013 |      0.11540
-1.7009s     |          0 |          0 |    2.33147 |              |
-2.0003s     |          0 |         91 |    0.47548 |              |
-3.0021s     |          0 |        398 |    0.24203 |              |
-3.6553s     |          0 |        599 |    0.22922 |              |
-3.6566s     |          1 |            |            |      0.95568 |      0.95320
-5.3384s     |          1 |          0 |    0.21946 |              |
-6.0018s     |          1 |        200 |    0.07385 |              |
-7.0005s     |          1 |        500 |    0.19840 |              |
-7.8268s     |          1 |        599 |    0.13859 |              |
-7.8288s     |          2 |            |            |      0.97107 |      0.96400
-11.1821s    |          2 |          0 |    0.05180 |              |
-12.0019s    |          2 |        244 |    0.07798 |              |
-13.0009s    |          2 |        538 |    0.03853 |              |
-13.2144s    |          2 |        599 |    0.08072 |              |
-13.2156s    |          3 |            |            |      0.97862 |      0.97010
-Saving in "results/train/dM_lC_mMd3eFen3h100pI_tBb100e3lCle1E-05oAol0.001_s0/cmd.txt"
-Saving in "results/train/dM_lC_mMd3eFen3h100pI_tBb100e3lCle1E-05oAol0.001_s0/args.json"
-Saving in "results/train/dM_lC_mMd3eFen3h100pI_tBb100e3lCle1E-05oAol0.001_s0/metrics.json"
-Saving in "results/train/dM_lC_mMd3eFen3h100pI_tBb100e3lCle1E-05oAol0.001_s0/metrics.png"
-Saving in "results/train/dM_lC_mMd3eFen3h100pI_tBb100e3lCle1E-05oAol0.001_s0/model.pth"
-Saving in "results/train/dM_lC_mMd3eFen3h100pI_tBb100e3lCle1E-05oAol0.001_s0/table.pkl"
-Model name = `dM_lC_mMd3eFen3h100pI_tBb100e3lCle1E-05oAol0.001_s0`
-Final metrics = 0.97862 (train), 0.97010 (test)
-Time taken for `train` = 15.2683 seconds
-```
-
-![](https://github.com/jakelevi1996/juml/raw/main/results/train/dM_lC_mMd3eFen3h100pI_tBb100e3lCle1E-05oAol0.001_s0/metrics.png)
-
-#### Plot confusion matrix
+Train an MLP on MNIST to 98% test accuracy in under 30 seconds (CPU):
 
 ```
-juml plotconfusionmatrix --model_name dM_lC_mMd3eFen3h100pI_tBb100e3lCle1E-05oAol0.001_s0
+juml TrainClassification \
+    --dataset Mnist \
+    --dataset.Mnist.flat \
+    --model ReluMlp \
+    --model.ReluMlp.hidden_dim 1000 \
+    --epochs 5
 ```
 
-![](https://github.com/jakelevi1996/juml/raw/main/results/train/dM_lC_mMd3eFen3h100pI_tBb100e3lCle1E-05oAol0.001_s0/Confusion_matrix.png)
-
-#### Sweep hyperparameters
+This produces the following output:
 
 ```
-juml sweep --model LinearModel --dataset LinearDataset --dataset.LinearDataset.input_dim 5 --dataset.LinearDataset.output_dim 10 --print_level 1 --sweep.seeds 1 2 3 --sweep.params '{"trainer.BpSp.epochs":[100,200,300],"trainer.BpSp.optimiser.Adam.lr":[1e-5,1e-4,1e-3,1e-2]}' --sweep.log_x trainer.BpSp.optimiser.Adam.lr --sweep.devices "[[],[],[],[],[],[]]" --sweep.no_cache
+cli: Mnist(flat=True)
+cli: ReluMlp(depth=2, hidden_dim=1000, input_shape=[784], output_shape=[10])
+Count | Time        | Epoch      | Batch      | Loss       | Train acc  | Test acc
+----- | ----------- | ---------- | ---------- | ---------- | ---------- | ----------
+0     | 0.0142s     |          0 |          0 |    2.35821 |            |
+91    | 1.0022s     |          0 |         91 |    0.21197 |            |
+183   | 2.0046s     |          0 |        183 |    0.18111 |            |
+273   | 3.0019s     |          0 |        273 |    0.18510 |            |
+364   | 4.0017s     |          0 |        364 |    0.14397 |            |
+456   | 5.0047s     |          0 |        456 |    0.14908 |            |
+547   | 6.0080s     |          0 |        547 |    0.11449 |            |
+599   | 6.5894s     |          0 |        599 |    0.07091 |            |
+600   | 6.9580s     |          0 |            |            |    0.97190 |    0.96670
+604   | 7.0040s     |          1 |          3 |    0.09275 |            |
+694   | 8.0038s     |          1 |         93 |    0.07405 |            |
+812   | 9.0012s     |          1 |        211 |    0.10806 |            |
+983   | 10.0041s    |          1 |        382 |    0.08695 |            |
+1150  | 11.0005s    |          1 |        549 |    0.08830 |            |
+1200  | 11.2970s    |          1 |        599 |    0.03669 |            |
+1201  | 11.6915s    |          1 |            |            |    0.98123 |    0.97070
+1253  | 12.0027s    |          2 |         51 |    0.05098 |            |
+1418  | 13.0049s    |          2 |        216 |    0.05247 |            |
+1578  | 14.0035s    |          2 |        376 |    0.08137 |            |
+1739  | 15.0028s    |          2 |        537 |    0.08548 |            |
+1801  | 15.3885s    |          2 |        599 |    0.05897 |            |
+1802  | 15.7840s    |          2 |            |            |    0.99040 |    0.97830
+1838  | 16.0027s    |          3 |         35 |    0.04630 |            |
+1996  | 17.0021s    |          3 |        193 |    0.12142 |            |
+2148  | 18.0031s    |          3 |        345 |    0.01137 |            |
+2300  | 19.0052s    |          3 |        497 |    0.01614 |            |
+2402  | 19.6594s    |          3 |        599 |    0.04586 |            |
+2403  | 20.0639s    |          3 |            |            |    0.99268 |    0.97970
+2404  | 20.0704s    |          4 |          0 |    0.00618 |            |
+2550  | 21.0057s    |          4 |        146 |    0.07377 |            |
+2706  | 22.0042s    |          4 |        302 |    0.03206 |            |
+2858  | 23.0003s    |          4 |        454 |    0.02141 |            |
+3003  | 23.9617s    |          4 |        599 |    0.00631 |            |
+3004  | 24.3791s    |          4 |            |            |    0.99547 |    0.98180
+Saving in "results/trainclassification/b100dMdfTe5mRmd2mh1000s0/args.json"
+Saving in "results/trainclassification/b100dMdfTe5mRmd2mh1000s0/cmd.txt"
+Saving in "results/trainclassification/b100dMdfTe5mRmd2mh1000s0/metrics.json"
+Saving in "results/trainclassification/b100dMdfTe5mRmd2mh1000s0/metrics.png"
+Time taken for `TrainClassification` = 26.7501 seconds
 ```
 
-[`[ full_sweep_results ]`](https://github.com/jakelevi1996/juml/blob/main/results/sweep/dLi5o10te200tr200ts0.0x0.0lMmLeIpItBb100e1,2,300lCle1E-05oAol,1E-0.0001,.001,.01,5s1,2,3/results.md)
+![](results/trainclassification/b100dMdfTe5mRmd2mh1000s0/metrics.png)
 
-![](https://github.com/jakelevi1996/juml/raw/main/results/sweep/dLi5o10te200tr200ts0.0x0.0lMmLeIpItBb100e1,2,300lCle1E-05oAol,1E-0.0001,.001,.01,5s1,2,3/trainer.BpSp.epochs.png)
-
-![](https://github.com/jakelevi1996/juml/raw/main/results/sweep/dLi5o10te200tr200ts0.0x0.0lMmLeIpItBb100e1,2,300lCle1E-05oAol,1E-0.0001,.001,.01,5s1,2,3/trainer.BpSp.optimiser.Adam.lr.png)
-
-#### Profile
+Sweep over width, depth, and random seeds for the MLP:
 
 ```
-juml profile --model_name dM_lC_mMd3eFen3h100pI_tBb100e3lCle1E-05oAol0.001_s0 --profile.num_warmup 1000 --profile.num_profile 1000 --profile.batch_size 100
+juml Sweep \
+    --params '{
+        "seed": [0, 1, 2],
+        "model.ReluMlp.hidden_dim": [20, 50, 100, 200, 500, 1000],
+        "model.ReluMlp.depth": [1, 2, 3]
+    }' \
+    --PlottingConfig.target_metric final_test_acc \
+    --PlottingConfig.x_key model.ReluMlp.hidden_dim \
+    --PlottingConfig.c_key model.ReluMlp.depth \
+    --PlottingConfig.log_x \
+    TrainClassification \
+    --dataset Mnist \
+    --dataset.Mnist.flat \
+    --model ReluMlp \
+    --epochs 3
 ```
 
-Key                                    | Value
--------------------------------------- | --------------------------------------
-Model                                  | `Mlp(num_params=99.7k)`
-Time (total)                           | 0.45093 s
-Time (average)                         | 0.00451 ms/sample
-Throughput                             | 221.8k samples/second
-FLOPS                                  | 199.1KFLOPS/sample
-Total number of samples                | 100.0k
-Batch size                             | 100
+This trains 54 models in ~12 minutes, and produces the following graph:
+
+![](results/sweep/b100dMdfTe3mRmd1,2,3mh1,2,50,0,00s0,1,2/sweep_results.png)
+
+Tidy up the labels and colour scheme by using the appropriate `--PlottingConfig` arguments. We also provide the `--name` argument to the `Sweep` command, because although `Sweep` automatically names output directories, it will overwrite our previous graph if we only change `--PlottingConfig` arguments. The results will automatically be loaded from disk without rerunning the experiments unless we specify `Sweep --force_run`:
 
 ```
-juml train --dataset RandomImage --model Cnn --model.Cnn.pooler Average2d --trainer BpSp --trainer.BpSp.epochs 1
-juml profile --model_name dRfFi3,32,32o10te200tr200_lC_mCb2c64eIk5n3pAs2_tBb100e1lCle1E-05oAol0.001_s0
+juml Sweep \
+    --params '{
+        "seed": [0, 1, 2],
+        "model.ReluMlp.hidden_dim": [20, 50, 100, 200, 500, 1000],
+        "model.ReluMlp.depth": [1, 2, 3]
+    }' \
+    --name tidy_mnist_sweep \
+    --PlottingConfig.target_metric final_test_acc \
+    --PlottingConfig.x_key model.ReluMlp.hidden_dim \
+    --PlottingConfig.c_key model.ReluMlp.depth \
+    --PlottingConfig.log_x \
+    --PlottingConfig.x_label Width \
+    --PlottingConfig.y_label 'Test acc' \
+    --PlottingConfig.c_label Depth \
+    --PlottingConfig.ylim 0.9 1 \
+    --PlottingConfig.cool_colours \
+    TrainClassification \
+    --dataset Mnist \
+    --dataset.Mnist.flat \
+    --model ReluMlp \
+    --epochs 3
 ```
 
-Key                                    | Value
--------------------------------------- | --------------------------------------
-Model                                  | `Cnn(num_params=620.3k)`
-Time (total)                           | 0.22285 s
-Time (average)                         | 0.22285 ms/sample
-Throughput                             | 4.5k samples/second
-FLOPS                                  | 7.2MFLOPS/sample
-Total number of samples                | 1.0k
-Batch size                             | 100
+![](results/sweep/tidy_mnist_sweep/sweep_results.png)
+
+We can transpose the axes of the graph simply by swapping `--PlottingConfig` arguments and choosing a new name:
 
 ```
-juml train --dataset RandomImage --model RzCnn --model.RzCnn.pooler Average2d --trainer BpSp --trainer.BpSp.epochs 1
-juml profile --model_name dRfFi3,32,32o10te200tr200_lC_mRZCb2eIk5m64n3pAs2x2.0_tBb100e1lCle1E-05oAol0.001_s0
+juml Sweep \
+    --params '{
+        "seed": [0, 1, 2],
+        "model.ReluMlp.hidden_dim": [20, 50, 100, 200, 500, 1000],
+        "model.ReluMlp.depth": [1, 2, 3]
+    }' \
+    --name tidy_mnist_sweep_transpose \
+    --PlottingConfig.target_metric final_test_acc \
+    --PlottingConfig.x_key model.ReluMlp.depth \
+    --PlottingConfig.c_key model.ReluMlp.hidden_dim \
+    --PlottingConfig.x_label Depth \
+    --PlottingConfig.y_label 'Test acc' \
+    --PlottingConfig.c_label Width \
+    --PlottingConfig.ylim 0.9 1 \
+    --PlottingConfig.cool_colours \
+    TrainClassification \
+    --dataset Mnist \
+    --dataset.Mnist.flat \
+    --model ReluMlp \
+    --epochs 3
 ```
 
-Key                                    | Value
--------------------------------------- | --------------------------------------
-Model                                  | `RzCnn(num_params=283.4k)`
-Time (total)                           | 0.22679 s
-Time (average)                         | 0.22679 ms/sample
-Throughput                             | 4.4k samples/second
-FLOPS                                  | 7.2MFLOPS/sample
-Total number of samples                | 1.0k
-Batch size                             | 100
+![](results/sweep/tidy_mnist_sweep_transpose/sweep_results.png)
 
-#### Further examples
+## Extension guide
 
-See [`scripts/further_examples.sh`](https://github.com/jakelevi1996/juml/blob/main/scripts/further_examples.sh) for some further examples of `juml` commands with some explanations.
+JUML is designed to be both extendable and flexible. Here we provide a guide for extending JUML in your project, step by step. You don't have to do everything in this guide, and you can do more than we outline here.
 
-### Extending JUML
+We will assume that your project is called `MYPROJ`, but you should replace `MYPROJ` with a short and descriptive (and lowercase) name for your project. All paths are relative to the top-level directory of your project.
 
-The script [`scripts/demo_extend_juml.py`](https://github.com/jakelevi1996/juml/blob/main/scripts/demo_extend_juml.py) (also shown below) is a simple demonstration of how the JUML framework can be extended with a simple new model and synthetic dataset. Despite being only 58 lines (including whitespace), this script inherits the following capabilities from JUML without *any* additional code:
+Here are the steps:
 
-1. CLI interface
-2. Training loop
-3. Hyperparameter sweeps
-4. Automated model naming/saving/loading
-5. Visualisation commands
-6. Profiling (from the CLI)
-7. Other models to compare against (by calling appropriate CLI arguments)
+1. Define models:
+   1. Define some model classes, each in a separate file in the directory `src/MYPROJ/models/`, which are subclasses of [`juml.models.Model`](https://github.com/jakelevi1996/juml/blob/main/src/juml/models/model.py) (see [`juml.models.ReluMlp`](https://github.com/jakelevi1996/juml/blob/main/src/juml/models/relu_mlp.py) for an example)
+   2. Make a file `src/MYPROJ/models/__init__.py` with a function `get_all_models` which returns a list of your defined model classes (see [`juml.models`](https://github.com/jakelevi1996/juml/blob/main/src/juml/models/__init__.py) for an example)
+2. Define datasets:
+   1. Define some dataset classes, each in a separate file in the directory `src/MYPROJ/data/`, which are subclasses of [`juml.data.Dataset`](https://github.com/jakelevi1996/juml/blob/main/src/juml/data/dataset.py) (see [`juml.data.Mnist`](https://github.com/jakelevi1996/juml/blob/main/src/juml/data/mnist.py) for an example)
+   2. Make a file `src/MYPROJ/data/__init__.py` with a function `get_all_datasets` which returns a list of your defined dataset classes (see [`juml.data`](https://github.com/jakelevi1996/juml/blob/main/src/juml/data/__init__.py) for an example)
+3. Define commands:
+   1. Define some training loops or other commands, each in a separate file in the directory `src/MYPROJ/commands/`, which are subclasses of [`juml.commands.Command`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/command.py) (see [`juml.commands.TrainClassification`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/train_classification.py) for an example)
+   2. Define a class `Sweep` which is a subclass of [`juml.commands.Sweep`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/sweep.py), override the class-method `get_subcommands`, and from it return a list of your defined command classes (NOT including your `Sweep` subclass itself)
+   3. Make a file `src/MYPROJ/command/__init__.py` with a function `get_all_commands` which returns a list of your defined command classes, including your `Sweep` subclass (see [`juml.commands`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/__init__.py) for an example)
+4. Define framework:
+   1. Define a class `Framework` in the file `src/MYPROJ/framework.py` which is a subclass of [`juml.Framework`](https://github.com/jakelevi1996/juml/blob/main/src/juml/framework.py), override the class-method `get_commands`, and from it return a list of your defined command classes (including your `Sweep` subclass)
+   2. Make a file `src/MYPROJ/__init__.py` which includes the statemt `from MYPROJ.framework import Framework` (see [`juml`](https://github.com/jakelevi1996/juml/blob/main/src/juml/__init__.py) for an example)
+5. Configure and install project:
+   1. Make a file `pyproject.toml` following the template below
+   2. Run the commands `python -m pip install -U pip` and `python -m pip install .`
+
+`pyproject.toml` template:
+
+```
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "MYPROJ"
+version = "0.0.1"
+
+[project.scripts]
+MYPROJ = "MYPROJ.framework:Framework.run"
+```
+
+Now you are ready to run some commands and sweeps! For example:
+
+```
+MYPROJ MyCommand ...
+MYPROJ Sweep --params '{...}' ... MyCommand ...`
+```
+
+## Extra tips
+
+There are different approaches that can be taken to debugging. Perhaps the easiest is to make a new Python script which calls `juml.Framework.run` (or your subclass of `Framework`) directly with specified arguments, and then debug this like a normal script, for example:
 
 ```py
-import torch
-from jutility import cli
 import juml
 
-class PolynomialRegression1d(juml.base.Model):
-    def __init__(
-        self,
-        n:              int,
-        input_shape:    list[int],
-        output_shape:   list[int],
-    ):
-        self._torch_module_init()
-        self.p_i    = torch.arange(n)
-        self.w_i1   = torch.nn.Parameter(torch.zeros([n, 1]))
-
-    def forward(self, x_n1: torch.Tensor) -> torch.Tensor:
-        x_ni = (x_n1 ** self.p_i)
-        x_n1 = x_ni @ self.w_i1
-        return x_n1
-
-    @classmethod
-    def get_cli_options(cls) -> list[cli.Arg]:
-        return [cli.Arg("n", type=int, default=5)]
-
-class Step1d(juml.datasets.Synthetic):
-    def __init__(self):
-        self._init_synthetic(
-            input_shape=[1],
-            output_shape=[1],
-            n_train=200,
-            n_test=200,
-            x_std=0.1,
-            t_std=0.02,
-        )
-
-    def _compute_target(self, x: torch.Tensor) -> torch.Tensor:
-        return torch.where(x > 0, 1.0, 0.0)
-
-    @classmethod
-    def get_default_loss(cls) -> type[juml.base.Loss] | None:
-        return juml.loss.Mse
-
-class DemoExtendFramework(juml.base.Framework):
-    @classmethod
-    def get_models(cls) -> list[type[juml.base.Model]]:
-        return [
-            *juml.models.get_all(),
-            PolynomialRegression1d,
-        ]
-
-    @classmethod
-    def get_datasets(cls) -> list[type[juml.base.Dataset]]:
-        return [
-            *juml.datasets.get_all(),
-            Step1d,
-        ]
-
-if __name__ == "__main__":
-    DemoExtendFramework.run()
+s = (
+    "TrainClassification "
+    "--dataset Mnist "
+    "--dataset.Mnist.flat "
+    "--model ReluMlp "
+    "--model.ReluMlp.hidden_dim 1000 "
+    "--epochs 1"
+)
+juml.Framework.run(s.split())
 ```
 
-Example usage:
+Sometimes you may want to make more sophisticated plots beyond those produced by `juml Sweep` (or your subclass of `Sweep`), which involves iterating over arguments and loading saved metrics. Every subclass of [`juml.commands.Command`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/command.py) inherits a class method `load_metric_from_args`, to which you can simply provide a dictionary of arguments (for example those saved in [`args.json`](results/trainclassification/b100dMdfTe5mRmd2mh1000s0/args.json) by your training command) and the name of the metric you want to load. Then `load_metric_from_args` will load that metric for you. For example:
 
-```sh
-python scripts/demo_extend_juml.py -h
-python scripts/demo_extend_juml.py train -h
-python scripts/demo_extend_juml.py train --model PolynomialRegression1d --dataset Step1d --trainer.BpSp.epochs 1000 --print_level 1
-python scripts/demo_extend_juml.py plot1dregression --model_name dST_lM_mPn5_tBb100e1000lCle1E-05oAol0.001_s0
-python scripts/demo_extend_juml.py sweep --model PolynomialRegression1d --dataset Step1d --trainer.BpSp.epochs 1000 --print_level 1 --sweep.params '{"model.PolynomialRegression1d.n":[3,4,5,6,7,8,9,10]}' --sweep.devices "[[],[],[],[],[],[]]" --sweep.no_cache
-python scripts/demo_extend_juml.py plot1dregression --model_name dST_lM_mPn6_tBb100e1000lCle1E-05oAol0.001_s0
-
-python scripts/demo_extend_juml.py train --model RzMlp --dataset Step1d --trainer.BpSp.epochs 1000 --print_level 1
-python scripts/demo_extend_juml.py plot1dregression --model_name dST_lM_mRZMd3eIm100pIx2.0_tBb100e1000lCle1E-05oAol0.001_s0
-python scripts/demo_extend_juml.py plotsequential --model_name dST_lM_mRZMd3eIm100pIx2.0_tBb100e1000lCle1E-05oAol0.001_s0
+```py
+m = juml.commands.TrainClassification.load_metric_from_args(
+    arg_dict={
+        "seed": 0,
+        "epochs": 5,
+        "batch_size": 100,
+        "dataset": "Mnist",
+        "dataset.Mnist.flat": True,
+        "model": "ReluMlp",
+        "model.ReluMlp.depth": 2,
+        "model.ReluMlp.hidden_dim": 1000
+    },
+    name="final_test_acc",
+)
+print(m)
+# >>> 0.9818000197410583
 ```
 
 ## Citation
