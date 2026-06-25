@@ -20,4 +20,4 @@ mp = plotting.MultiPlot(
     title_colour="w",
     title_font_size=40,
 )
-mp.save("logo_black", dir_name="scripts/img")
+mp.save("logo_black", dir_name="img")
