@@ -8,6 +8,7 @@ class Sweep(Command):
     def run(
         self,
         params:     dict[str, list],
+        name:       str | None,
         force_run:  bool,
     ):
         command = self.get_command()
@@ -21,6 +22,11 @@ class Sweep(Command):
             command=command,
             force_run=force_run,
         )
+
+        if name is None:
+            name = self.experiment_group.get_summary()
+
+        self.name = name
 
         print("\nExperiments:\n")
         self.experiment_group.get_table(cfg.target_metric)
@@ -49,7 +55,7 @@ class Sweep(Command):
             mp.save("sweep results", output_dir)
 
     def get_summary(self, replaces=None) -> str:
-        return self.experiment_group.get_summary()
+        return self.name
 
     @classmethod
     def get_cli_args(cls) -> list[cli.Arg]:
@@ -73,7 +79,8 @@ class Sweep(Command):
                     "arguments to `PlottingConfig`."
                 ),
             ),
-            cli.Arg("force_run", action="store_true"),
+            cli.Arg("name",         type=str, default=None),
+            cli.Arg("force_run",    action="store_true"),
             PlottingConfig.get_cli_arg(),
         ]
 
