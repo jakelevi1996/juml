@@ -214,13 +214,14 @@ class ExperimentGroup:
     ) -> plotting.Subplot:
         if cfg.c_key is not None:
             c_vals = self.params[cfg.c_key]
+            cp = cfg.get_cp(len(c_vals))
             nd_list = [
                 self.get_subgroup(cfg.c_key, c).get_series(cfg)
                 for c in c_vals
             ]
             lines = [
                 nd.plot(c=c, label=s)
-                for nd, c, s in zip(nd_list, cfg.cp, c_vals)
+                for nd, c, s in zip(nd_list, cp, c_vals)
             ]
         else:
             nd = self.get_series(cfg)
@@ -256,9 +257,10 @@ class ExperimentGroup:
     def get_legend_kwargs(self, cfg: PlottingConfig) -> dict:
         if cfg.c_key is not None:
             c_vals = self.params[cfg.c_key]
+            cp = cfg.get_cp(len(c_vals))
             kw = {
                 "legend": plotting.FigureLegend.centre_right(
-                    *cfg.cp.get_legend_sweeps(*c_vals, key_order=c_vals),
+                    *cp.get_legend_sweeps(*c_vals, key_order=c_vals),
                     title=cfg.c_label,
                 ),
             }

@@ -12,6 +12,8 @@ class PlottingConfig:
         log_y:          bool,
         sharex:         bool,
         sharey:         bool,
+        cool_colours:   bool,
+        hsv_colours:    bool,
         x_label:        str | None,
         y_label:        str | None,
         c_label:        str | None,
@@ -41,6 +43,8 @@ class PlottingConfig:
         self.log_y          = log_y
         self.sharex         = sharex
         self.sharey         = sharey
+        self.cool_colours   = cool_colours
+        self.hsv_colours    = hsv_colours
         self.x_label        = x_label
         self.y_label        = y_label
         self.c_label        = c_label
@@ -49,7 +53,16 @@ class PlottingConfig:
         self.ylim           = ylim
         self.figsize        = figsize
         self.font_size      = font_size
-        self.cp             = plotting.ColourPicker.contrast()
+
+    def get_cp(self, n_colours: int) -> plotting.ColourPicker:
+        if self.cool_colours:
+            cp = plotting.ColourPicker.cool(n_colours)
+        elif self.hsv_colours:
+            cp = plotting.ColourPicker.hsv(n_colours)
+        else:
+            cp = plotting.ColourPicker.contrast()
+
+        return cp
 
     @classmethod
     def get_cli_arg(cls) -> cli.ObjectArg:
@@ -64,6 +77,8 @@ class PlottingConfig:
             cli.Arg("log_y",            action="store_true"),
             cli.Arg("sharex",           action="store_true"),
             cli.Arg("sharey",           action="store_true"),
+            cli.Arg("cool_colours",     action="store_true"),
+            cli.Arg("hsv_colours",      action="store_true"),
             cli.Arg("x_label",          type=str, default=None),
             cli.Arg("y_label",          type=str, default=None),
             cli.Arg("c_label",          type=str, default=None),
