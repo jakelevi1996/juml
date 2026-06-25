@@ -125,7 +125,7 @@ Saving in "results/trainclassification/b100dMdfTe5mRmd2mh1000s0/metrics.png"
 Time taken for `TrainClassification` = 26.7501 seconds
 ```
 
-![](results/trainclassification/b100dMdfTe5mRmd2mh1000s0/metrics.png)
+![](https://github.com/jakelevi1996/juml/raw/main/results/trainclassification/b100dMdfTe5mRmd2mh1000s0/metrics.png)
 
 Sweep over width, depth, and random seeds for the MLP:
 
@@ -149,7 +149,7 @@ juml Sweep \
 
 This trains 54 models in ~12 minutes, and produces the following graph:
 
-![](results/sweep/b100dMdfTe3mRmd1,2,3mh1,2,50,0,00s0,1,2/sweep_results.png)
+![](https://github.com/jakelevi1996/juml/raw/main/results/sweep/b100dMdfTe3mRmd1,2,3mh1,2,50,0,00s0,1,2/sweep_results.png)
 
 Tidy up the labels and colour scheme by using the appropriate `--PlottingConfig` arguments. We also provide the `--name` argument to the `Sweep` command, because although `Sweep` automatically names output directories, it will overwrite our previous graph if we only change `--PlottingConfig` arguments. The results will automatically be loaded from disk without rerunning the experiments unless we specify `Sweep --force_run`:
 
@@ -177,7 +177,7 @@ juml Sweep \
     --epochs 3
 ```
 
-![](results/sweep/tidy_mnist_sweep/sweep_results.png)
+![](https://github.com/jakelevi1996/juml/raw/main/results/sweep/tidy_mnist_sweep/sweep_results.png)
 
 We can transpose the axes of the graph simply by swapping `--PlottingConfig` arguments and choosing a new name:
 
@@ -204,7 +204,7 @@ juml Sweep \
     --epochs 3
 ```
 
-![](results/sweep/tidy_mnist_sweep_transpose/sweep_results.png)
+![](https://github.com/jakelevi1996/juml/raw/main/results/sweep/tidy_mnist_sweep_transpose/sweep_results.png)
 
 ## Extension guide
 
@@ -271,7 +271,7 @@ s = (
 juml.Framework.run(s.split())
 ```
 
-Sometimes you may want to make more sophisticated plots beyond those produced by `juml Sweep` (or your subclass of `Sweep`), which involves iterating over arguments and loading saved metrics. Every subclass of [`juml.commands.Command`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/command.py) inherits a class method `load_metric_from_args`, to which you can simply provide a dictionary of arguments (for example those saved in [`args.json`](results/trainclassification/b100dMdfTe5mRmd2mh1000s0/args.json) by your training command) and the name of the metric you want to load. Then `load_metric_from_args` will load that metric for you. For example:
+Sometimes you may want to make more sophisticated plots beyond those produced by `juml Sweep` (or your subclass of `Sweep`), which involves iterating over arguments and loading saved metrics. Every subclass of [`juml.commands.Command`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/command.py) inherits a class method `load_metric_from_args`, to which you can simply provide a dictionary of arguments (for example those saved in [`args.json`](https://github.com/jakelevi1996/juml/blob/main/results/trainclassification/b100dMdfTe5mRmd2mh1000s0/args.json) by your training command) and the name of the metric you want to load. Then `load_metric_from_args` will load that metric for you. For example:
 
 ```py
 m = juml.commands.TrainClassification.load_metric_from_args(
