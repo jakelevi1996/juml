@@ -3,10 +3,10 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "juml-toolkit"
-version = "0.0.5"
+name = "juml-framework"
+version = "0.0.1"
 dependencies = [
-  "jutility>=0.0.23",
+  "jutility>=0.0.30",
 ]
 requires-python = ">= 3.10"
 authors = [
