@@ -255,17 +255,14 @@ class ExperimentGroup:
         return nd
 
     def get_legend_kwargs(self, cfg: PlottingConfig) -> dict:
+        kw = dict()
         if cfg.c_key is not None:
             c_vals = self.params[cfg.c_key]
             cp = cfg.get_cp(len(c_vals))
-            kw = {
-                "legend": plotting.FigureLegend.centre_right(
-                    *cp.get_legend_sweeps(*c_vals, key_order=c_vals),
-                    title=cfg.c_label,
-                ),
-            }
-        else:
-            kw = dict()
+            kw["legend"] = plotting.FigureLegend.centre_right(
+                *cp.get_legend_sweeps(*c_vals, key_order=c_vals),
+                title=cfg.c_label,
+            )
 
         return kw
 
