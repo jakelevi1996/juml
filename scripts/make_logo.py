@@ -3,12 +3,11 @@ from jutility import plotting
 
 num_colours = 7
 x = torch.linspace(-1, 7, 100)
+cp = plotting.ColourPicker.from_linear_cmap("plasma", num_colours)
 lines = [
-    plotting.Line(x, ((1 + (i/10)) * torch.sin(x + (i / num_colours))))
-    for i in range(num_colours)
+    plotting.Line(x, ((1 + (i/10)) * torch.sin(x + (i / num_colours))), c=c)
+    for i, c in enumerate(cp)
 ]
-cp = plotting.ColourPicker(num_colours, cyclic=False, cmap_name="plasma")
-cp.colourise(lines)
 mp = plotting.MultiPlot(
     plotting.Subplot(
         *lines,
