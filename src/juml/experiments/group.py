@@ -167,6 +167,7 @@ class ExperimentGroup:
                 if cfg.col_key is not None
                 else 1
             ),
+            sharex=cfg.sharex,
             sharey=cfg.sharey,
             **self.get_legend_kwargs(cfg),
         )
@@ -177,17 +178,17 @@ class ExperimentGroup:
             subplots = [
                 sp
                 for r in row_vals
-                for sp in self.get_subgroup(cfg.row_key, r).get_row(
+                for sp in self.get_subgroup(cfg.row_key, r).get_row_subplots(
                     cfg,
-                    ["%s=%s" % (cfg.abbrev(cfg.row_key), r)],
+                    ["%s=%s" % (cfg.row_label, r)],
                 )
             ]
         else:
-            subplots = self.get_row(cfg, [])
+            subplots = self.get_row_subplots(cfg, [])
 
         return subplots
 
-    def get_row(
+    def get_row_subplots(
         self,
         cfg:            PlottingConfig,
         title_parts:    list[str],
@@ -197,7 +198,7 @@ class ExperimentGroup:
             subplots = [
                 self.get_subgroup(cfg.col_key, c).get_subplot(
                     cfg,
-                    title_parts + ["%s=%s" % (cfg.abbrev(cfg.col_key), c)],
+                    title_parts + ["%s=%s" % (cfg.col_label, c)],
                 )
                 for c in col_vals
             ]
@@ -235,8 +236,8 @@ class ExperimentGroup:
         )
         return plotting.Subplot(
             *lines,
-            xlabel=cfg.abbrev(cfg.x_key),
-            ylabel=cfg.abbrev(cfg.target_metric),
+            xlabel=cfg.x_label,
+            ylabel=cfg.y_label,
             log_x=cfg.log_x,
             log_y=cfg.log_y,
             ylim=cfg.ylim,
@@ -258,7 +259,7 @@ class ExperimentGroup:
             kw = {
                 "legend": plotting.FigureLegend.centre_right(
                     *cfg.cp.get_legend_sweeps(*c_vals, key_order=c_vals),
-                    title=cfg.abbrev(cfg.c_key),
+                    title=cfg.c_label,
                 ),
             }
         else:
