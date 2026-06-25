@@ -229,7 +229,7 @@ Here are the steps:
    2. Make a file `src/MYPROJ/__init__.py` which includes the statemt `from MYPROJ.framework import Framework` (see [`juml`](https://github.com/jakelevi1996/juml/blob/main/src/juml/__init__.py) for an example)
 5. Configure and install project:
    1. Make a file `pyproject.toml` following the template below
-   2. Run the commands `python -m pip install -U pip` and `python -m pip install .`
+   2. Run the commands `python -m pip install -U pip` and `python -m pip install -e .`
 
 `pyproject.toml` template:
 
