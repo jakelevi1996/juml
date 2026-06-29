@@ -1,6 +1,5 @@
 from jutility import cli, util
-from juml.commands import get_all_commands
-from juml.commands.command import Command
+from juml.commands import Command, get_all_commands
 
 class Framework:
     @classmethod
@@ -19,14 +18,9 @@ class Framework:
         )
 
     @classmethod
-    def get_command(cls, *parser_args, **parser_kwargs) -> Command:
+    def run(cls, *parser_args, **parser_kwargs):
         parser = cls.get_parser()
         args = parser.parse_args(*parser_args, **parser_kwargs)
         command = args.get_command()
-        return command
-
-    @classmethod
-    def run(cls, *parser_args, **parser_kwargs):
-        command = cls.get_command(*parser_args, **parser_kwargs)
         with util.Timer(repr(command)):
             command.run(**command.get_kwargs())
