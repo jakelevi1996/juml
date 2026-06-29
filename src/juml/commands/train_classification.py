@@ -1,10 +1,8 @@
 import torch
 from jutility import plotting, util, cli
 from juml.commands.command import Command
-from juml.data import get_all_datasets
-from juml.data.classification import ClassificationDataset
-from juml.models import get_all_models
-from juml.models.classification import ClassificationModel
+from juml.data import ClassificationDataset, get_all_datasets
+from juml.models import ClassificationModel, get_all_models
 from juml.util import softmax_cross_entropy_from_logits, multiclass_acc
 
 class TrainClassification(Command):
