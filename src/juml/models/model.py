@@ -5,15 +5,6 @@ class Model(torch.nn.Module):
     def _torch_module_init(self):
         super().__init__()
 
-    def forward(
-        self,
-        *tensors: torch.Tensor,
-    ) -> (torch.Tensor | tuple[torch.Tensor, ...]):
-        raise NotImplementedError()
-
-    def step(self, *tensors: torch.Tensor) -> float:
-        raise NotImplementedError()
-
     @classmethod
     def get_cli_options(cls) -> list[cli.Arg]:
         raise NotImplementedError()
