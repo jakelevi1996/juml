@@ -2,9 +2,9 @@ import torch
 from jutility import plotting, util, cli
 from juml.commands.command import Command
 from juml.data import get_all_datasets
-from juml.data.dataset import Dataset
+from juml.data.classification import ClassificationDataset
 from juml.models import get_all_models
-from juml.models.model import Model
+from juml.models.classification import ClassificationModel
 from juml.util import softmax_cross_entropy_from_logits, multiclass_acc
 
 class TrainClassification(Command):
@@ -17,21 +17,22 @@ class TrainClassification(Command):
         torch.manual_seed(seed)
 
         dataset = self.init_object("dataset")
-        assert isinstance(dataset, Dataset)
+        assert isinstance(dataset, ClassificationDataset)
 
-        input_shape, output_shape = dataset.get_dimensions()
         model = self.init_object(
             "model",
-            input_shape=input_shape,
-            output_shape=output_shape,
+            input_dim=dataset.get_input_dim(),
+            output_dim=dataset.get_output_dim(),
         )
-        assert isinstance(model, Model)
+        assert isinstance(model, ClassificationModel)
 
         opt = torch.optim.Adam(model.parameters())
 
         train_loader = dataset.get_data_loader("train", batch_size)
         x_train, t_train = dataset.get_full_batch("train")
         x_test,  t_test  = dataset.get_full_batch("test")
+        x_train, t_train = dataset.format_batch(x_train, t_train)
+        x_test,  t_test  = dataset.format_batch(x_test,  t_test)
 
         table = util.Table(
             util.CountColumn(),

@@ -71,7 +71,6 @@ Train an MLP on MNIST to 98% test accuracy in under 30 seconds (CPU):
 ```
 juml TrainClassification \
     --dataset Mnist \
-    --dataset.Mnist.flat \
     --model ReluMlp \
     --model.ReluMlp.hidden_dim 1000 \
     --epochs 5
@@ -142,7 +141,6 @@ juml Sweep \
     --PlottingConfig.log_x \
     TrainClassification \
     --dataset Mnist \
-    --dataset.Mnist.flat \
     --model ReluMlp \
     --epochs 3
 ```
@@ -172,7 +170,6 @@ juml Sweep \
     --PlottingConfig.cool_colours \
     TrainClassification \
     --dataset Mnist \
-    --dataset.Mnist.flat \
     --model ReluMlp \
     --epochs 3
 ```
@@ -199,7 +196,6 @@ juml Sweep \
     --PlottingConfig.cool_colours \
     TrainClassification \
     --dataset Mnist \
-    --dataset.Mnist.flat \
     --model ReluMlp \
     --epochs 3
 ```
@@ -263,7 +259,6 @@ import juml
 s = (
     "TrainClassification "
     "--dataset Mnist "
-    "--dataset.Mnist.flat "
     "--model ReluMlp "
     "--model.ReluMlp.hidden_dim 1000 "
     "--epochs 1"
@@ -280,7 +275,6 @@ m = juml.commands.TrainClassification.load_metric_from_args(
         "epochs": 5,
         "batch_size": 100,
         "dataset": "Mnist",
-        "dataset.Mnist.flat": True,
         "model": "ReluMlp",
         "model.ReluMlp.depth": 2,
         "model.ReluMlp.hidden_dim": 1000
