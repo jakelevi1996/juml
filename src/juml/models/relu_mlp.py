@@ -1,7 +1,7 @@
 import torch
 from jutility import cli
 import juml
-from juml.models.classification import FeedForwardModel
+from juml.models.ff import FeedForwardModel
 from juml.models.layers.linear import LinearLayer
 
 class ReluMlp(FeedForwardModel):
