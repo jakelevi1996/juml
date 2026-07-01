@@ -2,7 +2,7 @@ import torch
 from jutility import plotting, util, cli
 from juml.commands.command import Command
 from juml.data import ClassificationDataset, get_all_datasets
-from juml.models import ClassificationModel, get_all_models
+from juml.models import FeedForwardModel, get_all_models
 from juml.util import softmax_cross_entropy_from_logits, multiclass_acc
 
 class TrainClassification(Command):
@@ -22,7 +22,7 @@ class TrainClassification(Command):
             input_dim=dataset.get_input_dim(),
             output_dim=dataset.get_output_dim(),
         )
-        assert isinstance(model, ClassificationModel)
+        assert isinstance(model, FeedForwardModel)
 
         opt = torch.optim.Adam(model.parameters())
 

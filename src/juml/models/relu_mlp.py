@@ -1,10 +1,10 @@
 import torch
 from jutility import cli
 import juml
-from juml.models.classification import ClassificationModel
+from juml.models.classification import FeedForwardModel
 from juml.models.layers.linear import LinearLayer
 
-class ReluMlp(ClassificationModel):
+class ReluMlp(FeedForwardModel):
     def __init__(
         self,
         input_dim:  int,
