@@ -1,4 +1,3 @@
-import math
 import torch
 from juml.models.model import Model
 
@@ -10,7 +9,7 @@ class LinearLayer(Model):
         w_scale:    (float | None)=None,
     ):
         if w_scale is None:
-            w_scale = 1.0 / math.sqrt(input_dim)
+            w_scale = input_dim ** (-1/2)
 
         self._torch_module_init()
         w_shape = [input_dim, output_dim]
