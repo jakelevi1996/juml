@@ -83,8 +83,12 @@ class TensorPrinter:
 
         self.printer = printer
 
-    def __call__(self, x: torch.Tensor):
-        self.printer.hline()
+    def __call__(self, x: torch.Tensor, name: (str | None)=None):
+        if name is not None:
+            self.printer((" %s " % name).center(util.HLINE_LEN, "-"))
+        else:
+            self.printer.hline()
+
         self.printer(
             "shape = %s\nnumel = %s\ndtype = %s\n%s"
             % (list(x.shape), x.numel(), x.dtype, x)
