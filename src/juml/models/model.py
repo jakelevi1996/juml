@@ -5,6 +5,12 @@ class Model(torch.nn.Module):
     def _torch_module_init(self):
         super().__init__()
 
+    def get_num_params(self) -> int:
+        return sum(
+            p.numel()
+            for p in self.parameters()
+        )
+
     @classmethod
     def get_cli_options(cls) -> list[cli.Arg]:
         raise NotImplementedError()

@@ -79,6 +79,7 @@ class TrainClassification(Command):
         train_acc   = table.get_data("train_acc")
         test_acc    = table.get_data("test_acc")
         t           = table.get_item("t", -1)
+        n_params    = model.get_num_params()
         self.save_metrics(
             final_train_loss    =train_loss[-1],
             final_train_acc     =train_acc[-1],
@@ -91,6 +92,8 @@ class TrainClassification(Command):
             max_test_acc        =max(test_acc),
             time                =t,
             time_str            =util.time_format(t, True),
+            n_params            =n_params,
+            n_params_str        =util.units.metric.format(n_params),
         )
 
         output_dir = self.get_output_dir()
