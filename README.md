@@ -206,25 +206,24 @@ juml Sweep \
 
 JUML is designed to be both extendable and flexible. Here we provide a guide for extending JUML in your project, step by step. You don't have to do everything in this guide, and you can do more than we outline here.
 
-We will assume that your project is called `MYPROJ`, but you should replace `MYPROJ` with a short and descriptive (and lowercase) name for your project. All paths are relative to the top-level directory of your project.
+We will assume that your project is called `MYPROJ`, but you should replace `MYPROJ` with a short and descriptive (and lowercase) name for your project. See the [JUML source code](https://github.com/jakelevi1996/juml/tree/main/src/juml) for recommended file and directory structure.
 
 Here are the steps:
 
 1. Define models:
    1. Define an interface class for your models, which is a subclass of [`juml.models.Model`](https://github.com/jakelevi1996/juml/blob/main/src/juml/models/model.py) (see [`juml.models.FeedForwardModel`](https://github.com/jakelevi1996/juml/blob/main/src/juml/models/ff.py) for an example)
-   2. Define some model classes which are subclasses of your interface class, each in a separate file in the directory `src/MYPROJ/models/` (see [`juml.models.ReluMlp`](https://github.com/jakelevi1996/juml/blob/main/src/juml/models/relu_mlp.py) for an example)
-   3. Make a file `src/MYPROJ/models/__init__.py` with a function `get_all_models` which returns a list of your defined model classes (see [`juml.models`](https://github.com/jakelevi1996/juml/blob/main/src/juml/models/__init__.py) for an example)
+   2. Define some model classes which are subclasses of your model interface class (see [`juml.models.ReluMlp`](https://github.com/jakelevi1996/juml/blob/main/src/juml/models/relu_mlp.py) for an example)
+   3. Define a function `get_all_models` which returns a list of your defined model classes (see [`juml.models.get_all_models`](https://github.com/jakelevi1996/juml/blob/main/src/juml/models/__init__.py) for an example)
 2. Define datasets:
    1. Define an interface class for your datasets, which is a subclass of [`juml.data.Dataset`](https://github.com/jakelevi1996/juml/blob/main/src/juml/data/dataset.py) (see [`juml.data.ClassificationDataset`](https://github.com/jakelevi1996/juml/blob/main/src/juml/data/classification.py) for an example)
-   2. Define some dataset classes which are subclasses of your interface class, each in a separate file in the directory `src/MYPROJ/data/` (see [`juml.data.Mnist`](https://github.com/jakelevi1996/juml/blob/main/src/juml/data/mnist.py) for an example)
-   3. Make a file `src/MYPROJ/data/__init__.py` with a function `get_all_datasets` which returns a list of your defined dataset classes (see [`juml.data`](https://github.com/jakelevi1996/juml/blob/main/src/juml/data/__init__.py) for an example)
+   2. Define some dataset classes which are subclasses of your dataset interface class (see [`juml.data.Mnist`](https://github.com/jakelevi1996/juml/blob/main/src/juml/data/mnist.py) for an example)
+   3. Define a function `get_all_datasets` which returns a list of your defined dataset classes (see [`juml.data.get_all_datasets`](https://github.com/jakelevi1996/juml/blob/main/src/juml/data/__init__.py) for an example)
 3. Define commands:
-   1. Define some training loops or other commands, each in a separate file in the directory `src/MYPROJ/commands/`, which are subclasses of [`juml.commands.Command`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/command.py) (see [`juml.commands.TrainClassification`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/train_classification.py) for an example)
+   1. Define some training loops or other commands, which are subclasses of [`juml.commands.Command`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/command.py) (see [`juml.commands.TrainClassification`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/train_classification.py) for an example)
    2. Define a class `Sweep` which is a subclass of [`juml.commands.Sweep`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/sweep.py), override the class-method `get_subcommands`, and from it return a list of your defined command classes (NOT including your `Sweep` subclass itself)
-   3. Make a file `src/MYPROJ/command/__init__.py` with a function `get_all_commands` which returns a list of your defined command classes, including your `Sweep` subclass (see [`juml.commands`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/__init__.py) for an example)
+   3. Define a function `get_all_commands` which returns a list of your defined command classes, including your `Sweep` subclass (see [`juml.commands.get_all_commands`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/__init__.py) for an example)
 4. Define framework:
-   1. Define a class `Framework` in the file `src/MYPROJ/framework.py` which is a subclass of [`juml.Framework`](https://github.com/jakelevi1996/juml/blob/main/src/juml/framework.py), override the class-method `get_commands`, and from it return a list of your defined command classes (including your `Sweep` subclass)
-   2. Make a file `src/MYPROJ/__init__.py` which includes the statemt `from MYPROJ.framework import Framework` (see [`juml`](https://github.com/jakelevi1996/juml/blob/main/src/juml/__init__.py) for an example)
+   1. Define a class `Framework` in the file `src/MYPROJ/framework.py` which is a subclass of [`juml.Framework`](https://github.com/jakelevi1996/juml/blob/main/src/juml/framework.py), override the class-method `get_commands`, and from it return the output from your `get_all_commands` function
 5. Configure and install project:
    1. Make a file `pyproject.toml` following the template below
    2. Run the commands `python -m pip install -U pip` and `python -m pip install -e .`
