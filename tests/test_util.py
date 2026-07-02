@@ -6,7 +6,7 @@ def test_tensorprinter():
     x = torch.arange(20).reshape(4, 5)
 
     assert util.strings_equal_except_whitespace(
-        juml.util.TensorPrinter.format(x, None, " "),
+        juml.util.TensorPrinter.format(x),
         (
             "shape = [4, 5]"
             "numel = 20"
@@ -18,7 +18,7 @@ def test_tensorprinter():
         ),
     )
     assert util.strings_equal_except_whitespace(
-        juml.util.TensorPrinter.format(x.float(), None, " "),
+        juml.util.TensorPrinter.format(x.float()),
         (
             "shape = [4, 5]"
             "numel = 20"

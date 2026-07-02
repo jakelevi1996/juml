@@ -84,32 +84,20 @@ class TensorPrinter:
         self.printer = printer
 
     @classmethod
-    def format(
-        cls,
-        x:      torch.Tensor,
-        name:   (str | None)=None,
-        pad:    str="-",
-    ) -> str:
-        footer = pad * util.HLINE_LEN
-        header = (
-            (" %s " % name).center(util.HLINE_LEN, pad)
-            if (name is not None)
-            else footer
-        )
+    def format(self, x: torch.Tensor) -> str:
         parts = [
-            header,
             "shape = %s" % list(x.shape),
             "numel = %s" % x.numel(),
             "dtype = %s" % x.dtype,
             str(x),
-            footer,
         ]
         return "\n".join(parts)
 
-    def __call__(
-        self,
-        x:      torch.Tensor,
-        name:   (str | None)=None,
-        pad:    str="-",
-    ):
-        self.printer(self.format(x, name, pad))
+    def __call__(self, x: torch.Tensor, name: (str | None)=None):
+        if name is not None:
+            self.printer((" %s " % name).center(util.HLINE_LEN, "-"))
+        else:
+            self.printer.hline()
+
+        self.printer(self.format(x))
+        self.printer.hline()
