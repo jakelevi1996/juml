@@ -24,8 +24,9 @@ class Experiment:
         }
         self.command.update(split_updates)
 
-    def force_skip(self):
-        self.skip = True
+    def skip_if(self, condition: bool):
+        if condition:
+            self.skip = True
 
     def run(self):
         self.update_command()

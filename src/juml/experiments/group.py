@@ -38,11 +38,9 @@ class ExperimentGroup:
         names = set()
         for u in updates_list:
             e = Experiment(u, command, force_run)
+            e.skip_if(e.name in names)
+            names.add(e.name)
             experiment_list.append(e)
-            if e.name in names:
-                e.force_skip()
-            else:
-                names.add(e.name)
 
         return cls(params, experiment_list)
 
