@@ -85,7 +85,7 @@ class Sweep(Command):
         ]
 
     @classmethod
-    def get_subcommands(cls) -> list[cli.SubCommand]:
+    def get_subcommands(cls) -> list[type[Command]]:
         return [
             TrainClassification,
         ]
