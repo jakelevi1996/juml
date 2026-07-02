@@ -222,11 +222,10 @@ Here are the steps:
    1. Define some training loops or other commands, which are subclasses of [`juml.commands.Command`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/command.py) (see [`juml.commands.TrainClassification`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/train_classification.py) for an example)
    2. Define a class `Sweep` which is a subclass of [`juml.commands.Sweep`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/sweep.py), override the class-method `get_subcommands`, and from it return a list of your defined command classes (NOT including your `Sweep` subclass itself)
    3. Define a function `get_all_commands` which returns a list of your defined command classes, including your `Sweep` subclass (see [`juml.commands.get_all_commands`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/__init__.py) for an example)
-4. Define framework:
+4. Define framework, configure and install project:
    1. Define a class `Framework` in the file `src/MYPROJ/framework.py` which is a subclass of [`juml.Framework`](https://github.com/jakelevi1996/juml/blob/main/src/juml/framework.py), override the class-method `get_commands`, and from it return the output from your `get_all_commands` function
-5. Configure and install project:
-   1. Make a file `pyproject.toml` following the template below
-   2. Run the commands `python -m pip install -U pip` and `python -m pip install -e .`
+   2. Make a file `pyproject.toml` following the template below
+   3. Run the commands `python -m pip install -U pip` and `python -m pip install -e .`
 
 `pyproject.toml` template:
 
