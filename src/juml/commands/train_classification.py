@@ -11,6 +11,7 @@ class TrainClassification(Command):
         seed:       int,
         epochs:     int,
         batch_size: int,
+        save_model: bool,
     ):
         torch.manual_seed(seed)
 
@@ -74,6 +75,9 @@ class TrainClassification(Command):
 
         self.save_args()
         self.save_cmd()
+        self.save_table(table)
+        if save_model:
+            self.save_model(model)
 
         train_loss  = table.get_data("loss")
         train_acc   = table.get_data("train_acc")
@@ -124,6 +128,7 @@ class TrainClassification(Command):
             cli.Arg("seed",         type=int,   default=0),
             cli.Arg("epochs",       type=int,   default=1),
             cli.Arg("batch_size",   type=int,   default=100),
+            cli.Arg("save_model",   action="store_true", tagged=False),
             cli.ObjectChoice(
                 "dataset",
                 *[

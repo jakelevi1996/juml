@@ -1,5 +1,7 @@
 import os
+import torch
 from jutility import cli, util
+from juml.models.model import Model
 
 class Command(cli.SubCommand):
     def run(self, **kwargs):
@@ -50,6 +52,14 @@ class Command(cli.SubCommand):
             self.get_output_dir(),
         )
 
+    def save_model(self, model: Model) -> str:
+        model_path = util.get_full_path("model.pth", self.get_output_dir())
+        torch.save(model.state_dict(), model_path)
+        return model_path
+
+    def save_table(self, table: util.Table) -> str:
+        return table.save_pickle("table", self.get_output_dir())
+
     def save_cmd(self) -> str:
         return util.save_text(
             util.get_argv_str().replace(" --", " \\\n    --"),
@@ -72,6 +82,31 @@ class Command(cli.SubCommand):
             )
 
         return metrics[name]
+
+    def load_model(self, **model_kwargs) -> Model:
+        model = self.init_object("model", **model_kwargs)
+        assert isinstance(model, Model)
+
+        model_path = util.get_full_path(
+            "model.pth",
+            dir_name=self.get_output_dir(),
+            loading=True,
+        )
+        state_dict = torch.load(model_path, map_location="cpu")
+        model.load_state_dict(state_dict)
+
+        return model
+
+    def load_table_data(self, column_name: str) -> list:
+        table_path = util.get_full_path(
+            "table.pkl",
+            dir_name=self.get_output_dir(),
+            loading=True,
+        )
+        table = util.load_pickle(table_path)
+        assert isinstance(table, util.Table)
+
+        return table.get_data(column_name)
 
     def __repr__(self) -> str:
         return self.get_name()
