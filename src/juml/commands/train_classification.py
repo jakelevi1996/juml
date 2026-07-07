@@ -4,6 +4,7 @@ from juml.commands.command import Command
 from juml.data import ClassificationDataset, get_all_datasets
 from juml.models import FeedForwardModel, get_all_models
 from juml.util import softmax_cross_entropy_from_logits, multiclass_acc
+from juml.device import DeviceConfig
 
 class TrainClassification(Command):
     def run(
@@ -24,6 +25,12 @@ class TrainClassification(Command):
             output_dim=dataset.get_output_dim(),
         )
         assert isinstance(model, FeedForwardModel)
+
+        device_cfg = self.init_object("DeviceConfig")
+        assert isinstance(device_cfg, DeviceConfig)
+
+        device_cfg.set_visible_devices()
+        device_cfg.set_module_device(model)
 
         opt = torch.optim.Adam(model.parameters())
 
@@ -46,6 +53,7 @@ class TrainClassification(Command):
 
         for e in range(epochs):
             for b, (x, t) in enumerate(train_loader):
+                x, t = device_cfg.set_tensor_device(x, t)
                 x, t = dataset.format_batch(x, t)
                 y = model.forward(x)
 
@@ -129,6 +137,7 @@ class TrainClassification(Command):
             cli.Arg("epochs",       type=int,   default=1),
             cli.Arg("batch_size",   type=int,   default=100),
             cli.Arg("save_model",   action="store_true", tagged=False),
+            DeviceConfig.get_cli_arg(),
             cli.ObjectChoice(
                 "dataset",
                 *[
