@@ -82,21 +82,21 @@ cli: ReluMlp(depth=2, hidden_dim=10, input_dim=2, output_dim=2)
 cli: DeviceConfig(gpu=False, visible_devices=[])
 Count | Time        | Epoch      | Batch      | Loss       | Train acc  | Test acc
 ----- | ----------- | ---------- | ---------- | ---------- | ---------- | ----------
-0     | 0.0009s     |          0 |          0 |    0.72485 |            |
-0     | 0.0009s     |          0 |          0 |    0.72485 |            |
+0     | 0.0010s     |          0 |          0 |    0.72485 |            |
+0     | 0.0010s     |          0 |          0 |    0.72485 |            |
 1     | 0.0011s     |          0 |            |            |    0.25000 |    0.25000
 ...
-398   | 0.0832s     |        199 |          0 |    0.55982 |            |
-399   | 0.0833s     |        199 |            |            |    1.00000 |    1.00000
-Saving in "results/trainclassification/b100daXe200mRmd2mh10s0/args.json"
-Saving in "results/trainclassification/b100daXe200mRmd2mh10s0/cmd.txt"
-Saving in "results/trainclassification/b100daXe200mRmd2mh10s0/table.pkl"
-Saving in "results/trainclassification/b100daXe200mRmd2mh10s0/metrics.json"
-Saving in "results/trainclassification/b100daXe200mRmd2mh10s0/metrics.png"
-Time taken for `TrainClassification` = 0.5659 seconds
+398   | 0.0804s     |        199 |          0 |    0.55982 |            |
+399   | 0.0805s     |        199 |            |            |    1.00000 |    1.00000
+Saving in "results/trainclassification/b100dXe200mRmd2mh10s0/args.json"
+Saving in "results/trainclassification/b100dXe200mRmd2mh10s0/cmd.txt"
+Saving in "results/trainclassification/b100dXe200mRmd2mh10s0/table.pkl"
+Saving in "results/trainclassification/b100dXe200mRmd2mh10s0/metrics.json"
+Saving in "results/trainclassification/b100dXe200mRmd2mh10s0/metrics.png"
+Time taken for `TrainClassification` = 0.5844 seconds
 ```
 
-![](results/trainclassification/b100daXe200mRmd2mh10s0/metrics.png)
+![](https://github.com/jakelevi1996/juml/raw/main/results/trainclassification/b100dXe200mRmd2mh10s0/metrics.png)
 
 Train an MLP on MNIST to 98% test accuracy in under 30 seconds (CPU):
 
