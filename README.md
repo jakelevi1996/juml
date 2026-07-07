@@ -66,6 +66,38 @@ juml TrainClassification -h
 juml Sweep -h
 ```
 
+Train an MLP on XOR to 100% accuracy in under 1 second (CPU):
+
+```
+juml TrainClassification \
+    --dataset Xor \
+    --model ReluMlp \
+    --model.ReluMlp.hidden_dim 10 \
+    --epochs 200
+```
+
+```
+cli: Xor()
+cli: ReluMlp(depth=2, hidden_dim=10, input_dim=2, output_dim=2)
+cli: DeviceConfig(gpu=False, visible_devices=[])
+Count | Time        | Epoch      | Batch      | Loss       | Train acc  | Test acc
+----- | ----------- | ---------- | ---------- | ---------- | ---------- | ----------
+0     | 0.0009s     |          0 |          0 |    0.72485 |            |
+0     | 0.0009s     |          0 |          0 |    0.72485 |            |
+1     | 0.0011s     |          0 |            |            |    0.25000 |    0.25000
+...
+398   | 0.0832s     |        199 |          0 |    0.55982 |            |
+399   | 0.0833s     |        199 |            |            |    1.00000 |    1.00000
+Saving in "results/trainclassification/b100daXe200mRmd2mh10s0/args.json"
+Saving in "results/trainclassification/b100daXe200mRmd2mh10s0/cmd.txt"
+Saving in "results/trainclassification/b100daXe200mRmd2mh10s0/table.pkl"
+Saving in "results/trainclassification/b100daXe200mRmd2mh10s0/metrics.json"
+Saving in "results/trainclassification/b100daXe200mRmd2mh10s0/metrics.png"
+Time taken for `TrainClassification` = 0.5659 seconds
+```
+
+![](results/trainclassification/b100daXe200mRmd2mh10s0/metrics.png)
+
 Train an MLP on MNIST to 98% test accuracy in under 30 seconds (CPU):
 
 ```
@@ -75,8 +107,6 @@ juml TrainClassification \
     --model.ReluMlp.hidden_dim 1000 \
     --epochs 5
 ```
-
-This produces the following output:
 
 ```
 cli: Mnist(flat=True)
