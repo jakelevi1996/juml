@@ -1,6 +1,6 @@
 # JUML
 
-A Judicious, Unified and extendable framework for multi-paradigm Machine Learning research, powered by [`jutility`](https://github.com/jakelevi1996/jutility) and [PyTorch](https://pytorch.org/).
+A Judicious, Unified, extendable, paradigm-agnostic framework for Machine Learning research, powered by [`jutility`](https://github.com/jakelevi1996/jutility) and [PyTorch](https://pytorch.org/).
 
 > *[Judicious [adjective]: having or showing reason and good judgment in making decisions](https://dictionary.cambridge.org/dictionary/english/judicious)*
 
@@ -40,11 +40,10 @@ JUML depends on [PyTorch](https://pytorch.org/). The installation instructions f
 
 The purpose of JUML is to make the process of running ML experiments smoother.
 
-For example, as described in the [Extension guide](#extension-guide), when starting a new project, all you have to do is:
+For example, as described in more detail in the [Extension guide](#extension-guide), when starting a new project, all you have to do is:
 
 - Appropriately define one or more training loops, models, and datasets (or RL environments)
-- Define subclasses of [`Framework`](https://github.com/jakelevi1996/juml/blob/main/src/juml/framework.py) and [`Sweep`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/sweep.py)
-- Override one method in each of those subclasses
+- Define subclasses of [`Framework`](https://github.com/jakelevi1996/juml/blob/main/src/juml/framework.py) and [`Sweep`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/sweep.py), and override one method in each of those subclasses
 - Configure your `pyproject.toml` file appropriately
 
 Then, JUML will automatically provide you with:
@@ -321,10 +320,10 @@ If you find JUML helpful in your research, please cite:
 
 ```
 @misc{levi_juml_2025,
-    title = {{JUML}: {A} {Judicious}, {Unified} and extendable framework for multi-paradigm {Machine} {Learning} research},
+    title = {{JUML}: {A} {Judicious}, {Unified}, extendable, paradigm-agnostic framework for {Machine} {Learning} research},
     shorttitle = {{JUML}},
     url = {https://github.com/jakelevi1996/juml},
-    abstract = {A Judicious, Unified and extendable framework for multi-paradigm Machine Learning research, powered by jutility and PyTorch.},
+    abstract = {A Judicious, Unified, extendable, paradigm-agnostic framework for Machine Learning research, powered by jutility and PyTorch.},
     author = {Levi, Jake},
     year = {2025},
 }
