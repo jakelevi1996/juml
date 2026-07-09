@@ -1,8 +1,6 @@
 import torch
 from jutility import util
 
-ZERO = torch.tensor(0.0)
-
 def softmax_cross_entropy_from_logits(
     y:      torch.Tensor,
     t:      torch.Tensor,
@@ -27,7 +25,10 @@ def binary_cross_entropy_from_logits(
     y: torch.Tensor,
     t: torch.Tensor,
 ) -> torch.Tensor:
-    return t * softplus(-y) + (1 - t) * softplus(y)
+    return (
+        + t * torch.nn.functional.softplus(-y)
+        + (1 - t) * torch.nn.functional.softplus(y)
+    )
 
 def binary_cross_entropy_from_probs(
     y: torch.Tensor,
@@ -39,9 +40,6 @@ def binary_acc(y: torch.Tensor, t: torch.Tensor) -> torch.Tensor:
     y_hard = torch.where(y > 0.5, 1, 0)
     acc = torch.where(t == y_hard, 1.0, 0.0).mean()
     return acc
-
-def softplus(x: torch.Tensor) -> torch.Tensor:
-    return torch.logaddexp(ZERO, x)
 
 def safe_divide(a: torch.Tensor, b: torch.Tensor) -> torch.Tensor:
     return torch.where(b != 0.0, a / b, 0.0)
