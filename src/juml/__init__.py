@@ -6,3 +6,4 @@ from juml import (
     util,
 )
 from juml.framework import Framework
+from juml.device import DeviceConfig
