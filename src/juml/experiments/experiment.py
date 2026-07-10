@@ -37,6 +37,10 @@ class Experiment:
         self.update_command()
         self.value = self.command.load_metric(target_metric)
 
+    def load_table_data(self, column_name: str) -> list:
+        self.update_command()
+        return self.command.load_table_data(column_name)
+
     def get_output_dir(self) -> str:
         self.update_command()
         return self.command.get_output_dir()
