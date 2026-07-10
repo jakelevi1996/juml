@@ -231,6 +231,34 @@ juml Sweep \
 
 ![](https://github.com/jakelevi1996/juml/raw/main/results/sweep/tidy_mnist_sweep_transpose/sweep_results.png)
 
+Compare learning curves for models with different widths and depths:
+
+```
+juml CompareLearningCurves \
+    --params '{
+        "seed": [0, 1, 2],
+        "model.ReluMlp.hidden_dim": [20, 50, 100, 200, 500, 1000],
+        "model.ReluMlp.depth": [1, 2, 3]
+    }' \
+    --PlottingConfig.y_key loss \
+    --PlottingConfig.c_key model.ReluMlp.hidden_dim \
+    --PlottingConfig.col_key model.ReluMlp.depth \
+    --PlottingConfig.log_x \
+    --PlottingConfig.log_y \
+    --PlottingConfig.x_label Step \
+    --PlottingConfig.y_label 'Test acc' \
+    --PlottingConfig.c_label Width \
+    --PlottingConfig.col_label Depth \
+    --PlottingConfig.cool_colours \
+    --PlottingConfig.figsize 10 3 \
+    TrainClassification \
+    --dataset Mnist \
+    --model ReluMlp \
+    --epochs 3
+```
+
+![](https://github.com/jakelevi1996/juml/raw/main/results/comparelearningcurves/b100dMe3mRmd1,2,3mh1,2,50,0,00s0,1,2/sweep_results.png)
+
 ## Extension guide
 
 JUML is designed to be both extendable and flexible. Here we provide a guide for extending JUML in your project, step by step. You don't have to do everything in this guide, and you can do more than we outline here.
