@@ -29,16 +29,16 @@ class Sweep(Command):
         self.name = name
 
         print("\nExperiments:\n")
-        self.experiment_group.get_table(cfg.target_metric)
+        self.experiment_group.get_table(cfg.y_key)
 
         self.experiment_group.run()
 
-        if cfg.target_metric is not None:
+        if cfg.y_key is not None:
             for e in self.experiment_group:
-                e.load(cfg.target_metric)
+                e.load(cfg.y_key)
 
         print("\nResults:\n")
-        table = self.experiment_group.get_table(cfg.target_metric)
+        table = self.experiment_group.get_table(cfg.y_key)
 
         util.hline()
         self.save_cmd()
@@ -47,10 +47,10 @@ class Sweep(Command):
         output_dir = self.get_output_dir()
         util.save_text(str(table), "summary", output_dir, "md")
         self.experiment_group.make_git_script(output_dir)
-        if cfg.target_metric is not None:
-            self.experiment_group.save_min_max(output_dir, cfg.target_metric)
+        if cfg.y_key is not None:
+            self.experiment_group.save_min_max(output_dir, cfg.y_key)
 
-        if (cfg.target_metric is not None) and (cfg.x_key is not None):
+        if (cfg.x_key is not None) and (cfg.y_key is not None):
             mp = self.experiment_group.get_multiplot(cfg)
             mp.save("sweep results", output_dir)
 

@@ -3,8 +3,8 @@ from jutility import plotting, cli
 class PlottingConfig:
     def __init__(
         self,
-        target_metric:  str | None,
         x_key:          str | None,
+        y_key:          str | None,
         c_key:          str | None,
         col_key:        str | None,
         row_key:        str | None,
@@ -26,7 +26,7 @@ class PlottingConfig:
         if x_label is None:
             x_label = x_key
         if y_label is None:
-            y_label = target_metric
+            y_label = y_key
         if c_label is None:
             c_label = c_key
         if col_label is None:
@@ -34,8 +34,8 @@ class PlottingConfig:
         if row_label is None:
             row_label = row_key
 
-        self.target_metric  = target_metric
         self.x_key          = x_key
+        self.y_key          = y_key
         self.c_key          = c_key
         self.col_key        = col_key
         self.row_key        = row_key
@@ -68,8 +68,8 @@ class PlottingConfig:
     def get_cli_arg(cls) -> cli.ObjectArg:
         return cli.ObjectArg(
             cls,
-            cli.Arg("target_metric",    type=str, default=None),
             cli.Arg("x_key",            type=str, default=None),
+            cli.Arg("y_key"        ,    type=str, default=None),
             cli.Arg("c_key",            type=str, default=None),
             cli.Arg("col_key",          type=str, default=None),
             cli.Arg("row_key",          type=str, default=None),
