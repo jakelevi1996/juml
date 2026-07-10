@@ -164,8 +164,8 @@ juml Sweep \
         "model.ReluMlp.hidden_dim": [20, 50, 100, 200, 500, 1000],
         "model.ReluMlp.depth": [1, 2, 3]
     }' \
-    --PlottingConfig.target_metric final_test_acc \
     --PlottingConfig.x_key model.ReluMlp.hidden_dim \
+    --PlottingConfig.y_key final_test_acc \
     --PlottingConfig.c_key model.ReluMlp.depth \
     --PlottingConfig.log_x \
     TrainClassification \
@@ -188,8 +188,8 @@ juml Sweep \
         "model.ReluMlp.depth": [1, 2, 3]
     }' \
     --name tidy_mnist_sweep \
-    --PlottingConfig.target_metric final_test_acc \
     --PlottingConfig.x_key model.ReluMlp.hidden_dim \
+    --PlottingConfig.y_key final_test_acc \
     --PlottingConfig.c_key model.ReluMlp.depth \
     --PlottingConfig.log_x \
     --PlottingConfig.x_label Width \
@@ -215,8 +215,8 @@ juml Sweep \
         "model.ReluMlp.depth": [1, 2, 3]
     }' \
     --name tidy_mnist_sweep_transpose \
-    --PlottingConfig.target_metric final_test_acc \
     --PlottingConfig.x_key model.ReluMlp.depth \
+    --PlottingConfig.y_key final_test_acc \
     --PlottingConfig.c_key model.ReluMlp.hidden_dim \
     --PlottingConfig.x_label Depth \
     --PlottingConfig.y_label 'Test acc' \
