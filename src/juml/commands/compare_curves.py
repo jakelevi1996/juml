@@ -39,6 +39,7 @@ class CompareLearningCurves(Sweep):
         self.save_args()
 
         output_dir = self.get_output_dir()
+        self.experiment_group.make_git_script(output_dir)
 
         if cfg.y_key is not None:
             mp = self.experiment_group.get_multiplot(cfg)

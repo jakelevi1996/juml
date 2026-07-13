@@ -103,7 +103,7 @@ class ExperimentGroup:
             print_to_console=False,
         )
 
-        names = "cmd.txt args.json git_add.sh summary.md sweep_results.png"
+        names = "cmd.txt args.json git_add.sh sweep_results.png"
         for s in names.split():
             printer("git add -f %s/%s" % (output_dir, s))
 
@@ -112,7 +112,7 @@ class ExperimentGroup:
             for e in self.experiment_list
         ]
         output_dirs = sorted(set(all_output_dirs))
-        for s in "metrics.json args.json".split():
+        for s in "metrics.json args.json table.pkl".split():
             printer()
             for d in output_dirs:
                 printer("git add -f %s/%s" % (d, s))
