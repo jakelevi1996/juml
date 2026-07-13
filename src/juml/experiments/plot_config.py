@@ -19,6 +19,7 @@ class PlottingConfig:
         c_label:        str | None,
         col_label:      str | None,
         row_label:      str | None,
+        y_scale:        float | None,
         ylim:           tuple[float, float] | None,
         figsize:        tuple[float, float],
         font_size:      int,
@@ -50,6 +51,7 @@ class PlottingConfig:
         self.c_label        = c_label
         self.col_label      = col_label
         self.row_label      = row_label
+        self.y_scale        = y_scale
         self.ylim           = ylim
         self.figsize        = figsize
         self.font_size      = font_size
@@ -69,7 +71,7 @@ class PlottingConfig:
         return cli.ObjectArg(
             cls,
             cli.Arg("x_key",            type=str, default=None),
-            cli.Arg("y_key"        ,    type=str, default=None),
+            cli.Arg("y_key",            type=str, default=None),
             cli.Arg("c_key",            type=str, default=None),
             cli.Arg("col_key",          type=str, default=None),
             cli.Arg("row_key",          type=str, default=None),
@@ -84,6 +86,7 @@ class PlottingConfig:
             cli.Arg("c_label",          type=str, default=None),
             cli.Arg("col_label",        type=str, default=None),
             cli.Arg("row_label",        type=str, default=None),
+            cli.Arg("y_scale",          type=float, default=None),
             cli.Arg("ylim",             type=float, default=None,   nargs=2),
             cli.Arg("figsize",          type=float, default=[6, 4], nargs=2),
             cli.Arg("font_size",        type=int,   default=12),

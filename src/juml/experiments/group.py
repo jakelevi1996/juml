@@ -248,7 +248,11 @@ class ExperimentGroup:
         x_vals = self.params[cfg.x_key]
         for x in x_vals:
             for e in self.get_subgroup(cfg.x_key, x):
-                nd.update(x, e.value)
+                y = e.value
+                if cfg.y_scale is not None:
+                    y = y * cfg.y_scale
+
+                nd.update(x, y)
 
         return nd
 

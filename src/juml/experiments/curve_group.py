@@ -54,6 +54,10 @@ class LearningCurveGroup(ExperimentGroup):
     def get_series(self, cfg: PlottingConfig) -> plotting.NoisyCurve:
         nc = plotting.NoisyCurve(log_y=cfg.log_y)
         for e in self:
-            nc.update(e.load_table_data(cfg.y_key))
+            y_list = e.load_table_data(cfg.y_key)
+            if cfg.y_scale is not None:
+                y_list = [cfg.y_scale * y for y in y_list]
+
+            nc.update(y_list)
 
         return nc
