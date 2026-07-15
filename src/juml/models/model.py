@@ -20,7 +20,12 @@ class Model(torch.nn.Module):
         return cli.ObjectArg(
             cls,
             *cls.get_cli_options(),
+            tag=cls.get_tag(),
         )
+
+    @classmethod
+    def get_tag(cls) -> (str | None):
+        return None
 
     def __repr__(self) -> str:
         return type(self).__name__
