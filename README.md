@@ -95,7 +95,7 @@ Saving in "results/trainclassification/b100dXe200mRmd2mh10s0/metrics.png"
 Time taken for `TrainClassification` = 0.5844 seconds
 ```
 
-![](https://github.com/jakelevi1996/juml/raw/main/results/trainclassification/b100dXe200mRmd2mh10s0/metrics.png)
+![](https://github.com/jakelevi1996/juml/raw/main/results/trainclassification/b100dXe200mRmd2mh10s0/metrics_readme.png)
 
 Train an MLP on MNIST to 98% test accuracy in under 30 seconds (CPU):
 
