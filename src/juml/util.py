@@ -44,6 +44,17 @@ def binary_acc(y: torch.Tensor, t: torch.Tensor) -> torch.Tensor:
 def safe_divide(a: torch.Tensor, b: torch.Tensor) -> torch.Tensor:
     return torch.where(b != 0.0, a / b, 0.0)
 
+def reg_lstsq(
+    a_ni:   torch.Tensor,
+    b_no:   torch.Tensor,
+    reg:    float,
+) -> torch.Tensor:
+    ab_io = a_ni.mT @ b_no
+    aa_ii = a_ni.mT @ a_ni
+    aa_reg_ii = aa_ii + reg * torch.eye(*aa_ii.shape)
+    x_io = torch.linalg.solve(aa_reg_ii, ab_io)
+    return x_io
+
 def error_if_not_finite(x: torch.Tensor):
     if not x.isfinite().all():
         raise RuntimeError()

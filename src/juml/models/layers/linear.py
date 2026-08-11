@@ -1,5 +1,6 @@
 import torch
 from juml.models.model import Model
+from juml.util import reg_lstsq
 
 class LinearLayer(Model):
     def __init__(
@@ -36,9 +37,7 @@ class LinearLayer(Model):
         tm_o = t_no.mean(0)
         xc_ni = x_ni - xm_i
         tc_no = t_no - tm_o
-        cxt_io = xc_ni.mT @ tc_no
-        cxx_ii = xc_ni.mT @ xc_ni
-        cxx_reg_ii = cxx_ii + reg * torch.eye(*cxx_ii.shape)
+
         with torch.no_grad():
-            self.w_io.copy_(torch.linalg.solve(cxx_reg_ii, cxt_io))
+            self.w_io.copy_(reg_lstsq(xc_ni, tc_no, reg))
             self.b_o.copy_(tm_o - xm_i @ self.w_io)
