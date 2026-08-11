@@ -19,3 +19,14 @@ class LinearLayer(Model):
     def forward(self, x_ni: torch.Tensor) -> torch.Tensor:
         y_no = x_ni @ self.w_io + self.b_o
         return y_no
+
+    def normalise(self, x_ni: torch.Tensor, b_std: float=1.0):
+        y_no = x_ni @ self.w_io
+        s_1o = y_no.std(0, keepdim=True)
+        with torch.no_grad():
+            self.w_io /= s_1o
+
+        y_no = x_ni @ self.w_io
+        m_o = y_no.mean(0, keepdim=False)
+        with torch.no_grad():
+            self.b_o.copy_((b_std * torch.randn_like(self.b_o)) - m_o)
