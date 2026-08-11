@@ -54,7 +54,7 @@ def test_linearlayer_lstsq():
     assert (y_no - t_no).square().mean().item() > 100.0
     assert list(y_no.shape) == [batch_size, output_dim]
 
-    layer.lstsq(x_ni, t_no)
+    layer.lstsq(x_ni, t_no, 1e-3)
 
     y_no = layer.forward(x_ni)
     assert (y_no - t_no).square().mean().item() < 1e-5

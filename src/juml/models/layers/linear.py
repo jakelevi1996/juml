@@ -32,7 +32,7 @@ class LinearLayer(Model):
         with torch.no_grad():
             self.b_o.copy_((b_std * torch.randn_like(self.b_o)) - m_o)
 
-    def lstsq(self, x_ni: torch.Tensor, t_no: torch.Tensor, reg: float=1e-3):
+    def lstsq(self, x_ni: torch.Tensor, t_no: torch.Tensor, reg: float):
         xm_i = x_ni.mean(0)
         tm_o = t_no.mean(0)
         xc_ni = x_ni - xm_i
@@ -48,8 +48,8 @@ class LinearLayer(Model):
         t_nd:   torch.Tensor,
         A_od:   torch.Tensor,
         d_nd:   torch.Tensor,
-        a_reg:  float=1e-3,
-        x_reg:  float=1e-3,
+        a_reg:  float,
+        x_reg:  float,
     ):
         td_nd = t_nd - d_nd
 
