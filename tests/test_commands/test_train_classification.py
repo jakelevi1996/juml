@@ -11,6 +11,8 @@ def test_mlp_xor():
             "model": "ReluMlp",
             "model.ReluMlp.hidden_dim": 10,
             "model.ReluMlp.depth": 2,
+            "DeviceConfig.gpu": False,
+            "DeviceConfig.visible_devices": [],
         },
     )
     command.run(**command.get_kwargs())

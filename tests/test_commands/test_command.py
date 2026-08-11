@@ -58,6 +58,8 @@ def get_command() -> juml.commands.Command:
             "model": "ReluMlp",
             "model.ReluMlp.hidden_dim": 10,
             "model.ReluMlp.depth": 2,
+            "DeviceConfig.gpu": False,
+            "DeviceConfig.visible_devices": [],
         },
     )
     return command
