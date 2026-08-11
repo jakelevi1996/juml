@@ -31,11 +31,14 @@ class LinearLayer(Model):
         with torch.no_grad():
             self.b_o.copy_((b_std * torch.randn_like(self.b_o)) - m_o)
 
-    def lstsq(self, x_ni: torch.Tensor, t_no: torch.Tensor):
+    def lstsq(self, x_ni: torch.Tensor, t_no: torch.Tensor, reg: float=1e-3):
         xm_i = x_ni.mean(0)
         tm_o = t_no.mean(0)
         xc_ni = x_ni - xm_i
         tc_no = t_no - tm_o
+        cxt_io = xc_ni.mT @ tc_no
+        cxx_ii = xc_ni.mT @ xc_ni
+        cxx_reg_ii = cxx_ii + reg * torch.eye(*cxx_ii.shape)
         with torch.no_grad():
-            self.w_io.copy_(torch.linalg.lstsq(xc_ni, tc_no).solution)
+            self.w_io.copy_(torch.linalg.solve(cxx_reg_ii, cxt_io))
             self.b_o.copy_(tm_o - xm_i @ self.w_io)
