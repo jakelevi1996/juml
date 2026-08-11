@@ -30,3 +30,12 @@ class LinearLayer(Model):
         m_o = y_no.mean(0, keepdim=False)
         with torch.no_grad():
             self.b_o.copy_((b_std * torch.randn_like(self.b_o)) - m_o)
+
+    def lstsq(self, x_ni: torch.Tensor, t_no: torch.Tensor):
+        xm_i = x_ni.mean(0)
+        tm_o = t_no.mean(0)
+        xc_ni = x_ni - xm_i
+        tc_no = t_no - tm_o
+        with torch.no_grad():
+            self.w_io.copy_(torch.linalg.lstsq(xc_ni, tc_no).solution)
+            self.b_o.copy_(tm_o - xm_i @ self.w_io)
