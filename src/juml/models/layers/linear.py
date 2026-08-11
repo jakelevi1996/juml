@@ -41,3 +41,26 @@ class LinearLayer(Model):
         with torch.no_grad():
             self.w_io.copy_(reg_lstsq(xc_ni, tc_no, reg))
             self.b_o.copy_(tm_o - xm_i @ self.w_io)
+
+    def indirect_lstsq(
+        self,
+        x_ni:   torch.Tensor,
+        t_nd:   torch.Tensor,
+        A_od:   torch.Tensor,
+        d_nd:   torch.Tensor,
+        a_reg:  float=1e-3,
+        x_reg:  float=1e-3,
+    ):
+        td_nd = t_nd - d_nd
+
+        xm_i = x_ni.mean(0)
+        tm_d = td_nd.mean(0)
+        xc_ni = x_ni - xm_i
+        tc_nd = td_nd - tm_d
+
+        atm_o = reg_lstsq(A_od.mT, tm_d, a_reg)
+        atc_no = reg_lstsq(A_od.mT, tc_nd.mT, a_reg).mT
+
+        with torch.no_grad():
+            self.w_io.copy_(reg_lstsq(xc_ni, atc_no, x_reg))
+            self.b_o.copy_(atm_o - xm_i @ self.w_io)
