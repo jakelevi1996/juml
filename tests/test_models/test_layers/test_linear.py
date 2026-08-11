@@ -75,7 +75,6 @@ def test_linearlayer_indirect_lstsq():
     d_nd  = torch.normal(0, 1, [batch_size, output_dim])
     t_nd = (x_ni @ w_io + b_o) @ a_od + d_nd
 
-
     layer = juml.models.layers.LinearLayer(input_dim, residual_dim)
 
     y_nd = layer.forward(x_ni) @ a_od + d_nd
