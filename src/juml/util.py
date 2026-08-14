@@ -72,6 +72,9 @@ def set_torch_seed(*args):
     seed = util.Seeder().get_seed(*args)
     torch.manual_seed(seed)
 
+def use_float64():
+    torch.set_default_dtype(torch.float64)
+
 def torch_set_print_options(
     precision:  int=3,
     threshold:  (int | float)=1e3,
