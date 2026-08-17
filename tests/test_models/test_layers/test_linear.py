@@ -24,7 +24,16 @@ def test_linearlayer_normalise():
     assert (y_no.std(0) - 1).abs().max().item() < 1e-5
     assert list(y_no.shape) == [batch_size, output_dim]
 
-    layer.normalise(x_ni, 0.0)
+    layer.normalise(x_ni, w_std=5.0)
+
+    y_no = layer.forward(x_ni)
+    assert y_no.mean(0).abs().max().item() > 0.1
+    assert y_no.mean(0).abs().max().item() < 10.0
+    assert (y_no.std(0) - 1).abs().max().item() > 1
+    assert (y_no.std(0) - 5).abs().max().item() < 1e-5
+    assert list(y_no.shape) == [batch_size, output_dim]
+
+    layer.normalise(x_ni, b_std=0.0)
 
     y_no = layer.forward(x_ni)
     assert y_no.mean(0).abs().max().item() < 1e-5

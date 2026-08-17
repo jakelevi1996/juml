@@ -21,18 +21,29 @@ class LinearLayer(Model):
         y_no = x_ni @ self.w_io + self.b_o
         return y_no
 
-    def normalise(self, x_ni: torch.Tensor, b_std: float=1.0):
+    def normalise(
+        self,
+        x_ni:   torch.Tensor,
+        w_std:  float=1.0,
+        b_std:  float=1.0,
+    ):
         y_no = x_ni @ self.w_io
         s_1o = y_no.std(0, keepdim=True)
         with torch.no_grad():
-            self.w_io /= s_1o
+            self.w_io *= w_std / s_1o
 
         y_no = x_ni @ self.w_io
         m_o = y_no.mean(0, keepdim=False)
+        offset = b_std * torch.randn_like(self.b_o)
         with torch.no_grad():
-            self.b_o.copy_((b_std * torch.randn_like(self.b_o)) - m_o)
+            self.b_o.copy_(offset - m_o)
 
-    def lstsq(self, x_ni: torch.Tensor, t_no: torch.Tensor, reg: float):
+    def lstsq(
+        self,
+        x_ni:   torch.Tensor,
+        t_no:   torch.Tensor,
+        reg:    float,
+    ):
         xm_i = x_ni.mean(0)
         tm_o = t_no.mean(0)
         xc_ni = x_ni - xm_i
@@ -46,7 +57,7 @@ class LinearLayer(Model):
         self,
         x_ni:   torch.Tensor,
         t_nd:   torch.Tensor,
-        A_od:   torch.Tensor,
+        a_od:   torch.Tensor,
         d_nd:   torch.Tensor,
         a_reg:  float,
         x_reg:  float,
@@ -58,8 +69,8 @@ class LinearLayer(Model):
         xc_ni = x_ni - xm_i
         tc_nd = td_nd - tm_d
 
-        atm_o = reg_lstsq(A_od.mT, tm_d, a_reg)
-        atc_no = reg_lstsq(A_od.mT, tc_nd.mT, a_reg).mT
+        atm_o = reg_lstsq(a_od.mT, tm_d, a_reg)
+        atc_no = reg_lstsq(a_od.mT, tc_nd.mT, a_reg).mT
 
         with torch.no_grad():
             self.w_io.copy_(reg_lstsq(xc_ni, atc_no, x_reg))
