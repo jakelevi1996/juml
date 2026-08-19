@@ -1,5 +1,9 @@
 import torch
+import torch.utils.data
 from jutility import util
+from juml.data.classification import ClassificationDataset
+from juml.models.ff import FeedForwardModel
+from juml.device import DeviceConfig
 
 def softmax_cross_entropy_from_logits(
     y:      torch.Tensor,
@@ -113,3 +117,21 @@ class TensorPrinter:
 
         self.printer(self.format(x))
         self.printer.hline()
+
+def batched_multiclass_acc(
+    model:          FeedForwardModel,
+    data_loader:    torch.utils.data.DataLoader,
+    dataset:        ClassificationDataset,
+    device_cfg:     DeviceConfig,
+) -> float:
+    n_correct = 0
+    n_total   = 0
+    for x, t in data_loader:
+        x, t = device_cfg.set_tensor_device(x, t)
+        x, t = dataset.format_batch(x, t)
+        y = model.forward(x)
+        acc_bool = y.argmax(-1) == t.argmax(-1)
+        n_correct += torch.where(acc_bool, 1, 0).sum().item()
+        n_total   += acc_bool.numel()
+
+    return n_correct / n_total

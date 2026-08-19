@@ -4,7 +4,10 @@ from jutility import plotting, util, cli
 from juml.commands.command import Command
 from juml.data import ClassificationDataset, get_all_datasets
 from juml.models import FeedForwardModel, get_all_models
-from juml.util import softmax_cross_entropy_from_logits
+from juml.util import (
+    softmax_cross_entropy_from_logits,
+    batched_multiclass_acc,
+)
 from juml.device import DeviceConfig
 
 class TrainClassification(Command):
@@ -158,21 +161,3 @@ class TrainClassification(Command):
                 is_group=True,
             ),
         ]
-
-def batched_multiclass_acc(
-    model:          FeedForwardModel,
-    data_loader:    torch.utils.data.DataLoader,
-    dataset:        ClassificationDataset,
-    device_cfg:     DeviceConfig,
-) -> float:
-    n_correct = 0
-    n_total   = 0
-    for x, t in data_loader:
-        x, t = device_cfg.set_tensor_device(x, t)
-        x, t = dataset.format_batch(x, t)
-        y = model.forward(x)
-        acc_bool = y.argmax(-1) == t.argmax(-1)
-        n_correct += torch.where(acc_bool, 1, 0).sum().item()
-        n_total   += acc_bool.numel()
-
-    return n_correct / n_total
