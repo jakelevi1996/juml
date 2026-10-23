@@ -75,6 +75,22 @@ def all_close(x: torch.Tensor, y: torch.Tensor, tol: float=1e-5) -> bool:
 def tensor_list_to_vector(x_list: list[torch.Tensor]) -> torch.Tensor:
     return torch.concat([x.flatten() for x in x_list])
 
+def tensor_list_to_vector_info(
+    x_list: list[torch.Tensor],
+) -> list[tuple[list[int], int]]:
+    return [(list(x.shape), x.numel()) for x in x_list]
+
+def vector_to_tensor_list(
+    x:              torch.Tensor,
+    vector_info:    list[tuple[list[int], int]],
+) -> list[torch.Tensor]:
+    shape_list, numel_list = zip(*vector_info)
+    x_list = [
+        torch.reshape(xi, shape)
+        for xi, shape in zip(x.split(numel_list), shape_list)
+    ]
+    return x_list
+
 def set_torch_seed(*args):
     seed = util.Seeder().get_seed(*args)
     torch.manual_seed(seed)
