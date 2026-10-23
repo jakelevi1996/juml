@@ -29,3 +29,13 @@ def test_tensorprinter():
             "        [15., 16., 17., 18., 19.]])"
         ),
     )
+
+def test_tensor_list_to_vector():
+    juml.util.set_torch_seed("test_tensor_list_to_vector")
+
+    model = juml.models.ReluMlp(3, 5, 10, 4)
+
+    w = juml.util.tensor_list_to_vector(model.parameters())
+
+    assert w.numel() == model.get_num_params()
+    assert str(w.dtype) == "torch.float32"
