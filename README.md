@@ -14,6 +14,11 @@ A Judicious, Unified, extendable, paradigm-agnostic framework for Machine Learni
   - [Overview](#overview)
   - [Usage examples](#usage-examples)
   - [Extension guide](#extension-guide)
+    - [Overview](#overview-1)
+    - [Define models](#define-models)
+    - [Define datasets](#define-datasets)
+    - [Define commands](#define-commands)
+    - [Define framework](#define-framework)
   - [Extra tips](#extra-tips)
   - [Citation](#citation)
 
@@ -261,30 +266,309 @@ juml CompareLearningCurves \
 
 ## Extension guide
 
-JUML is designed to be both extendable and flexible. Here we provide a guide for extending JUML in your project, step by step. You don't have to do everything in this guide, and you can do more than we outline here.
+### Overview
 
-We will assume that your project is called `MYPROJ`, but you should replace `MYPROJ` with a short and descriptive (and lowercase) name for your project. See the [JUML source code](https://github.com/jakelevi1996/juml/tree/main/src/juml) for recommended file and directory structure.
+JUML is designed to be both extendable and flexible. Here we provide a guide for extending JUML in your project, step by step. You don't have to do everything in this guide (for example, you could skip defining your own datasets and just use dataset wrappers already built into JUML), and you can do more than we outline here (for example, instead of defining datasets, you could create wrappers for RL environments).
 
-Here are the steps:
+In this guide, we provide template code structures that can be copied and pasted into your repository, as well as links to concrete examples within the [JUML source code](https://github.com/jakelevi1996/juml/tree/main/src/juml). We use `ALLCAPS` to denote placeholder names, which should be replaced by descriptive names that are relevant to your project.
 
-1. Define models:
-   1. Define an interface class for your models, which is a subclass of [`juml.models.Model`](https://github.com/jakelevi1996/juml/blob/main/src/juml/models/model.py) (see [`juml.models.FeedForwardModel`](https://github.com/jakelevi1996/juml/blob/main/src/juml/models/ff.py) for an example)
-   2. Define some model classes which are subclasses of your model interface class (see [`juml.models.ReluMlp`](https://github.com/jakelevi1996/juml/blob/main/src/juml/models/relu_mlp.py) for an example)
-   3. Define a function `get_all_models` which returns a list of your defined model classes (see [`juml.models.get_all_models`](https://github.com/jakelevi1996/juml/blob/main/src/juml/models/__init__.py) for an example)
-2. Define datasets:
-   1. Define an interface class for your datasets, which is a subclass of [`juml.data.Dataset`](https://github.com/jakelevi1996/juml/blob/main/src/juml/data/dataset.py) (see [`juml.data.ClassificationDataset`](https://github.com/jakelevi1996/juml/blob/main/src/juml/data/classification.py) for an example)
-   2. Define some dataset classes which are subclasses of your dataset interface class (see [`juml.data.Mnist`](https://github.com/jakelevi1996/juml/blob/main/src/juml/data/mnist.py) for an example)
-   3. Define a function `get_all_datasets` which returns a list of your defined dataset classes (see [`juml.data.get_all_datasets`](https://github.com/jakelevi1996/juml/blob/main/src/juml/data/__init__.py) for an example)
-3. Define commands:
-   1. Define some training loops or other commands, which are subclasses of [`juml.commands.Command`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/command.py) (see [`juml.commands.TrainClassification`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/train_classification.py) for an example)
-   2. Define a class `Sweep` which is a subclass of [`juml.commands.Sweep`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/sweep.py), override the class-method `get_subcommands`, and from it return a list of your defined command classes (NOT including your `Sweep` subclass itself)
-   3. Define a function `get_all_commands` which returns a list of your defined command classes, including your `Sweep` subclass (see [`juml.commands.get_all_commands`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/__init__.py) for an example)
-4. Define framework, configure and install project:
-   1. Define a class `Framework` in the file `src/MYPROJ/framework.py` which is a subclass of [`juml.Framework`](https://github.com/jakelevi1996/juml/blob/main/src/juml/framework.py), override the class-method `get_commands`, and from it return the output from your `get_all_commands` function
-   2. Make a file `pyproject.toml` following the template below
-   3. Run the commands `python -m pip install -U pip` and `python -m pip install -e .`
+After following this guide, your file structure should look something like this:
 
-`pyproject.toml` template:
+```
+src/
+├─ MYPROJ/
+   ├─ models/
+      ├─ __init__.py
+      ├─ INTERFACE.py
+      ├─ MODEL_1.py
+      ├─ MODEL_2.py
+      ├─ ...
+   ├─ data/
+      ├─ __init__.py
+      ├─ INTERFACE.py
+      ├─ DATASET_1.py
+      ├─ DATASET_2.py
+      ├─ ...
+   ├─ commands/
+      ├─ __init__.py
+      ├─ COMMAND_1.py
+      ├─ COMMAND_2.py
+      ├─ ...
+      ├─ sweep.py
+   ├─ framework.py
+pyproject.toml
+```
+
+### Define models
+
+Start by defining an interface class for your models in `src/MYPROJ/models/INTERFACE.py` which is a subclass of [`juml.models.Model`](https://github.com/jakelevi1996/juml/blob/main/src/juml/models/model.py) (see [`juml.models.FeedForwardModel`](https://github.com/jakelevi1996/juml/blob/main/src/juml/models/ff.py) for an example):
+
+```python
+import torch
+import juml
+
+class MODEL_INTERFACE(juml.models.Model):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        raise NotImplementedError()
+
+    def step(self, x: torch.Tensor, t: torch.Tensor) -> float:
+        raise NotImplementedError()
+
+    ...
+```
+
+Define some model classes in `src/MYPROJ/models/MODEL_1.py`, `src/MYPROJ/models/MODEL_2.py`, `...` which are subclasses of your model interface class (see [`juml.models.ReluMlp`](https://github.com/jakelevi1996/juml/blob/main/src/juml/models/relu_mlp.py) for an example):
+
+```python
+import torch
+import juml
+from jutility import cli
+from MYPROJ.models.INTERFACE import MODEL_INTERFACE
+
+class MODEL_1(MODEL_INTERFACE):
+    def __init__(
+        self,
+        input_shape:    list[int],
+        output_shape:   list[int],
+        param_1:        int,
+        param_2:        int,
+        ...
+    ):
+        self._torch_module_init()
+        ...
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        y = ...
+        return y
+
+    def step(self, x: torch.Tensor, t: torch.Tensor) -> float:
+        loss = ...
+        return loss
+
+    ...
+
+    @classmethod
+    def get_cli_options(cls) -> list[cli.Arg]:
+        return [
+            cli.Arg("param_1",  type=int, default=37),
+            cli.Arg("param_2",  type=int, default=42),
+            ...
+        ]
+```
+
+Define a function `get_all_models` in `src/MYPROJ/models/__init__.py` which returns a list of your defined model classes (see [`juml.models.get_all_models`](https://github.com/jakelevi1996/juml/blob/main/src/juml/models/__init__.py) for an example):
+
+```python
+from MYPROJ.models.INTERFACE import MODEL_INTERFACE
+from MYPROJ.models.MODEL_1 import MODEL_1
+from MYPROJ.models.MODEL_2 import MODEL_2
+...
+
+def get_all_models() -> list[type[MODEL_INTERFACE]]:
+    return [
+        MODEL_1,
+        MODEL_2,
+        ...
+    ]
+```
+
+### Define datasets
+
+Define an interface class for your datasets in `src/MYPROJ/data/INTERFACE.py`, which is a subclass of [`juml.data.Dataset`](https://github.com/jakelevi1996/juml/blob/main/src/juml/data/dataset.py) (see [`juml.data.ClassificationDataset`](https://github.com/jakelevi1996/juml/blob/main/src/juml/data/classification.py) for an example):
+
+```python
+import torch
+import juml
+
+class DATASET_INTERFACE(juml.data.Dataset):
+    def get_input_shape(self) -> list[int]:
+        raise NotImplementedError()
+
+    def get_output_shape(self) -> list[int]:
+        raise NotImplementedError()
+
+    ...
+```
+
+Define some dataset classes in `src/MYPROJ/data/DATASET_1.py`, `src/MYPROJ/data/DATASET_2.py`, `...` which are subclasses of your dataset interface class (see [`juml.data.Mnist`](https://github.com/jakelevi1996/juml/blob/main/src/juml/data/mnist.py) for an example):
+
+```python
+import torch
+import torch.utils.data
+import juml
+from jutility import cli
+from MYPROJ.data.INTERFACE import DATASET_INTERFACE
+
+class DATASET_1(DATASET_INTERFACE):
+    def __init__(
+        self,
+        param_1: int,
+        param_2: int,
+        ...
+    ):
+        ...
+
+    def get_split(self, split: str) -> torch.utils.data.Dataset:
+        split = ...
+        return split
+
+    def get_input_shape(self) -> list[int]:
+        return [1, 28, 28]
+
+    def get_output_shape(self) -> list[int]:
+        return [10]
+
+    ...
+
+    @classmethod
+    def get_cli_options(cls) -> list[cli.Arg]:
+        return [
+            cli.Arg("param_1",  type=int, default=37),
+            cli.Arg("param_2",  type=int, default=42),
+            ...
+        ]
+```
+
+Define a function `get_all_datasets` in `src/MYPROJ/data/__init__.py` which returns a list of your defined dataset classes (see [`juml.data.get_all_datasets`](https://github.com/jakelevi1996/juml/blob/main/src/juml/data/__init__.py) for an example):
+
+```python
+from MYPROJ.data.INTERFACE import DATASET_INTERFACE
+from MYPROJ.data.DATASET_1 import DATASET_1
+from MYPROJ.data.DATASET_2 import DATASET_2
+...
+
+def get_all_datasets() -> list[type[DATASET_INTERFACE]]:
+    return [
+        DATASET_1,
+        DATASET_2,
+        ...
+    ]
+```
+
+### Define commands
+
+Define some training loops or other commands in `src/MYPROJ/commands/COMMAND_1`, `src/MYPROJ/commands/COMMAND_2`, `...`, which are subclasses of [`juml.commands.Command`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/command.py), and override the `run` and `get_cli_args` methods (see [`juml.commands.TrainClassification`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/train_classification.py) for an example):
+
+```python
+import torch
+import juml
+from jutility import plotting, util, cli
+from MYPROJ.data import DATASET_INTERFACE, get_all_datasets
+from MYPROJ.models import MODEL_INTERFACE, get_all_models
+
+class COMMAND_1(juml.commands.Command):
+    def run(
+        self,
+        seed:       int,
+        epochs:     int,
+        batch_size: int,
+        ...
+    ):
+        torch.manual_seed(seed)
+
+        dataset = self.init_object("dataset")
+        assert isinstance(dataset, DATASET_INTERFACE)
+
+        model = self.init_object(
+            "model",
+            input_shape=dataset.get_input_shape(),
+            output_shape=dataset.get_output_shape(),
+        )
+        assert isinstance(model, MODEL_INTERFACE)
+
+        train_loader = dataset.get_data_loader("train", batch_size)
+        test_loader  = dataset.get_data_loader("test",  batch_size)
+
+        for e in range(epochs):
+            for b, (x, t) in enumerate(train_loader):
+                loss = model.step()
+                ...
+
+        self.save_metrics(
+            final_train_loss=...
+            final_train_acc=...
+            final_test_acc=...
+            time=...
+        )
+
+    @classmethod
+    def get_cli_args(cls) -> list[cli.Arg]:
+        return [
+            cli.Arg("seed",         type=int,   default=0),
+            cli.Arg("epochs",       type=int,   default=1),
+            cli.Arg("batch_size",   type=int,   default=100),
+            ...
+            juml.DeviceConfig.get_cli_arg(),
+            cli.ObjectChoice(
+                "dataset",
+                *[
+                    dataset_type.get_cli_arg()
+                    for dataset_type in get_all_datasets()
+                ],
+                is_group=True,
+            ),
+            cli.ObjectChoice(
+                "model",
+                *[
+                    model_type.get_cli_arg()
+                    for model_type in get_all_models()
+                ],
+                is_group=True,
+            ),
+        ]
+```
+
+Define a class `Sweep` in `src/MYPROJ/commands/sweep.py` which is a subclass of [`juml.commands.Sweep`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/sweep.py), override the class-method `get_subcommands`, and from it return a list of your defined command classes (NOT including your `Sweep` subclass itself):
+
+```python
+import juml
+from MYPROJ.commands.COMMAND_1 import COMMAND_1
+from MYPROJ.commands.COMMAND_2 import COMMAND_2
+...
+
+class Sweep(juml.commands.Sweep):
+    @classmethod
+    def get_subcommands(cls) -> list[type[juml.commands.Command]]:
+        return [
+            COMMAND_1,
+            COMMAND_2,
+            ...
+        ]
+```
+
+Define a function `get_all_commands` in `src/MYPROJ/commands/__init__.py` which returns a list of your defined command classes, including your `Sweep` subclass (see [`juml.commands.get_all_commands`](https://github.com/jakelevi1996/juml/blob/main/src/juml/commands/__init__.py) for an example):
+
+```python
+import juml
+from MYPROJ.commands.COMMAND_1 import COMMAND_1
+from MYPROJ.commands.COMMAND_2 import COMMAND_2
+...
+from MYPROJ.commands.sweep import Sweep
+
+def get_all_commands() -> list[type[juml.commands.Command]]:
+    return [
+        COMMAND_1,
+        COMMAND_2,
+        ...
+        Sweep,
+    ]
+```
+
+### Define framework
+
+Define a class `Framework` in the file `src/MYPROJ/framework.py` which is a subclass of [`juml.Framework`](https://github.com/jakelevi1996/juml/blob/main/src/juml/framework.py), override the class-method `get_commands`, and from it return the output from your `get_all_commands` function:
+
+```python
+import juml
+from MYPROJ.commands import get_all_commands
+
+class Framework(juml.Framework):
+    @classmethod
+    def get_commands(cls) -> list[type[juml.commands.Command]]:
+        return get_all_commands()
+```
+
+Make a file `pyproject.toml` with the following template:
 
 ```
 [build-system]
@@ -297,6 +581,13 @@ version = "0.0.1"
 
 [project.scripts]
 MYPROJ = "MYPROJ.framework:Framework.run"
+```
+
+Run the following commands to update `pip` and install your project:
+
+```
+python -m pip install -U pip
+python -m pip install -e .
 ```
 
 Now you are ready to run some commands and sweeps! For example:
