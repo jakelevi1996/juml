@@ -593,8 +593,8 @@ python -m pip install -e .
 Now you are ready to run some commands and sweeps! For example:
 
 ```
-MYPROJ MyCommand ...
-MYPROJ Sweep --params '{...}' ... MyCommand ...`
+MYPROJ COMMAND_1 ...
+MYPROJ Sweep --params '{...}' ... COMMAND_1 ...`
 ```
 
 ## Extra tips
