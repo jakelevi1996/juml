@@ -1,5 +1,4 @@
 import torch
-from jutility import cli
 from juml.models.model import Model
 
 class FeedForwardModel(Model):

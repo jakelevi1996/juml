@@ -1,5 +1,4 @@
 import torch
-import torch.utils.data
 from jutility import plotting, util, cli
 from juml.commands.command import Command
 from juml.data import ClassificationDataset, get_all_datasets

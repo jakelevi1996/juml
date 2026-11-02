@@ -1,7 +1,6 @@
 import torch
 import torch.utils.data
 import torchvision
-from jutility import cli
 from juml.data.classification import ClassificationDataset
 
 class Mnist(ClassificationDataset):
