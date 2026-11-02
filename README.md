@@ -604,13 +604,13 @@ There are different approaches that can be taken to debugging. Perhaps the easie
 ```py
 import juml
 
-s = (
-    "TrainClassification "
-    "--dataset Mnist "
-    "--model ReluMlp "
-    "--model.ReluMlp.hidden_dim 1000 "
-    "--epochs 1"
-)
+s = """
+    TrainClassification \
+    --dataset Mnist \
+    --model ReluMlp \
+    --model.ReluMlp.hidden_dim 1000 \
+    --epochs 1
+"""
 juml.Framework.run(s.split())
 ```
 
