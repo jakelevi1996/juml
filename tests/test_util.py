@@ -48,7 +48,7 @@ def test_vector_to_tensor_list():
     w = juml.util.tensors_to_vector(*model.parameters())
     vector_info = juml.util.tensors_to_vector_info(*model.parameters())
 
-    x_list = juml.util.vector_to_tensor_list(w, vector_info)
+    x_list = juml.util.vector_to_tensors(w, *vector_info)
 
     p_list = list(model.parameters())
     assert len(x_list) == len(p_list)

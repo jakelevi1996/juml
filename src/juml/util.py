@@ -77,19 +77,20 @@ def tensors_to_vector(*tensors: torch.Tensor) -> torch.Tensor:
 
 def tensors_to_vector_info(
     *tensors: torch.Tensor,
-) -> list[tuple[list[int], int]]:
-    return [(list(x.shape), x.numel()) for x in tensors]
+) -> tuple[list[list[int]], list[int]]:
+    shape_list = [list(x.shape) for x in tensors]
+    numel_list = [x.numel() for x in tensors]
+    return shape_list, numel_list
 
-def vector_to_tensor_list(
-    x:              torch.Tensor,
-    vector_info:    list[tuple[list[int], int]],
+def vector_to_tensors(
+    x:          torch.Tensor,
+    shape_list: list[list[int]],
+    numel_list: list[int],
 ) -> list[torch.Tensor]:
-    shape_list, numel_list = zip(*vector_info)
-    x_list = [
+    return [
         torch.reshape(xi, shape)
         for xi, shape in zip(x.split(numel_list), shape_list)
     ]
-    return x_list
 
 def set_torch_seed(*args):
     seed = util.Seeder().get_seed(*args)
