@@ -72,13 +72,13 @@ def all_close_to_zero(x: torch.Tensor, tol: float=1e-5) -> bool:
 def all_close(x: torch.Tensor, y: torch.Tensor, tol: float=1e-5) -> bool:
     return all_close_to_zero(x - y, tol)
 
-def tensor_list_to_vector(x_list: list[torch.Tensor]) -> torch.Tensor:
-    return torch.concat([x.flatten() for x in x_list])
+def tensors_to_vector(*tensors: torch.Tensor) -> torch.Tensor:
+    return torch.concat([x.flatten() for x in tensors])
 
-def tensor_list_to_vector_info(
-    x_list: list[torch.Tensor],
+def tensors_to_vector_info(
+    *tensors: torch.Tensor,
 ) -> list[tuple[list[int], int]]:
-    return [(list(x.shape), x.numel()) for x in x_list]
+    return [(list(x.shape), x.numel()) for x in tensors]
 
 def vector_to_tensor_list(
     x:              torch.Tensor,

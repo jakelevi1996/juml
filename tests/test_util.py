@@ -35,7 +35,7 @@ def test_tensor_list_to_vector():
 
     model = juml.models.ReluMlp(3, 5, 10, 4)
 
-    w = juml.util.tensor_list_to_vector(model.parameters())
+    w = juml.util.tensors_to_vector(*model.parameters())
 
     assert w.numel() == model.get_num_params()
     assert str(w.dtype) == "torch.float32"
@@ -45,8 +45,8 @@ def test_vector_to_tensor_list():
 
     model = juml.models.ReluMlp(3, 5, 10, 4)
 
-    w = juml.util.tensor_list_to_vector(model.parameters())
-    vector_info = juml.util.tensor_list_to_vector_info(model.parameters())
+    w = juml.util.tensors_to_vector(*model.parameters())
+    vector_info = juml.util.tensors_to_vector_info(*model.parameters())
 
     x_list = juml.util.vector_to_tensor_list(w, vector_info)
 
