@@ -1,4 +1,5 @@
 from juml.data.dataset import Dataset
+from juml.data.from_tensors import DataSplitFromTensors
 from juml.data.classification import ClassificationDataset
 from juml.data.xor import Xor
 from juml.data.mnist import Mnist
