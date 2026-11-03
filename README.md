@@ -250,8 +250,10 @@ juml CompareLearningCurves \
     --PlottingConfig.col_key model.ReluMlp.depth \
     --PlottingConfig.log_x \
     --PlottingConfig.log_y \
+    --PlottingConfig.sharey \
+    --PlottingConfig.ylim 2e-3 3 \
     --PlottingConfig.x_label Step \
-    --PlottingConfig.y_label 'Test acc' \
+    --PlottingConfig.y_label Loss \
     --PlottingConfig.c_label Width \
     --PlottingConfig.col_label Depth \
     --PlottingConfig.cool_colours \
