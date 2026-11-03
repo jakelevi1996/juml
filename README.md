@@ -295,6 +295,7 @@ src/
       ├─ COMMAND_2.py
       ├─ ...
       ├─ sweep.py
+   ├─ __init__.py
    ├─ framework.py
 pyproject.toml
 ```
@@ -566,6 +567,17 @@ class Framework(juml.Framework):
     @classmethod
     def get_commands(cls) -> list[type[juml.commands.Command]]:
         return get_all_commands()
+```
+
+Define the namespace for your package in `src/MYPROJ/__init__.py`:
+
+```python
+from MYPROJ import (
+    models,
+    data,
+    commands,
+)
+from MYPROJ.framework import Framework
 ```
 
 Make a file `pyproject.toml` with the following template:
