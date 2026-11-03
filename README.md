@@ -477,14 +477,21 @@ class COMMAND_1(juml.commands.Command):
         )
         assert isinstance(model, MODEL_INTERFACE)
 
+        device_cfg = self.init_object("DeviceConfig")
+        assert isinstance(device_cfg, juml.DeviceConfig)
+
+        device_cfg.set_module_device(model)
+
         train_loader = dataset.get_data_loader("train", batch_size)
         test_loader  = dataset.get_data_loader("test",  batch_size)
 
         for e in range(epochs):
             for b, (x, t) in enumerate(train_loader):
-                loss = model.step()
+                x, t = device_cfg.set_tensor_device(x, t)
+                loss = model.step(x, t)
                 ...
 
+        self.save_args()
         self.save_metrics(
             final_train_loss=...
             final_train_acc=...
