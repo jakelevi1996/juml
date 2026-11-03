@@ -32,7 +32,6 @@ class TrainClassification(Command):
         device_cfg = self.init_object("DeviceConfig")
         assert isinstance(device_cfg, DeviceConfig)
 
-        device_cfg.set_visible_devices()
         device_cfg.set_module_device(model)
 
         opt = torch.optim.Adam(model.parameters())

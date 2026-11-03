@@ -7,9 +7,8 @@ class DeviceConfig:
         self.visible_devices = visible_devices
         self.gpu = gpu or (len(visible_devices) > 0)
 
-    def set_visible_devices(self):
-        if len(self.visible_devices) > 0:
-            devices_str = ",".join(str(d) for d in self.visible_devices)
+        if len(visible_devices) > 0:
+            devices_str = ",".join(str(d) for d in visible_devices)
             os.environ["CUDA_VISIBLE_DEVICES"] = devices_str
 
     def set_module_device(self, module: torch.nn.Module):
