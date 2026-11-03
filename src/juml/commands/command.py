@@ -61,8 +61,9 @@ class Command(cli.SubCommand):
         return table.save_pickle("table", self.get_output_dir())
 
     def save_cmd(self) -> str:
+        arg_str = util.get_argv_str(basename_first_arg=True)
         return util.save_text(
-            util.get_argv_str().replace(" --", " \\\n    --"),
+            arg_str.replace(" --", " \\\n    --"),
             "cmd",
             self.get_output_dir(),
         )
