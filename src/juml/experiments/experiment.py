@@ -5,10 +5,12 @@ class Experiment:
     def __init__(
         self,
         updates:    dict[str, str | float | int | bool],
+        depends:    dict[str, dict],
         command:    Command,
         force_run:  bool,
     ):
         self.updates = updates
+        self.depends = depends
         self.command = command
 
         self.update_command()
@@ -22,6 +24,10 @@ class Experiment:
             for k, v in self.updates.items()
             for ki in k.split(",")
         }
+        for key_pair, value_dict in self.depends.items():
+            src_key, dest_key = key_pair.split(":")
+            split_updates[dest_key] = value_dict[split_updates[src_key]]
+
         self.command.update(split_updates)
 
     def skip_if(self, condition: bool):

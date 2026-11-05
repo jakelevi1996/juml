@@ -236,6 +236,26 @@ juml Sweep \
 
 ![](https://github.com/jakelevi1996/juml/raw/main/results/sweep/tidy_mnist_sweep_transpose/sweep_results.png)
 
+The `--depends` argument to `Sweep` can be use to make some parameters depend functionally on other parameters being swept over by specifying a value mapping. For example, suppose we want to sweep over `model.ReluMlp.depth` for 2 datasets `Mnist` and `Xor`, but we want to use different numbers of epochs and hidden dimension for each dataset:
+
+```
+juml Sweep \
+    --params '{
+        "seed": [0, 1, 2],
+        "model.ReluMlp.depth": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        "dataset": ["Mnist", "Xor"]
+    }' \
+    --depends '{
+        "dataset:epochs": {"Mnist": 3, "Xor": 100},
+        "dataset:model.ReluMlp.hidden_dim": {"Mnist": 200, "Xor": 10}
+    }' \
+    --PlottingConfig.x_key model.ReluMlp.depth \
+    --PlottingConfig.y_key final_test_acc \
+    --PlottingConfig.c_key dataset \
+    TrainClassification \
+    --model ReluMlp
+```
+
 Compare learning curves for models with different widths and depths:
 
 ```

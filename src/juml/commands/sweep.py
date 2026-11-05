@@ -8,6 +8,7 @@ class Sweep(Command):
     def run(
         self,
         params:     dict[str, list],
+        depends:    dict[str, dict],
         name:       str | None,
         force_run:  bool,
     ):
@@ -19,6 +20,7 @@ class Sweep(Command):
 
         self.experiment_group = ExperimentGroup.from_params(
             params=params,
+            depends=depends,
             command=command,
             force_run=force_run,
         )
@@ -78,6 +80,10 @@ class Sweep(Command):
                     "colour, row, and column axes using the appropriate "
                     "arguments to `PlottingConfig`."
                 ),
+            ),
+            cli.JsonArg(
+                "depends",
+                required=False,
             ),
             cli.Arg("name",         type=str, default=None),
             cli.Arg("force_run",    action="store_true"),

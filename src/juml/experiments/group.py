@@ -17,6 +17,7 @@ class ExperimentGroup:
     def from_params(
         cls,
         params:     dict[str, list],
+        depends:    dict[str, dict],
         command:    Command,
         force_run:  bool,
     ) -> "ExperimentGroup":
@@ -37,7 +38,7 @@ class ExperimentGroup:
         experiment_list = []
         names = set()
         for u in updates_list:
-            e = Experiment(u, command, force_run)
+            e = Experiment(u, depends, command, force_run)
             e.skip_if(e.name in names)
             names.add(e.name)
             experiment_list.append(e)
