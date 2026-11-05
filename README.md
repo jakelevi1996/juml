@@ -167,7 +167,7 @@ juml Sweep \
     --params '{
         "seed": [0, 1, 2],
         "model.ReluMlp.hidden_dim": [20, 50, 100, 200, 500, 1000],
-        "model.ReluMlp.depth": [1, 2, 3]
+        "model.ReluMlp.depth": [0, 1, 2]
     }' \
     --PlottingConfig.x_key model.ReluMlp.hidden_dim \
     --PlottingConfig.y_key final_test_acc \
@@ -190,7 +190,7 @@ juml Sweep \
     --params '{
         "seed": [0, 1, 2],
         "model.ReluMlp.hidden_dim": [20, 50, 100, 200, 500, 1000],
-        "model.ReluMlp.depth": [1, 2, 3]
+        "model.ReluMlp.depth": [0, 1, 2]
     }' \
     --name tidy_mnist_sweep \
     --PlottingConfig.x_key model.ReluMlp.hidden_dim \
@@ -217,7 +217,7 @@ juml Sweep \
     --params '{
         "seed": [0, 1, 2],
         "model.ReluMlp.hidden_dim": [20, 50, 100, 200, 500, 1000],
-        "model.ReluMlp.depth": [1, 2, 3]
+        "model.ReluMlp.depth": [0, 1, 2]
     }' \
     --name tidy_mnist_sweep_transpose \
     --PlottingConfig.x_key model.ReluMlp.depth \
@@ -243,7 +243,7 @@ juml CompareLearningCurves \
     --params '{
         "seed": [0, 1, 2],
         "model.ReluMlp.hidden_dim": [20, 50, 100, 200, 500, 1000],
-        "model.ReluMlp.depth": [1, 2, 3]
+        "model.ReluMlp.depth": [0, 1, 2]
     }' \
     --PlottingConfig.y_key loss \
     --PlottingConfig.c_key model.ReluMlp.hidden_dim \
@@ -646,7 +646,7 @@ m = juml.commands.TrainClassification.load_metric_from_args(
         "batch_size": 100,
         "dataset": "Mnist",
         "model": "ReluMlp",
-        "model.ReluMlp.depth": 2,
+        "model.ReluMlp.depth": 1,
         "model.ReluMlp.hidden_dim": 1000
     },
     name="final_test_acc",

@@ -15,7 +15,7 @@ class ReluMlp(FeedForwardModel):
         self.hidden_layers = torch.nn.ModuleList()
         layer_input_dim = input_dim
 
-        for _ in range(depth - 1):
+        for _ in range(depth):
             layer = LinearLayer(layer_input_dim, hidden_dim)
             self.hidden_layers.append(layer)
             layer_input_dim = hidden_dim
@@ -34,5 +34,5 @@ class ReluMlp(FeedForwardModel):
     def get_cli_options(cls) -> list[cli.Arg]:
         return [
             cli.Arg("hidden_dim",   type=int, default=100),
-            cli.Arg("depth",        type=int, default=2),
+            cli.Arg("depth",        type=int, default=1),
         ]
