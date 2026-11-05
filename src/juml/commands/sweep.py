@@ -84,6 +84,24 @@ class Sweep(Command):
             cli.JsonArg(
                 "depends",
                 required=False,
+                help=(
+                    "Dependencies between sweep parameters and additional "
+                    "parameters whose values will depend on the sweep "
+                    "parameters, as a dictionary mapping key-pairs to value "
+                    "dictionaries, in a JSON string of the form '{\"k1:k2\": "
+                    "{k1_v1: k2_v1, k1_v2: k2_v2, ...}, ...}'. In the outer "
+                    "dictionary, keys are strings containing pairs of "
+                    "parameter names separate by \":\", EG \"k1:k2\". The "
+                    "first parameter name is the source key, which should "
+                    "also be a key in the `--params` argument, and the "
+                    "second parameter name is the target key, which will "
+                    "have its values set depending on the value of the "
+                    "source key. In the outer dictionary, values are "
+                    "dictionaries, mapping values of the source key to "
+                    "values of the target key. In the previous example, when "
+                    "k1 is set to k1_v1, k2 will be set to k2_v1, when k1 is "
+                    "set to k1_v2, k2 will be set to k2_v2, etc."
+                ),
             ),
             cli.Arg("name",         type=str, default=None),
             cli.Arg("force_run",    action="store_true"),
