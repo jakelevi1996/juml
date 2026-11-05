@@ -91,7 +91,7 @@ class Sweep(Command):
                     "dictionaries, in a JSON string of the form '{\"k1:k2\": "
                     "{k1_v1: k2_v1, k1_v2: k2_v2, ...}, ...}'. In the outer "
                     "dictionary, keys are strings containing pairs of "
-                    "parameter names separate by \":\", EG \"k1:k2\". The "
+                    "parameter names separated by \":\", EG \"k1:k2\". The "
                     "first parameter name is the source key, which should "
                     "also be a key in the `--params` argument, and the "
                     "second parameter name is the target key, which will "
