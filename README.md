@@ -35,8 +35,9 @@ Alternatively, JUML can be installed in "editable mode" from the [GitHub reposit
 
 ```
 git clone https://github.com/jakelevi1996/juml.git
+cd juml
 python -m pip install -U pip
-python -m pip install -e ./juml
+python -m pip install -e .
 ```
 
 JUML depends on [PyTorch](https://pytorch.org/). The installation instructions for PyTorch depend on which (if any) CUDA version is available, so PyTorch won't be automatically installed by `pip` when installing JUML. Instead, please install PyTorch following the [official PyTorch installation instructions](https://pytorch.org/get-started/locally/).
