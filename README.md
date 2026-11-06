@@ -90,25 +90,25 @@ juml TrainClassification \
 
 ```
 cli: Xor()
-cli: ReluMlp(depth=2, hidden_dim=10, input_dim=2, output_dim=2)
+cli: ReluMlp(depth=1, hidden_dim=10, input_dim=2, output_dim=2)
 cli: DeviceConfig(gpu=False, visible_devices=[])
 Count | Time        | Epoch      | Batch      | Loss       | Train acc  | Test acc
 ----- | ----------- | ---------- | ---------- | ---------- | ---------- | ----------
-0     | 0.0010s     |          0 |          0 |    0.72485 |            |
-0     | 0.0010s     |          0 |          0 |    0.72485 |            |
-1     | 0.0011s     |          0 |            |            |    0.25000 |    0.25000
+0     | 0.1796s     |          0 |          0 |    0.72485 |            |
+0     | 0.1796s     |          0 |          0 |    0.72485 |            |
+1     | 0.1801s     |          0 |            |            |    0.25000 |    0.25000
 ...
-398   | 0.0804s     |        199 |          0 |    0.55982 |            |
-399   | 0.0805s     |        199 |            |            |    1.00000 |    1.00000
-Saving in "results/trainclassification/b100dXe200mRmd2mh10s0/args.json"
-Saving in "results/trainclassification/b100dXe200mRmd2mh10s0/cmd.txt"
-Saving in "results/trainclassification/b100dXe200mRmd2mh10s0/table.pkl"
-Saving in "results/trainclassification/b100dXe200mRmd2mh10s0/metrics.json"
-Saving in "results/trainclassification/b100dXe200mRmd2mh10s0/metrics.png"
-Time taken for `TrainClassification` = 0.5844 seconds
+398   | 0.2665s     |        199 |          0 |    0.55982 |            |
+399   | 0.2667s     |        199 |            |            |    1.00000 |    1.00000
+Saving in "results/trainclassification/b100dXe200mRmd1mh10s0/args.json"
+Saving in "results/trainclassification/b100dXe200mRmd1mh10s0/cmd.txt"
+Saving in "results/trainclassification/b100dXe200mRmd1mh10s0/table.pkl"
+Saving in "results/trainclassification/b100dXe200mRmd1mh10s0/metrics.json"
+Saving in "results/trainclassification/b100dXe200mRmd1mh10s0/metrics.png"
+Time taken for `TrainClassification` = 0.5965 seconds
 ```
 
-![](https://github.com/jakelevi1996/juml/raw/main/results/trainclassification/b100dXe200mRmd2mh10s0/metrics_readme.png)
+![](https://github.com/jakelevi1996/juml/raw/main/results/trainclassification/b100dXe200mRmd1mh10s0/metrics_readme.png)
 
 Train an MLP on MNIST to 98% test accuracy in under 30 seconds (CPU):
 
@@ -121,52 +121,45 @@ juml TrainClassification \
 ```
 
 ```
-cli: Mnist(flat=True)
-cli: ReluMlp(depth=2, hidden_dim=1000, input_shape=[784], output_shape=[10])
+cli: Mnist()
+cli: ReluMlp(depth=1, hidden_dim=1000, input_dim=784, output_dim=10)
+cli: DeviceConfig(gpu=False, visible_devices=[])
 Count | Time        | Epoch      | Batch      | Loss       | Train acc  | Test acc
 ----- | ----------- | ---------- | ---------- | ---------- | ---------- | ----------
-0     | 0.0142s     |          0 |          0 |    2.35821 |            |
-91    | 1.0022s     |          0 |         91 |    0.21197 |            |
-183   | 2.0046s     |          0 |        183 |    0.18111 |            |
-273   | 3.0019s     |          0 |        273 |    0.18510 |            |
-364   | 4.0017s     |          0 |        364 |    0.14397 |            |
-456   | 5.0047s     |          0 |        456 |    0.14908 |            |
-547   | 6.0080s     |          0 |        547 |    0.11449 |            |
-599   | 6.5894s     |          0 |        599 |    0.07091 |            |
-600   | 6.9580s     |          0 |            |            |    0.97190 |    0.96670
-604   | 7.0040s     |          1 |          3 |    0.09275 |            |
-694   | 8.0038s     |          1 |         93 |    0.07405 |            |
-812   | 9.0012s     |          1 |        211 |    0.10806 |            |
-983   | 10.0041s    |          1 |        382 |    0.08695 |            |
-1150  | 11.0005s    |          1 |        549 |    0.08830 |            |
-1200  | 11.2970s    |          1 |        599 |    0.03669 |            |
-1201  | 11.6915s    |          1 |            |            |    0.98123 |    0.97070
-1253  | 12.0027s    |          2 |         51 |    0.05098 |            |
-1418  | 13.0049s    |          2 |        216 |    0.05247 |            |
-1578  | 14.0035s    |          2 |        376 |    0.08137 |            |
-1739  | 15.0028s    |          2 |        537 |    0.08548 |            |
-1801  | 15.3885s    |          2 |        599 |    0.05897 |            |
-1802  | 15.7840s    |          2 |            |            |    0.99040 |    0.97830
-1838  | 16.0027s    |          3 |         35 |    0.04630 |            |
-1996  | 17.0021s    |          3 |        193 |    0.12142 |            |
-2148  | 18.0031s    |          3 |        345 |    0.01137 |            |
-2300  | 19.0052s    |          3 |        497 |    0.01614 |            |
-2402  | 19.6594s    |          3 |        599 |    0.04586 |            |
-2403  | 20.0639s    |          3 |            |            |    0.99268 |    0.97970
-2404  | 20.0704s    |          4 |          0 |    0.00618 |            |
-2550  | 21.0057s    |          4 |        146 |    0.07377 |            |
-2706  | 22.0042s    |          4 |        302 |    0.03206 |            |
-2858  | 23.0003s    |          4 |        454 |    0.02141 |            |
-3003  | 23.9617s    |          4 |        599 |    0.00631 |            |
-3004  | 24.3791s    |          4 |            |            |    0.99547 |    0.98180
-Saving in "results/trainclassification/b100dMdfTe5mRmd2mh1000s0/args.json"
-Saving in "results/trainclassification/b100dMdfTe5mRmd2mh1000s0/cmd.txt"
-Saving in "results/trainclassification/b100dMdfTe5mRmd2mh1000s0/metrics.json"
-Saving in "results/trainclassification/b100dMdfTe5mRmd2mh1000s0/metrics.png"
-Time taken for `TrainClassification` = 26.7501 seconds
+0     | 0.2381s     |          0 |          0 |    2.33933 |            |
+165   | 1.0033s     |          0 |        165 |    0.23473 |            |
+515   | 2.0012s     |          0 |        515 |    0.14962 |            |
+599   | 2.2364s     |          0 |        599 |    0.05567 |            |
+600   | 3.6071s     |          0 |            |            |    0.96902 |    0.96540
+601   | 3.6106s     |          1 |          0 |    0.06847 |            |
+740   | 4.0008s     |          1 |        139 |    0.08200 |            |
+1095  | 5.0017s     |          1 |        494 |    0.02998 |            |
+1200  | 5.2969s     |          1 |        599 |    0.05450 |            |
+1201  | 6.6441s     |          1 |            |            |    0.98487 |    0.97540
+1202  | 6.6476s     |          2 |          0 |    0.02625 |            |
+1327  | 7.0009s     |          2 |        125 |    0.05536 |            |
+1670  | 8.0008s     |          2 |        468 |    0.07023 |            |
+1801  | 8.4322s     |          2 |        599 |    0.05022 |            |
+1802  | 9.7925s     |          2 |            |            |    0.98570 |    0.97610
+1803  | 9.7963s     |          3 |          0 |    0.03761 |            |
+1872  | 10.0011s    |          3 |         69 |    0.02156 |            |
+2225  | 11.0021s    |          3 |        422 |    0.05112 |            |
+2402  | 11.5221s    |          3 |        599 |    0.03530 |            |
+2403  | 12.8423s    |          3 |            |            |    0.99327 |    0.98090
+2404  | 12.8461s    |          4 |          0 |    0.02854 |            |
+2457  | 13.0013s    |          4 |         53 |    0.02315 |            |
+2824  | 14.0006s    |          4 |        420 |    0.02309 |            |
+3003  | 14.4822s    |          4 |        599 |    0.02862 |            |
+3004  | 15.8258s    |          4 |            |            |    0.99525 |    0.98130
+Saving in "results/trainclassification/b100dMe5mRmd1mh1000s0/args.json"
+Saving in "results/trainclassification/b100dMe5mRmd1mh1000s0/cmd.txt"
+Saving in "results/trainclassification/b100dMe5mRmd1mh1000s0/table.pkl"
+Saving in "results/trainclassification/b100dMe5mRmd1mh1000s0/metrics.json"
+Saving in "results/trainclassification/b100dMe5mRmd1mh1000s0/metrics.png"
+Time taken for `TrainClassification` = 16.2295 seconds
 ```
 
-![](https://github.com/jakelevi1996/juml/raw/main/results/trainclassification/b100dMdfTe5mRmd2mh1000s0/metrics.png)
+![](https://github.com/jakelevi1996/juml/raw/main/results/trainclassification/b100dMe5mRmd1mh1000s0/metrics_readme.png)
 
 Sweep over width, depth, and random seeds for the MLP:
 
@@ -189,7 +182,7 @@ juml Sweep \
 
 This trains 54 models in ~12 minutes, and produces the following graph:
 
-![](https://github.com/jakelevi1996/juml/raw/main/results/sweep/b100dMdfTe3mRmd1,2,3mh1,2,50,0,00s0,1,2/sweep_results.png)
+![](https://github.com/jakelevi1996/juml/raw/main/results/sweep/b100dMe3mRmd0,1,2mh1,2,50,0,00s0,1,2/sweep_results.png)
 
 Tidy up the labels and colour scheme by using the appropriate `--PlottingConfig` arguments. We also provide the `--name` argument to the `Sweep` command, because although `Sweep` automatically names output directories, it will overwrite our previous graph if we only change `--PlottingConfig` arguments. The results will automatically be loaded from disk without rerunning the experiments unless we specify `Sweep --force_run`:
 
@@ -250,11 +243,11 @@ The `--depends` argument to `Sweep` can be use to make some parameters depend fu
 juml Sweep \
     --params '{
         "seed": [0, 1, 2],
-        "model.ReluMlp.depth": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        "model.ReluMlp.depth": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         "dataset": ["Mnist", "Xor"]
     }' \
     --depends '{
-        "dataset:epochs": {"Mnist": 3, "Xor": 100},
+        "dataset:epochs": {"Mnist": 3, "Xor": 200},
         "dataset:model.ReluMlp.hidden_dim": {"Mnist": 200, "Xor": 10}
     }' \
     --PlottingConfig.x_key model.ReluMlp.depth \
@@ -263,6 +256,8 @@ juml Sweep \
     TrainClassification \
     --model ReluMlp
 ```
+
+![](https://github.com/jakelevi1996/juml/raw/main/results/sweep/b100dM,Xe200,3mRmd0,1,10,2,3,4,5,6,7,8,9mh1,20,0s0,1,2/sweep_results.png)
 
 Compare learning curves for models with different widths and depths:
 
@@ -292,7 +287,7 @@ juml CompareLearningCurves \
     --epochs 3
 ```
 
-![](https://github.com/jakelevi1996/juml/raw/main/results/comparelearningcurves/b100dMe3mRmd1,2,3mh1,2,50,0,00s0,1,2/sweep_results.png)
+![](https://github.com/jakelevi1996/juml/raw/main/results/comparelearningcurves/b100dMe3mRmd0,1,2mh1,2,50,0,00s0,1,2/sweep_results.png)
 
 ## Extension guide
 
