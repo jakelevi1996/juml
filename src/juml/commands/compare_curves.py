@@ -9,6 +9,7 @@ class CompareLearningCurves(Sweep):
     def run(
         self,
         params:     dict[str, list],
+        depends:    dict[str, dict],
         name:       str | None,
         force_run:  bool,
     ):
@@ -20,6 +21,7 @@ class CompareLearningCurves(Sweep):
 
         self.experiment_group = LearningCurveGroup.from_params(
             params=params,
+            depends=depends,
             command=command,
             force_run=force_run,
         )
