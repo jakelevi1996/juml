@@ -31,6 +31,13 @@ python -m pip install -U pip
 python -m pip install -U juml-framework
 ```
 
+JUML can be installed with the latest updates from GitHub:
+
+```
+python -m pip install -U pip
+python -m pip install git+https://github.com/jakelevi1996/juml.git --force-reinstall --no-deps
+```
+
 Alternatively, JUML can be installed in "editable mode" from the [GitHub repository](https://github.com/jakelevi1996/juml):
 
 ```
