@@ -55,7 +55,7 @@ def reg_lstsq(
 ) -> torch.Tensor:
     ab_io = a_ni.mT @ b_no
     aa_ii = a_ni.mT @ a_ni
-    aa_reg_ii = aa_ii + reg * torch.eye(*aa_ii.shape)
+    aa_reg_ii = aa_ii + reg * torch.eye(*aa_ii.shape, device=aa_ii.device)
     x_io = torch.linalg.solve(aa_reg_ii, ab_io)
     return x_io
 

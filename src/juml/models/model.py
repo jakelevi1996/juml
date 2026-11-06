@@ -16,11 +16,12 @@ class Model(torch.nn.Module):
         raise NotImplementedError()
 
     @classmethod
-    def get_cli_arg(cls):
+    def get_cli_arg(cls, **kwargs):
         return cli.ObjectArg(
             cls,
             *cls.get_cli_options(),
             tag=cls.get_tag(),
+            **kwargs,
         )
 
     @classmethod

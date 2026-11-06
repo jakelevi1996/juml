@@ -1,6 +1,7 @@
 from jutility import util, cli
 from juml.commands.command import Command
 from juml.commands.train_classification import TrainClassification
+from juml.commands.train_rand_relu_features import TrainRandReluFeatures
 from juml.experiments.group import ExperimentGroup
 from juml.experiments.plot_config import PlottingConfig
 
@@ -112,4 +113,5 @@ class Sweep(Command):
     def get_subcommands(cls) -> list[type[Command]]:
         return [
             TrainClassification,
+            TrainRandReluFeatures,
         ]
