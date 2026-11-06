@@ -1,3 +1,4 @@
+import os
 import torch
 import torch.utils.data
 from jutility import cli
@@ -27,6 +28,14 @@ class Dataset:
             shuffle=False,
         )
         return next(iter(data_loader))
+
+    @classmethod
+    def get_data_dir(cls) -> str:
+        data_dir = os.path.expanduser("~/juml_datasets/")
+        if not os.path.isdir(data_dir):
+            os.makedirs(data_dir)
+
+        return data_dir
 
     @classmethod
     def get_cli_arg(cls):

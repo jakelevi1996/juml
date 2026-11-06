@@ -7,13 +7,13 @@ class Mnist(ClassificationDataset):
     def __init__(self):
         self.split_dict = {
             "train": torchvision.datasets.MNIST(
-                root="data",
+                root=self.get_data_dir(),
                 train=True,
                 transform=torchvision.transforms.ToTensor(),
                 download=True,
             ),
             "test": torchvision.datasets.MNIST(
-                root="data",
+                root=self.get_data_dir(),
                 train=False,
                 transform=torchvision.transforms.ToTensor(),
                 download=True,

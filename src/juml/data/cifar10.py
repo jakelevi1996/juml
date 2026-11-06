@@ -8,13 +8,13 @@ class Cifar10(ClassificationDataset):
     def __init__(self):
         self.split_dict = {
             "train": torchvision.datasets.CIFAR10(
-                root="data",
+                root=self.get_data_dir(),
                 train=True,
                 transform=torchvision.transforms.ToTensor(),
                 download=True,
             ),
             "test": torchvision.datasets.CIFAR10(
-                root="data",
+                root=self.get_data_dir(),
                 train=False,
                 transform=torchvision.transforms.ToTensor(),
                 download=True,
