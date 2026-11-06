@@ -84,6 +84,7 @@ class Sweep(Command):
             cli.JsonArg(
                 "depends",
                 required=False,
+                default=dict(),
                 help=(
                     "Dependencies between sweep parameters and additional "
                     "parameters whose values will depend on the sweep "
