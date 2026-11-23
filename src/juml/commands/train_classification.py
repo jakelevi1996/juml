@@ -12,10 +12,11 @@ from juml.device import DeviceConfig
 class TrainClassification(Command):
     def run(
         self,
-        seed:       int,
-        epochs:     int,
-        batch_size: int,
-        save_model: bool,
+        seed:           int,
+        epochs:         int,
+        batch_size:     int,
+        print_level:    int,
+        save_model:     bool,
     ):
         torch.manual_seed(seed)
 
@@ -48,6 +49,7 @@ class TrainClassification(Command):
             util.Column("train_acc",    ".5f",  width=10),
             util.Column("test_acc",     ".5f",  width=10),
             print_interval=util.TimeInterval(1),
+            print_level=print_level,
         )
 
         for e in range(epochs):
@@ -84,6 +86,9 @@ class TrainClassification(Command):
                 ),
                 level=1,
             )
+
+        if print_level >= 1:
+            table.print_last(print_level)
 
         self.save_args()
         self.save_cmd()
@@ -140,7 +145,8 @@ class TrainClassification(Command):
             cli.Arg("seed",         type=int,   default=0),
             cli.Arg("epochs",       type=int,   default=1),
             cli.Arg("batch_size",   type=int,   default=100),
-            cli.Arg("save_model",   action="store_true", tagged=False),
+            cli.Arg("print_level",  type=int,   default=0,  tagged=False),
+            cli.Arg("save_model",   action="store_true",    tagged=False),
             DeviceConfig.get_cli_arg(),
             cli.ObjectChoice(
                 "dataset",
