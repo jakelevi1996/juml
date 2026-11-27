@@ -56,3 +56,27 @@ def test_vector_to_tensor_list():
     for x, p in zip(x_list, p_list):
         assert list(x.shape) == list(p.shape)
         assert str(x.detach()) == str(p.detach())
+
+def test_entropy_binary():
+    juml.util.set_torch_seed("test_entropy_binary")
+    x = torch.linspace(0, 1, 101)
+    h = juml.util.entropy_binary(x)
+
+    assert h[ 0].item() == 0
+    assert h[-1].item() == 0
+    assert h.max().item() == h[h.numel() // 2].item()
+    assert h.max().item() > 0.6
+
+def test_entropy_categorical():
+    juml.util.set_torch_seed("test_entropy_categorical")
+    x = torch.zeros([3, 13])
+    x[:, 2] = 1
+    h = juml.util.entropy_categorical(x, -1)
+    assert (h == 0).all().item()
+    assert list(h.shape) == [3]
+
+    x.normal_(0, 1)
+    x = x.softmax(-1)
+    h = juml.util.entropy_categorical(x, -1)
+    assert (h > 1.5).all().item()
+    assert list(h.shape) == [3]

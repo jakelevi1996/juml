@@ -45,6 +45,12 @@ def binary_acc(y: torch.Tensor, t: torch.Tensor) -> torch.Tensor:
     acc = torch.where(t == y_hard, 1.0, 0.0).mean()
     return acc
 
+def entropy_binary(x: torch.Tensor) -> torch.Tensor:
+    return -torch.xlogy(x, x) - torch.xlogy(1-x, 1-x)
+
+def entropy_categorical(x: torch.Tensor, dim: int) -> torch.Tensor:
+    return -torch.xlogy(x, x).sum(dim)
+
 def safe_divide(a: torch.Tensor, b: torch.Tensor) -> torch.Tensor:
     return torch.where(b != 0.0, a / b, 0.0)
 
